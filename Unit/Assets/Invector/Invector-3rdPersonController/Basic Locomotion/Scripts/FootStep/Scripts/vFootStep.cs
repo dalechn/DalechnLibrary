@@ -87,16 +87,16 @@ namespace Invector
             }
         }
 
-        protected virtual void UpdateTerrainInfo(Terrain newTerrain)
+        protected virtual void UpdateTerrainInfo(FootStepObject footStepObj)
         {
-            if (terrain == null || terrain != newTerrain)
+            if (terrain == null || terrain != footStepObj.terrain)
             {
-                terrain = newTerrain;
+                terrain = footStepObj.terrain;
                 if (terrain != null)
                 {
                     terrainData = terrain.terrainData;
                     terrainPos = terrain.transform.position;
-                    terrainCollider = terrain.GetComponent<TerrainCollider>();
+                    terrainCollider = footStepObj.terrainCollider;
                 }
             }
         }
@@ -109,7 +109,7 @@ namespace Invector
             // The number of values in the array will equal the number
             // of textures added to the terrain.
 
-            UpdateTerrainInfo(footStepObj.terrain);
+            UpdateTerrainInfo(footStepObj);
 
             // calculate which splat map cell the worldPos falls within (ignoring y)
             var worldPos = footStepObj.sender.position;
@@ -248,7 +248,8 @@ namespace Invector
                 currentFootStep.volume = Volume;
                 currentFootStep.spawnParticleEffect = SpawnParticle;
                 currentFootStep.spawnStepMarkEffect = SpawnStepMark;
-                SpawnSurfaceEffect(currentFootStep);
+
+                StartCoroutine(SpawnSurfaceEffect(currentFootStep));
             }
         }
 

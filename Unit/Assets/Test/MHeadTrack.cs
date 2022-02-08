@@ -2,7 +2,7 @@
 using Invector.vCharacterController;
 using UnityEngine;
 
-public class MHeadTrack : vHeadTrack
+public class mHeadTrack : vHeadTrack
 {
     [vEditorToolbar("Settings")]
 

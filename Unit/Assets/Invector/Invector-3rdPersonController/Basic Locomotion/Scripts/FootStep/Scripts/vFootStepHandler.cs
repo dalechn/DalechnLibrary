@@ -21,5 +21,14 @@ namespace Invector
             materialName,
             textureName
         }
+
+        public Terrain terrain;
+        public Renderer render;
+
+        private void Start()
+        {
+            this.terrain = GetComponent<Terrain>();
+            this.render = GetComponent<Renderer>();
+        }
     }
 }

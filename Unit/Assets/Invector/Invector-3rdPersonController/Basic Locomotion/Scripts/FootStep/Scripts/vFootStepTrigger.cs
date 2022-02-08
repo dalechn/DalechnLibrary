@@ -94,6 +94,7 @@ namespace Invector
         public string name;
         public Transform sender;
         public Collider ground;
+        public TerrainCollider terrainCollider;
         public Terrain terrain;
         public bool isTerrain { get { return terrain != null; } }
         public vFootStepHandler stepHandle;
@@ -107,9 +108,22 @@ namespace Invector
             this.name = "";
             this.sender = sender;
             this.ground = ground;
-            this.terrain = ground.GetComponent<Terrain>();
             this.stepHandle = ground.GetComponent<vFootStepHandler>();
-            this.renderer = ground.GetComponent<Renderer>();
+
+            if(!stepHandle)
+            {
+                this.terrain = ground.GetComponent<Terrain>();
+                this.renderer = ground.GetComponent<Renderer>();
+            }
+            else
+            {
+                this.terrain = stepHandle.terrain;
+                this.renderer = stepHandle.render;
+            }
+            if (terrain)
+            {
+                terrainCollider = ground as TerrainCollider;
+            }
             spawnSoundEffect = true;
             spawnStepMarkEffect = true;
             spawnParticleEffect = true;

@@ -5,7 +5,7 @@ using Invector.vShooter;
 using Invector;
 using RootMotion.FinalIK;
 
-public class MShooterWeapon : vShooterWeapon
+public class mShooterWeapon : vShooterWeapon
 {
     [vEditorToolbar("Weapon Settings")]
     public ShakerPresent shakerPresent;

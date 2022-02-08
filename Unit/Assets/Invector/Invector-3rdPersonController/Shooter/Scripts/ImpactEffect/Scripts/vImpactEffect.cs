@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using PathologicalGames;
+
 namespace Invector.vShooter
 {
     [CreateAssetMenu(menuName = "Invector/Effects/New ImpactEffect",fileName ="ImpactEffect@")]
@@ -29,10 +31,20 @@ namespace Invector.vShooter
             return CreateInstance(GetRandomObject(hitEffects), position, rotation);
         }
 
-        protected GameObject CreateInstance(GameObject target,Vector3 position,Quaternion rotation)
+        protected GameObject CreateInstance(GameObject target, Vector3 position, Quaternion rotation)
         {
             if (target == null) return null;
-            else return Instantiate(target, position, rotation);
+            else
+            {
+                if (PoolManager.Pools.ContainsKey(ResDefine.AmmoEffect))
+                {
+                    return PoolManager.Pools[ResDefine.AmmoEffect].Spawn(target, position, rotation).gameObject;
+                }
+                else
+                {
+                    return Instantiate(target, position, rotation);
+                }
+            }
         }
 
         public override void DoImpactEffect(Vector3 position, Quaternion rotation, GameObject sender, GameObject receiver)

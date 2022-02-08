@@ -275,7 +275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 1
   openCloseWindow: 1
-  selectedToolbar: 7
+  selectedToolbar: 5
   weaponCategory: Bow
   shootFrequency: 0.2
   isInfinityAmmo: 0

@@ -62,7 +62,7 @@ namespace CJTools
             target.SetActive(true);
 
             target.transform.localScale = Vector3.one;
-            DoAction a = DoAction.RunAction(target, duration, delegate (float time, float r)
+            DoAction a = bl_UpdateManager.RunAction(null, duration, delegate (float time, float r)
             {
                 float val = DoAction.DampMotion(time, 0.309f);
                 float val2 = DoAction.DampMotion(time, 0.204f);
@@ -134,7 +134,7 @@ namespace CJTools
 
         public static void FlashUI(Image obj, bool overShow = true, float duration = 0.8f)
         {
-            DoAction.RunAction(obj.gameObject, duration, (float time, float r) =>
+            bl_UpdateManager.RunAction(null, duration, (float time, float r) =>
             {
                 obj.enabled = (r % 0.4f) > 0.4f / 2;
             }, () =>
@@ -149,8 +149,8 @@ namespace CJTools
             {
                 m.enabled = false;
             }
-         
-            DoAction.RunAction(obj, duration, (float time, float r) =>
+
+            bl_UpdateManager.RunAction(null, duration, (float time, float r) =>
         {
             for (int i = 0; i < originVisableMeshs.Count; i++)
             {

@@ -2,7 +2,7 @@
 using Invector.vCharacterController;
 using UnityEngine;
 
-public class MShooterMeleeInput : vShooterMeleeInput
+public class mShooterMeleeInput : vShooterMeleeInput
 {
     public virtual Vector3 AimIKPosition { get; protected set; }
 

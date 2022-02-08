@@ -12,7 +12,6 @@ namespace Invector.vShooter
         public RectTransform canvas;
         public List<vAimCanvas> aimCanvasCollection = new List<vAimCanvas>();
         public Camera scopeBackgroundCamera;
-
         public bool isScopeCameraActive { get => scopeBackgroundCamera && scopeBackgroundCamera.gameObject.activeInHierarchy; set { if (scopeBackgroundCamera) scopeBackgroundCamera.gameObject.SetActive(value); } }
 
         public bool isValid { get { if (!currentAimCanvas) return false; return currentAimCanvas.isValid; } set { currentAimCanvas.isValid = value; } }
@@ -20,16 +19,17 @@ namespace Invector.vShooter
        
         public bool isScopeUIActive { get { if (!currentAimCanvas) return false; return currentAimCanvas.isScopeUIActive; } set { currentAimCanvas.isScopeUIActive = value; } }
         public bool useScopeTransition { get { if (!currentAimCanvas) return false; return currentAimCanvas.useScopeTransition; } set { currentAimCanvas.useScopeTransition = value; } }
+        protected bool scaleAimWithMovement { get { if (!currentAimCanvas) return false; return currentAimCanvas.scaleAimWithMovement; } }
+        protected bool scaleAimWithJump { get { if (!currentAimCanvas) return false; return currentAimCanvas.scaleAimWithJump; } }
         protected float movementSensibility { get { return currentAimCanvas.movementSensibility; } }
+        protected float scaleWithMovement;
         protected float smoothChangeScale { get { return currentAimCanvas.smoothChangeScale; } }
         protected float smoothTransition { get { return currentAimCanvas.smoothTransition; } }
         protected RectTransform aimTarget { get { return currentAimCanvas.aimTarget; } }
         protected RectTransform aimCenter { get { return currentAimCanvas.aimCenter; } }
         protected Vector2 sizeDeltaTarget { get { return currentAimCanvas.sizeDeltaTarget; } }
         protected Vector2 sizeDeltaCenter { get { return currentAimCanvas.sizeDeltaCenter; } }
-
-        protected float scaleWithMovement;
-
+        
         protected vThirdPersonController cc;
 
         protected UnityEvent onEnableAim { get { return currentAimCanvas.onEnableAim; } }
@@ -51,7 +51,6 @@ namespace Invector.vShooter
         Quaternion scopeCameraOriginRot;
         Vector3 scopeCameraTargetPos, scopeCameraOriginPos;      
         public Camera mainCamera;
-
         public virtual void Init(vThirdPersonController cc)
         {
             if (scopeBackgroundCamera == null)
@@ -62,7 +61,7 @@ namespace Invector.vShooter
             }
             mainCamera = Camera.main;
             instance = this;
-            this.cc =  cc;
+            this.cc = cc;
             currentAimCanvas = aimCanvasCollection[currentCanvasID];
             isValid = true;
         }
@@ -130,10 +129,20 @@ namespace Invector.vShooter
                 aimCenter.anchoredPosition = WorldObject_ScreenPosition;
             aimTarget.anchoredPosition = WorldObject_ScreenPosition;
 
-            scaleWithMovement = currentAimCanvas.scaleWithMovement > 0 && cc.input.magnitude > movementSensibility ? currentAimCanvas.scaleWithMovement : 1;
-            scaleWithMovement = (currentAimCanvas.scaleWithJump > 0 && (cc.isJumping || !cc.isGrounded) ? currentAimCanvas.scaleWithJump : scaleWithMovement);
+            //if (scaleAimWithMovement && (cc.input.magnitude > movementSensibility || Input.GetAxis("Mouse X") > movementSensibility || Input.GetAxis("Mouse Y") > movementSensibility))
+            //{
+            //    aimCenter.sizeDelta = Vector2.Lerp(aimCenter.sizeDelta, sizeDeltaCenter * scaleWithMovement, smoothChangeScale * Time.deltaTime);
+            //    aimTarget.sizeDelta = Vector2.Lerp(aimTarget.sizeDelta, sizeDeltaTarget * scaleWithMovement, smoothChangeScale * Time.deltaTime);
+            //}
+            //else
+            //{
+            //    aimCenter.sizeDelta = Vector2.Lerp(aimCenter.sizeDelta, sizeDeltaCenter * 1, smoothChangeScale * Time.deltaTime);
+            //    aimTarget.sizeDelta = Vector2.Lerp(aimTarget.sizeDelta, sizeDeltaTarget * 1, smoothChangeScale * Time.deltaTime);
+            //}
 
-            //aimCenter.sizeDelta = Vector2.Lerp(aimCenter.sizeDelta, sizeDeltaCenter * scaleWithMovement, smoothChangeScale * Time.deltaTime);
+            scaleWithMovement = currentAimCanvas.scaleAimWithMovement  && cc.input.magnitude > movementSensibility ? currentAimCanvas.scaleWithMovement : 1;
+            scaleWithMovement = (currentAimCanvas.scaleAimWithJump && (cc.isJumping || !cc.isGrounded) ? currentAimCanvas.scaleWithJump : scaleWithMovement);
+
             aimTarget.sizeDelta = Vector2.Lerp(aimTarget.sizeDelta, sizeDeltaTarget * scaleWithMovement, smoothChangeScale * Time.deltaTime);
         }
 

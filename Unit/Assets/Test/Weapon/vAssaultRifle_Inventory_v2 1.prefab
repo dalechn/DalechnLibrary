@@ -27311,10 +27311,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 0
-  selectedToolbar: 0
+  selectedToolbar: 5
   weaponCategory: Rifle
   shootFrequency: 0.09
-  isInfinityAmmo: 1
+  isInfinityAmmo: 0
   ammo: 0
   ignoreTags:
   - Player
@@ -27373,7 +27373,7 @@ MonoBehaviour:
   clipSize: 25
   dontUseReload: 0
   autoReload: 1
-  ammoID: 0
+  ammoID: 13
   moveSetID: 1
   upperBodyID: 2
   shotID: 2

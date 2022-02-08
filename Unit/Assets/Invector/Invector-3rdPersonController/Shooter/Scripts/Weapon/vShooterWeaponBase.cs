@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using PathologicalGames;
 
 namespace Invector.vShooter
 {
@@ -262,7 +263,14 @@ namespace Invector.vShooter
                 {
                     var dispersionDir = Dispersion(dir.normalized, maxDamageDistance, dispersion);
                     var spreadRotation = Quaternion.LookRotation(dispersionDir);
-                    bulletObject = Instantiate(projectile, muzzle.transform.position, spreadRotation);
+                    if(PoolManager.Pools.ContainsKey(ResDefine.AmmoPool))
+                    {
+                        bulletObject = PoolManager.Pools[ResDefine.AmmoPool].Spawn(projectile, muzzle.transform.position, spreadRotation).gameObject;
+                    }
+                    else
+                    {
+                        bulletObject = Instantiate(projectile, muzzle.transform.position, spreadRotation);
+                    }
 
                     var pCtrl = bulletObject.GetComponent<vProjectileControl>();
 
@@ -285,7 +293,15 @@ namespace Invector.vShooter
             }
             else if (projectilesPerShot > 0 && projectile)
             {
-                bulletObject = Instantiate(projectile, muzzle.transform.position, rotation);
+                if (PoolManager.Pools.ContainsKey(ResDefine.AmmoPool))
+                {
+                    bulletObject = PoolManager.Pools[ResDefine.AmmoPool].Spawn(projectile, muzzle.transform.position, rotation).gameObject;
+                }
+                else
+                {
+                    bulletObject = Instantiate(projectile, muzzle.transform.position, rotation);
+                }
+
                 var pCtrl = bulletObject.GetComponent<vProjectileControl>();
                 pCtrl.shooterTransform = sender;
                 pCtrl.ignoreTags = ignoreTags;

@@ -17,25 +17,25 @@ MonoBehaviour:
   ammos:
   - ammoName: Rifle Ammo
     ammoID: 13
-    _count: 0
+    _count: 100
     ammoItems: []
   - ammoName: Handgun Ammo
     ammoID: 14
-    _count: 0
+    _count: 100
     ammoItems: []
   - ammoName: Shotgun Shells
     ammoID: 17
-    _count: 0
+    _count: 100
     ammoItems: []
   - ammoName: RPG Ammo
     ammoID: 18
-    _count: 0
+    _count: 100
     ammoItems: []
   - ammoName: Sniper Ammo
     ammoID: 19
-    _count: 0
+    _count: 100
     ammoItems: []
   - ammoName: Arrows
     ammoID: 21
-    _count: 0
+    _count: 100
     ammoItems: []

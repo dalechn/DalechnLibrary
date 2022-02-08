@@ -70,7 +70,7 @@ MonoBehaviour:
     defaultDistance: 1.23
     maxDistance: 1.5
     minDistance: 0.25
-    height: 1.6
+    height: 1.49
     smooth: 10
     smoothDamp: 1
     xMouseSensitivity: 2
@@ -82,7 +82,7 @@ MonoBehaviour:
     rotationOffSet: {x: 0, y: 0, z: 0}
     cullingHeight: 1.5
     cullingMinDist: 0.1
-    fov: 35
+    fov: 48.2
     useZoom: 0
     fixedAngle: {x: 0, y: 0}
     lookPoints: []

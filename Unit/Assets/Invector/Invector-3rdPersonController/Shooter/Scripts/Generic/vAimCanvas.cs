@@ -8,15 +8,16 @@ namespace Invector.vShooter
     {
         public RectTransform aimTarget, aimCenter;       
         public bool useScopeTransition = true;
+        public bool scaleAimWithMovement = true;
+        public bool scaleAimWithJump = true;
         [Tooltip("Set aim center to same position of aim target ")]
         public bool aimCenterToAimTarget;
-        public float scaleWithMovement = 0.5f;
-        public float scaleWithJump = 0.5f;
+        public float scaleWithMovement = 2;
+        public float scaleWithJump = 2;
         public float smoothChangeScale = 2;
         public float smoothTransition =10f;
         [Range(0, 1)]
         public float movementSensibility = 0.1f;
-
         public UnityEvent onEnableAim;
         public UnityEvent onDisableAim;
         public UnityEvent onCheckvalidAim;

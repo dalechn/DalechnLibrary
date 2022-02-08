@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using PathologicalGames;
 
 namespace Invector
 {
@@ -10,7 +11,7 @@ namespace Invector
         public AudioMixerGroup audioMixerGroup;                 // The AudioSource that will play the clips.   
         public List<string> TextureOrMaterialNames;             // The tag on the surfaces that play these sounds.
         public List<AudioClip> audioClips;                      // The different clips that can be played on this surface.    
-        public GameObject particleObject;
+        public ParticleSystem particleObject;
 
         private vFisherYatesRandom randomSource = new vFisherYatesRandom();       // For randomly reordering clips.   
 
@@ -76,7 +77,14 @@ namespace Invector
             AudioSource source = null;
             if (audioSource != null)
             {
-                source = Instantiate(audioSource, footStepObject.sender.position, Quaternion.identity);
+                if (PoolManager.Pools.ContainsKey(ResDefine.FootPool))
+                {
+                    source = PoolManager.Pools[ResDefine.FootPool].Spawn(audioSource, footStepObject.sender.position, Quaternion.identity);
+                }
+                else
+                {
+                    source = Instantiate(audioSource, footStepObject.sender.position, Quaternion.identity);
+                }
             }
             if (audioSource)
             {
@@ -94,8 +102,15 @@ namespace Invector
         /// <param name="footStepObject">Step object surface info</param>
         protected virtual void SpawnParticle(FootStepObject footStepObject)
         {
-            var obj = Instantiate(particleObject, footStepObject.sender.position, footStepObject.sender.rotation);
-            obj.transform.SetParent(vObjectContainer.root, true);
+            if (PoolManager.Pools.ContainsKey(ResDefine.FootPool))
+            {
+                PoolManager.Pools[ResDefine.FootPool].Spawn(particleObject, footStepObject.sender.position, footStepObject.sender.rotation);
+            }
+            else
+            {
+                var obj = Instantiate(particleObject, footStepObject.sender.position, footStepObject.sender.rotation);
+                obj.transform.SetParent(vObjectContainer.root, true);
+            }
         }
         /// <summary>
         /// Spawn Step Mark effect
@@ -109,9 +124,19 @@ namespace Invector
                 if (stepMark)
                 {
                     var angle = Quaternion.FromToRotation(footStep.sender.up, hit.normal);
-                    var step = Instantiate(stepMark, hit.point, angle * footStep.sender.rotation);
-                    step.transform.SetParent(vObjectContainer.root, true);
-                    Destroy(step, timeToDestroy);
+          
+                    if (PoolManager.Pools.ContainsKey(ResDefine.FootPool))
+                    {
+                        var step = PoolManager.Pools[ResDefine.FootPool].Spawn(stepMark, hit.point, angle * footStep.sender.rotation);
+                        PoolManager.Pools[ResDefine.FootPool].Despawn(step, timeToDestroy);
+                    }
+                    else
+                    {
+                        var step = Instantiate(stepMark, hit.point, angle * footStep.sender.rotation);
+                        step.transform.SetParent(vObjectContainer.root, true);
+                        Destroy(step, timeToDestroy);
+                    }
+
                 }
             }
         }

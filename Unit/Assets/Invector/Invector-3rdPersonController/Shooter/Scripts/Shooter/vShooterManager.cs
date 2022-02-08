@@ -155,7 +155,7 @@ namespace Invector.vShooter
             animator = GetComponent<Animator>();
             //if (applyRecoilToCamera)
             //{
-            //    tpCamera = FindObjectOfType<vCamera.vThirdPersonCamera>();
+            tpCamera = FindObjectOfType<vCamera.vThirdPersonCamera>();
             //}
             ammoManager = GetComponent<vAmmoManager>();
             if (ammoManager != null)

@@ -17,14 +17,14 @@ namespace Invector
         /// <param name="spawnParticle">Spawn Particle ?</param>
         /// <param name="spawnStepMark">Spwan Step Mark ?</param>
         /// <param name="volume">Audio effect volume</param>
-        public virtual void SpawnSurfaceEffect(FootStepObject footStepObject)
+        public virtual IEnumerator SpawnSurfaceEffect(FootStepObject footStepObject)
         {
             if(footStepObject!=null)
                 for (int i = 0; i < customSurfaces.Count; i++)
                     if (customSurfaces[i] != null && ContainsTexture(footStepObject.name, customSurfaces[i]))
                     {
                         customSurfaces[i].SpawnSurfaceEffect(footStepObject);
-                        return;
+                       yield  return null;
                     }
             if (defaultSurface != null)
             {

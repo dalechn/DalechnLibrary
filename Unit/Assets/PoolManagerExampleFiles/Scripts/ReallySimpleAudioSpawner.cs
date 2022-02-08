@@ -19,10 +19,10 @@ public class ReallySimpleAudioSpawner : MonoBehaviour
     private void Start()
     {
         this.pool = this.GetComponent<SpawnPool>();
-        this.StartCoroutine(this.Spawner());
+        //this.StartCoroutine(this.Spawner());
 
-		if (this.musicPrefab != null)
-			this.StartCoroutine(this.MusicSpawner());
+        if (this.musicPrefab != null)
+            this.StartCoroutine(this.MusicSpawner());
     }
 
 	private IEnumerator MusicSpawner()
