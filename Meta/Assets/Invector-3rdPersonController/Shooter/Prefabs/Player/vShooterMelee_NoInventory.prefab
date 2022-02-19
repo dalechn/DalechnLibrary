@@ -726,7 +726,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 468602}
-  - component: {fileID: 11492792}
   - component: {fileID: 9599192}
   - component: {fileID: 11476208}
   - component: {fileID: 11419998}
@@ -764,23 +763,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -89.999, z: 0}
---- !u!114 &11492792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 114070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19c789670a80b704eba4dfebed94a111, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  header: COMMENT
-  comment: This is a example of a different type of Shooter, the character walk on
-    Strafe Mode by default and is always aiming. Also there is no Inventory / ItemManager,
-    you can just pick up weapons by pressing "E"
-  inEdit: 0
 --- !u!95 &9599192
 Animator:
   serializedVersion: 3
@@ -814,7 +796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 1
+  selectedToolbar: 0
   _isDead: 0
   _currentHealth: 0
   isImmortal: 0
@@ -886,13 +868,11 @@ MonoBehaviour:
   OnStaminaEnd:
     m_PersistentCalls:
       m_Calls: []
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 1
+  crouchHeightReduction: 1.5
   autoCrouchLayer:
     serializedVersion: 2
     m_Bits: 1
-  headDetect: 0.95
+  crouchHeadDetect: 0.95
   speedMultiplier: 1
   rotateByWorld: 0
   locomotionType: 1
@@ -916,6 +896,110 @@ MonoBehaviour:
     runningSpeed: 4
     sprintSpeed: 6
     crouchSpeed: 2
+  walkRotationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.20340729
+      value: 1.011383
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  runRotationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.20340729
+      value: 1.011383
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  sprintRotationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.20340729
+      value: 1.011383
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  currentRotationSpeed: 0
+  rotationCurveTime: 0
+  timeToDisableHorizontal: 1
+  useHorizontal: 0
+  rotationTimer: 0
   disableAnimations: 0
   useRootMotion: 0
   useLeanMovementAnim: 1
@@ -924,13 +1008,13 @@ MonoBehaviour:
   randomIdleTime: 0
   useContinuousSprint: 1
   sprintOnlyFree: 1
-  crouchHeightReduction: 1.5
   customFixedTimeStep: 2
   jumpWithRigidbodyForce: 0
   jumpAndRotate: 1
   jumpTimer: 0.3
+  jumpStandingDelay: 0.25
   jumpHeight: 4
-  airSpeed: 5
+  airSpeed: 4
   airSmooth: 6
   extraGravity: -10
   limitFallVelocity: -15
@@ -940,22 +1024,31 @@ MonoBehaviour:
   fallDamage: 10
   useRollRootMotion: 1
   rollTransition: 0.25
-  rollControl: 0
+  rollControl: 1
   rollSpeed: 0
-  rollRotationSpeed: 10
+  rollRotationSpeed: 20
   rollUseGravity: 1
-  rollUseGravityTime: 0.2
+  rollUseGravityTime: 0.1
   timeToRollAgain: 0.75
   noDamageWhileRolling: 1
   noActiveRagdollWhileRolling: 1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1
   groundCheckMethod: 1
   groundDetectionDistance: 10
   useSnapGround: 1
   snapPower: 0.5
   groundMinDistance: 0.1
   groundMaxDistance: 0.5
+  stopMoveLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  stopMoveRayDistance: 1
+  stopMoveMaxHeight: 1.8
+  stopMoveCheckMethod: 2
   useSlopeLimit: 1
-  slopeLimit: 75
+  slopeLimit: 45
   stopSlopeMargin: 20
   slopeSidewaysSmooth: 2
   slopeMinDistance: 0
@@ -963,12 +1056,12 @@ MonoBehaviour:
   slopeLimitHeight: 0.2
   steepSlopeAhead: 0
   useSlide: 1
-  slideDownVelocity: 7
+  slideDownVelocity: 10
   slideDownSmooth: 2
-  slideSidewaysVelocity: 5
-  slidingEnterTime: 0.1
-  rotateSlopeEnterTime: 0.25
-  rotateDownSlopeSmooth: 6
+  slideSidewaysVelocity: 0.5
+  slidingEnterTime: 0.2
+  rotateSlopeEnterTime: 0.1
+  rotateDownSlopeSmooth: 8
   useStepOffset: 1
   stepOffsetMaxHeight: 0.5
   stepOffsetMinHeight: 0
@@ -995,7 +1088,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 1
-  openCloseWindow: 1
+  openCloseWindow: 0
   selectedToolbar: 0
   unlockCursorOnStart: 0
   showCursorOnStart: 0
@@ -1328,7 +1421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 0
-  openCloseWindow: 1
+  openCloseWindow: 0
   selectedToolbar: 6
   canUseMeleeBlock_H: 1
   canUseMeleeWeakAttack_H: 1
@@ -1401,6 +1494,7 @@ MonoBehaviour:
   useRightIK: 1
   weaponIKAdjustList: {fileID: 0}
   ikAdjustSmooth: 20
+  allAmmoInfinity: 0
   useAmmoDisplay: 1
   leftWeaponAmmoDisplayID: -1
   rightWeaponAmmoDisplayID: 1

@@ -20,9 +20,9 @@ MonoBehaviour:
     defaultDistance: 2.5
     maxDistance: 80
     minDistance: 0.6
-    height: 1.5
+    height: 1.25
     smooth: 10
-    smoothDamp: 4
+    smoothDamp: 2
     xMouseSensitivity: 3
     yMouseSensitivity: 3
     yMinLimit: -75
@@ -41,10 +41,37 @@ MonoBehaviour:
       eulerAngle: {x: -0, y: 0, z: 0}
       freeRotation: 0
     cameraMode: 0
+  - Name: Sprinting
+    forward: -1
+    right: 0
+    defaultDistance: 2.5
+    maxDistance: 80
+    minDistance: 0.6
+    height: 1.25
+    smooth: 10
+    smoothDamp: 2
+    xMouseSensitivity: 3
+    yMouseSensitivity: 3
+    yMinLimit: -75
+    yMaxLimit: 75
+    xMinLimit: -360
+    xMaxLimit: 360
+    rotationOffSet: {x: 0.84, y: 0.99, z: 0}
+    cullingHeight: 1.8
+    cullingMinDist: 0.01
+    fov: 70
+    useZoom: 0
+    fixedAngle: {x: 360, y: 78}
+    lookPoints:
+    - pointName: point_01
+      positionPoint: {x: 0, y: 1, z: -10}
+      eulerAngle: {x: -0, y: 0, z: 0}
+      freeRotation: 0
+    cameraMode: 0
   - Name: Crouch
     forward: -1
-    right: 0.4
-    defaultDistance: 1.5
+    right: 0.15
+    defaultDistance: 2
     maxDistance: 6.55
     minDistance: 0.5
     height: 1
@@ -59,7 +86,7 @@ MonoBehaviour:
     rotationOffSet: {x: 0, y: 0, z: 0}
     cullingHeight: 0.7
     cullingMinDist: 0.1
-    fov: 50
+    fov: 60
     useZoom: 0
     fixedAngle: {x: 0, y: 0}
     lookPoints: []
@@ -73,8 +100,8 @@ MonoBehaviour:
     height: 1.6
     smooth: 10
     smoothDamp: 4
-    xMouseSensitivity: 1
-    yMouseSensitivity: 1
+    xMouseSensitivity: 3
+    yMouseSensitivity: 3
     yMinLimit: -40
     yMaxLimit: 80
     xMinLimit: -360

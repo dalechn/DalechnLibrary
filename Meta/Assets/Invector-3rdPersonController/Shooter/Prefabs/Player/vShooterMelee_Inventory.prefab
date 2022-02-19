@@ -301,10 +301,11 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 104698}
   m_ConnectedBody: {fileID: 5466220}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.0003274242, y: 21.022537, z: -0.33026162}
+  m_ConnectedAnchor: {x: -0.00023205648, y: 21.022522, z: -0.33007088}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -477,6 +478,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -816,10 +818,11 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 109424}
   m_ConnectedBody: {fileID: 5474386}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 18.556273, y: 21.897703, z: 0.007988129}
+  m_ConnectedAnchor: {x: 18.556309, y: 21.897703, z: 0.007988129}
   serializedVersion: 2
   m_SwingAxis: {x: -1, y: 0, z: 0}
   m_TwistLimitSpring:
@@ -1464,10 +1467,11 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 119484}
   m_ConnectedBody: {fileID: 5466220}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 10.920647, y: -5.3976493, z: 1.6831485}
+  m_ConnectedAnchor: {x: 10.9206705, y: -5.397657, z: 1.6830531}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -1714,10 +1718,11 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 121962}
   m_ConnectedBody: {fileID: 5414974}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.00013720339, y: 28.77711, z: -0.0000047683725}
+  m_ConnectedAnchor: {x: -0.000041455965, y: 28.777182, z: 0.000007629396}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: -1}
   m_TwistLimitSpring:
@@ -1976,10 +1981,11 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 123198}
   m_ConnectedBody: {fileID: 5458202}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.0000026806406, y: 46.442974, z: -0.000041245537}
+  m_ConnectedAnchor: {x: 0.00000851848, y: 46.44298, z: -0.000041364743}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -2205,10 +2211,11 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 123550}
   m_ConnectedBody: {fileID: 5466220}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -10.920647, y: -5.3976626, z: 1.9478527}
+  m_ConnectedAnchor: {x: -10.920569, y: -5.3976474, z: 1.9481388}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -2846,10 +2853,11 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 142880}
   m_ConnectedBody: {fileID: 5415908}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.0000014303967, y: 46.442314, z: -0.00003570318}
+  m_ConnectedAnchor: {x: -0.00001668796, y: 46.442314, z: -0.00003570318}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -3006,12 +3014,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 404034}
-  - component: {fileID: 11480394}
   - component: {fileID: 9513224}
-  - component: {fileID: 5445852}
-  - component: {fileID: 13632550}
   - component: {fileID: 11409872}
   - component: {fileID: 11499794}
+  - component: {fileID: 5445852}
+  - component: {fileID: 13632550}
   - component: {fileID: 11439352}
   - component: {fileID: 11478012}
   - component: {fileID: 11473478}
@@ -3049,22 +3056,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -450, z: 0}
---- !u!114 &11480394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 146720}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19c789670a80b704eba4dfebed94a111, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  header: COMMENT
-  comment: This example has both Melee and Shooter features included and working
-    together, you have several options to play with to create something unique.
-  inEdit: 0
 --- !u!95 &9513224
 Animator:
   serializedVersion: 3
@@ -3084,36 +3075,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!54 &5445852
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 146720}
-  serializedVersion: 2
-  m_Mass: 50
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 3
---- !u!136 &13632550
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 146720}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.3
-  m_Height: 1.8
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!114 &11409872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3127,15 +3088,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 1
-  openCloseWindow: 0
-  selectedToolbar: 3
+  openCloseWindow: 1
+  selectedToolbar: 5
   _isDead: 0
   _currentHealth: 0
   isImmortal: 0
   fillHealthOnStart: 1
   maxHealth: 200
-  healthRecovery: 1
-  healthRecoveryDelay: 20
+  healthRecovery: 0
+  healthRecoveryDelay: 0
   currentHealthRecoveryDelay: 0
   checkHealthEvents: []
   _onStartReceiveDamage:
@@ -3145,6 +3106,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11439352}
+        m_TargetAssemblyTypeName: 
         m_MethodName: CancelReload
         m_Mode: 1
         m_Arguments:
@@ -3159,6 +3121,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11404304}
+        m_TargetAssemblyTypeName: 
         m_MethodName: DropAllItens
         m_Mode: 1
         m_Arguments:
@@ -3262,6 +3225,7 @@ MonoBehaviour:
   jumpWithRigidbodyForce: 0
   jumpAndRotate: 1
   jumpTimer: 0.3
+  jumpStandingDelay: 0.25
   jumpHeight: 4
   airSpeed: 4
   airSmooth: 6
@@ -3292,9 +3256,10 @@ MonoBehaviour:
   groundMaxDistance: 0.5
   stopMoveLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 0
   stopMoveRayDistance: 1
-  stopMoveCheckMethod: 2
+  stopMoveMaxHeight: 1.8
+  stopMoveCheckMethod: 1
   useSlopeLimit: 1
   slopeLimit: 45
   stopSlopeMargin: 20
@@ -3304,12 +3269,12 @@ MonoBehaviour:
   slopeLimitHeight: 0.2
   steepSlopeAhead: 0
   useSlide: 1
-  slideDownVelocity: 7
+  slideDownVelocity: 10
   slideDownSmooth: 2
-  slideSidewaysVelocity: 5
-  slidingEnterTime: 0.1
-  rotateSlopeEnterTime: 0.25
-  rotateDownSlopeSmooth: 6
+  slideSidewaysVelocity: 0.5
+  slidingEnterTime: 0.2
+  rotateSlopeEnterTime: 0.1
+  rotateDownSlopeSmooth: 8
   useStepOffset: 1
   stepOffsetMaxHeight: 0.5
   stepOffsetMinHeight: 0
@@ -3656,6 +3621,36 @@ MonoBehaviour:
     lastTimeTheButtonWasPressed: 0
     inButtomTimer: 0
   shooterManager: {fileID: 0}
+--- !u!54 &5445852
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146720}
+  serializedVersion: 2
+  m_Mass: 50
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 3
+--- !u!136 &13632550
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146720}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.3
+  m_Height: 1.8
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!114 &11439352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3955,19 +3950,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 0
-  openCloseWindow: 0
+  openCloseWindow: 1
   selectedToolbar: 0
   inventory: {fileID: 0}
   itemListData: {fileID: 11400000, guid: 1493f9d9326e8014494b8cb04de38f25, type: 2}
-  startItems:
-  - id: 11
-    name: 
-    amount: 1
-    attributes: []
-    changeAttributes: 0
-    autoEquip: 0
-    addToEquipArea: 1
-    indexArea: 0
+  startItems: []
   equipPoints:
   - equipPointName: LeftArm
     area: {fileID: 0}
@@ -3997,6 +3984,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 11409872}
+          m_TargetAssemblyTypeName: 
           m_MethodName: AddHealth
           m_Mode: 0
           m_Arguments:
@@ -4042,6 +4030,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11499794}
+        m_TargetAssemblyTypeName: 
         m_MethodName: ShowCursor
         m_Mode: 0
         m_Arguments:
@@ -4053,6 +4042,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 11499794}
+        m_TargetAssemblyTypeName: 
         m_MethodName: LockCursor
         m_Mode: 0
         m_Arguments:
@@ -4064,6 +4054,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 11499794}
+        m_TargetAssemblyTypeName: 
         m_MethodName: SetLockAllInput
         m_Mode: 0
         m_Arguments:
@@ -4075,6 +4066,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 11409872}
+        m_TargetAssemblyTypeName: 
         m_MethodName: ResetInputAnimatorParameters
         m_Mode: 1
         m_Arguments:
@@ -4192,6 +4184,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11439352}
+        m_TargetAssemblyTypeName: 
         m_MethodName: CancelReload
         m_Mode: 1
         m_Arguments:
@@ -4314,6 +4307,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114373293903615254}
+        m_TargetAssemblyTypeName: 
         m_MethodName: HideWeapons
         m_Mode: 6
         m_Arguments:
@@ -4429,6 +4423,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11499794}
+        m_TargetAssemblyTypeName: 
         m_MethodName: ChangeCameraStateWithLerp
         m_Mode: 5
         m_Arguments:
@@ -4443,6 +4438,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 11499794}
+        m_TargetAssemblyTypeName: 
         m_MethodName: ResetCameraState
         m_Mode: 1
         m_Arguments:
@@ -4519,6 +4515,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 8660532995614133703}
+          m_TargetAssemblyTypeName: 
           m_MethodName: SetActive
           m_Mode: 6
           m_Arguments:
@@ -4535,6 +4532,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 8660532995614133703}
+          m_TargetAssemblyTypeName: 
           m_MethodName: SetActive
           m_Mode: 6
           m_Arguments:
@@ -4567,6 +4565,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114373293903615254}
+          m_TargetAssemblyTypeName: 
           m_MethodName: ForceHideWeapons
           m_Mode: 6
           m_Arguments:
@@ -4578,6 +4577,7 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 114373293903615254}
+          m_TargetAssemblyTypeName: 
           m_MethodName: LockDrawHideInput
           m_Mode: 6
           m_Arguments:
@@ -4594,6 +4594,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114373293903615254}
+          m_TargetAssemblyTypeName: 
           m_MethodName: LockDrawHideInput
           m_Mode: 6
           m_Arguments:
@@ -4610,6 +4611,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 11439352}
+          m_TargetAssemblyTypeName: 
           m_MethodName: set_AllAmmoInfinity
           m_Mode: 6
           m_Arguments:
@@ -4621,6 +4623,7 @@ MonoBehaviour:
             m_BoolArgument: 1
           m_CallState: 2
         - m_Target: {fileID: 11439352}
+          m_TargetAssemblyTypeName: 
           m_MethodName: AmmoManagerWasUpdated
           m_Mode: 1
           m_Arguments:
@@ -4637,6 +4640,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 11439352}
+          m_TargetAssemblyTypeName: 
           m_MethodName: set_AllAmmoInfinity
           m_Mode: 6
           m_Arguments:
@@ -4648,6 +4652,7 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 11439352}
+          m_TargetAssemblyTypeName: 
           m_MethodName: AmmoManagerWasUpdated
           m_Mode: 1
           m_Arguments:
@@ -4664,6 +4669,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 2949936891286124722}
+          m_TargetAssemblyTypeName: 
           m_MethodName: ShowText
           m_Mode: 0
           m_Arguments:
@@ -4680,6 +4686,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 11439352}
+          m_TargetAssemblyTypeName: 
           m_MethodName: set_AllAmmoInfinity
           m_Mode: 6
           m_Arguments:
@@ -4691,6 +4698,7 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 11439352}
+          m_TargetAssemblyTypeName: 
           m_MethodName: AmmoManagerWasUpdated
           m_Mode: 1
           m_Arguments:
@@ -4702,6 +4710,7 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 2949936891286124722}
+          m_TargetAssemblyTypeName: 
           m_MethodName: ShowText
           m_Mode: 0
           m_Arguments:
@@ -4884,6 +4893,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5102,10 +5112,11 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 157270}
   m_ConnectedBody: {fileID: 5462482}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.00020033124, y: 28.78294, z: 0.000025749203}
+  m_ConnectedAnchor: {x: 0.000010669232, y: 28.782848, z: 0.000016212462}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: -1}
   m_TwistLimitSpring:
@@ -5393,10 +5404,11 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 161828}
   m_ConnectedBody: {fileID: 5474386}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.00000207565, y: 33.153038, z: 2.5028114}
+  m_ConnectedAnchor: {x: 0.00009329167, y: 33.153046, z: 2.5031934}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -5477,6 +5489,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5909,6 +5922,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -6438,10 +6452,11 @@ CharacterJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 199386}
   m_ConnectedBody: {fileID: 5474386}
+  m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -18.555357, y: 21.8977, z: -0.18356001}
+  m_ConnectedAnchor: {x: -18.555353, y: 21.897718, z: -0.18384582}
   serializedVersion: 2
   m_SwingAxis: {x: 1, y: 0, z: 0}
   m_TwistLimitSpring:
@@ -6692,6 +6707,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &556765322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7266,6 +7282,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -7726,6 +7743,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -7751,6 +7769,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &8660536078090757541
 GameObject:
   m_ObjectHideFlags: 0
@@ -8201,6 +8220,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -8225,6 +8245,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &8660827274359038137
 GameObject:
   m_ObjectHideFlags: 0
@@ -8809,6 +8830,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -8834,6 +8856,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &8660949040401390805
 GameObject:
   m_ObjectHideFlags: 0
@@ -9144,6 +9167,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -9169,6 +9193,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &8661462565985955561
 GameObject:
   m_ObjectHideFlags: 0
@@ -9355,6 +9380,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -9380,6 +9406,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &8661507758823876279
 GameObject:
   m_ObjectHideFlags: 0
@@ -10031,6 +10058,12 @@ PrefabInstance:
       objectReference: {fileID: 8843865828420889752}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8cff4600ff380fc45910465a0a4d4ab1, type: 3}
+--- !u!4 &7184961713697875765 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3987802230167169305, guid: 8cff4600ff380fc45910465a0a4d4ab1,
+    type: 3}
+  m_PrefabInstance: {fileID: 6116338666087484972}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8843865828420889752 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3340017813516427956, guid: 8cff4600ff380fc45910465a0a4d4ab1,
@@ -10043,9 +10076,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b1424bb39073254d8167bf3b4896582, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &7184961713697875765 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3987802230167169305, guid: 8cff4600ff380fc45910465a0a4d4ab1,
-    type: 3}
-  m_PrefabInstance: {fileID: 6116338666087484972}
-  m_PrefabAsset: {fileID: 0}

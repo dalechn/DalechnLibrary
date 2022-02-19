@@ -110,10 +110,10 @@ namespace Invector.vItemManager
                 if (manager.itemListData)
                 {
                     GUILayout.BeginVertical("box");
-                    if (itemReferenceList.arraySize > manager.itemListData.items.Count)
-                    {
-                        manager.startItems.Resize(manager.itemListData.items.Count);
-                    }
+                    //if (itemReferenceList.arraySize > manager.itemListData.items.Count)
+                    //{
+                    //    manager.startItems.Resize(manager.itemListData.items.Count);
+                    //}
                     GUILayout.Box("Start Items " + manager.startItems.Count);
 
                     if (GUILayout.Button("Add Item", EditorStyles.miniButton))
@@ -122,6 +122,7 @@ namespace Invector.vItemManager
                        (manager.itemListData.items, ref manager.itemsFilter,
                            (vItem item) =>//OnSelectItem
                            {
+                               Debug.Log(item);
                                itemReferenceList.arraySize++;
                                itemReferenceList.GetArrayElementAtIndex(itemReferenceList.arraySize - 1).FindPropertyRelative("id").intValue = item.id;
                                itemReferenceList.GetArrayElementAtIndex(itemReferenceList.arraySize - 1).FindPropertyRelative("amount").intValue = 1;
@@ -137,128 +138,136 @@ namespace Invector.vItemManager
                     }
                     GUIStyle boxStyle = new GUIStyle(GUI.skin.box);
                     scroll = GUILayout.BeginScrollView(scroll, GUILayout.MinHeight(200), GUILayout.ExpandHeight(false), GUILayout.ExpandWidth(false));
-                    for (int i = 0; i < manager.startItems.Count; i++)
+                    try
                     {
-                        var item = manager.itemListData.items.Find(t => t.id.Equals(manager.startItems[i].id));
-                        if (item)
+                        for (int i = 0; i < manager.startItems.Count; i++)
                         {
-                            GUILayout.BeginVertical("box");
-                            GUILayout.BeginHorizontal();
-                            GUILayout.BeginHorizontal();
-
-                            var rect = GUILayoutUtility.GetRect(50, 50);
-
-                            if (item.icon != null)
+                            var item = manager.itemListData.items.Find(t => t.id.Equals(manager.startItems[i].id));
+                            if (item)
                             {
-                                DrawTextureGUI(rect, item.icon, new Vector2(50, 50));
-                            }
+                                GUILayout.BeginVertical("box");
+                                GUILayout.BeginHorizontal();
+                                GUILayout.BeginHorizontal();
 
-                            var name = " ID " + item.id.ToString("00") + "\n - " + item.name + "\n - " + item.type.ToString();
-                            var content = new GUIContent(name, null, "Click to Open");
-                            GUILayout.Label(content, EditorStyles.miniLabel);
-                            GUILayout.BeginVertical("box");
-                            GUILayout.BeginHorizontal();
-                            GUILayout.Label("Add to EquipArea", EditorStyles.miniLabel);
-                            manager.startItems[i].addToEquipArea = EditorGUILayout.Toggle("", manager.startItems[i].addToEquipArea, GUILayout.Width(30));
-                            GUILayout.EndHorizontal();
-                            GUILayout.BeginHorizontal();
-                            if (manager.startItems[i].addToEquipArea)
-                            {
-                                GUILayout.Label("EquipArea", EditorStyles.miniLabel);
-                                manager.startItems[i].indexArea = EditorGUILayout.IntField("", manager.startItems[i].indexArea, GUILayout.Width(30));
-                            }
-                            GUILayout.EndHorizontal();
+                                var rect = GUILayoutUtility.GetRect(50, 50);
 
-                            GUILayout.BeginHorizontal();
-                            if (manager.startItems[i].addToEquipArea)
-                            {
-                                GUILayout.Label("AutoEquip", EditorStyles.miniLabel);
-                                manager.startItems[i].autoEquip = EditorGUILayout.Toggle("", manager.startItems[i].autoEquip, GUILayout.Width(30));
-                            }
-                            GUILayout.EndHorizontal();
-                            GUILayout.BeginHorizontal();
-                            GUILayout.Label("Amount", EditorStyles.miniLabel);
-                            manager.startItems[i].amount = EditorGUILayout.IntField(manager.startItems[i].amount, GUILayout.Width(30));
-
-                            if (manager.startItems[i].amount < 1)
-                            {
-                                manager.startItems[i].amount = 1;
-                            }
-
-                            GUILayout.EndHorizontal();
-                            if (item.attributes.Count > 0)
-                            {
-                                manager.startItems[i].changeAttributes = GUILayout.Toggle(manager.startItems[i].changeAttributes, new GUIContent("Change Attributes", "This is a override of the original item attributes"), EditorStyles.miniButton, GUILayout.ExpandWidth(true));
-                            }
-
-                            GUILayout.EndVertical();
-
-                            GUILayout.EndHorizontal();
-
-                            if (GUILayout.Button("x", GUILayout.Width(25), GUILayout.Height(25)))
-                            {
-                                itemReferenceList.DeleteArrayElementAtIndex(i);
-                                EditorUtility.SetDirty(target);
-                                serializedObject.ApplyModifiedProperties();
-                                break;
-                            }
-
-                            GUILayout.EndHorizontal();
-
-                            Color backgroundColor = GUI.backgroundColor;
-                            GUI.backgroundColor = Color.clear;
-                            var _rec = GUILayoutUtility.GetLastRect();
-                            _rec.width -= 100;
-
-                            EditorGUIUtility.AddCursorRect(_rec, MouseCursor.Link);
-
-                            if (GUI.Button(_rec, ""))
-                            {
-                                ShowItemListWindow(item);
-                            }
-                            GUILayout.Space(7);
-                            GUI.backgroundColor = backgroundColor;
-                            if (item.attributes != null && item.attributes.Count > 0)
-                            {
-
-                                if (manager.startItems[i].changeAttributes)
+                                if (item.icon != null)
                                 {
-                                    if (GUILayout.Button("Reset", EditorStyles.miniButton))
-                                    {
-                                        manager.startItems[i].attributes = null;
+                                    DrawTextureGUI(rect, item.icon, new Vector2(50, 50));
+                                }
 
-                                    }
-                                    if (manager.startItems[i].attributes == null)
+                                var name = " ID " + item.id.ToString("00") + "\n - " + item.name + "\n - " + item.type.ToString();
+                                var content = new GUIContent(name, null, "Click to Open");
+                                GUILayout.Label(content, EditorStyles.miniLabel);
+                                GUILayout.BeginVertical("box");
+                                GUILayout.BeginHorizontal();
+                                GUILayout.Label("Add to EquipArea", EditorStyles.miniLabel);
+                                manager.startItems[i].addToEquipArea = EditorGUILayout.Toggle("", manager.startItems[i].addToEquipArea, GUILayout.Width(30));
+                                GUILayout.EndHorizontal();
+                                GUILayout.BeginHorizontal();
+                                if (manager.startItems[i].addToEquipArea)
+                                {
+                                    GUILayout.Label("EquipArea", EditorStyles.miniLabel);
+                                    manager.startItems[i].indexArea = EditorGUILayout.IntField("", manager.startItems[i].indexArea, GUILayout.Width(30));
+                                }
+                                GUILayout.EndHorizontal();
+
+                                GUILayout.BeginHorizontal();
+                                if (manager.startItems[i].addToEquipArea)
+                                {
+                                    GUILayout.Label("AutoEquip", EditorStyles.miniLabel);
+                                    manager.startItems[i].autoEquip = EditorGUILayout.Toggle("", manager.startItems[i].autoEquip, GUILayout.Width(30));
+                                }
+                                GUILayout.EndHorizontal();
+                                GUILayout.BeginHorizontal();
+                                GUILayout.Label("Amount", EditorStyles.miniLabel);
+                                manager.startItems[i].amount = EditorGUILayout.IntField(manager.startItems[i].amount, GUILayout.Width(30));
+
+                                if (manager.startItems[i].amount < 1)
+                                {
+                                    manager.startItems[i].amount = 1;
+                                }
+
+                                GUILayout.EndHorizontal();
+                                if (item.attributes.Count > 0)
+                                {
+                                    manager.startItems[i].changeAttributes = GUILayout.Toggle(manager.startItems[i].changeAttributes, new GUIContent("Change Attributes", "This is a override of the original item attributes"), EditorStyles.miniButton, GUILayout.ExpandWidth(true));
+                                }
+
+                                GUILayout.EndVertical();
+
+                                GUILayout.EndHorizontal();
+
+                                if (GUILayout.Button("x", GUILayout.Width(25), GUILayout.Height(25)))
+                                {
+                                    itemReferenceList.DeleteArrayElementAtIndex(i);
+                                    EditorUtility.SetDirty(target);
+                                    serializedObject.ApplyModifiedProperties();
+                                    break;
+                                }
+
+                                GUILayout.EndHorizontal();
+
+                                Color backgroundColor = GUI.backgroundColor;
+                                GUI.backgroundColor = Color.clear;
+                                var _rec = GUILayoutUtility.GetLastRect();
+                                _rec.width -= 100;
+
+                                EditorGUIUtility.AddCursorRect(_rec, MouseCursor.Link);
+
+                                if (GUI.Button(_rec, ""))
+                                {
+                                    ShowItemListWindow(item);
+                                }
+                                GUILayout.Space(7);
+                                GUI.backgroundColor = backgroundColor;
+                                if (item.attributes != null && item.attributes.Count > 0)
+                                {
+
+                                    if (manager.startItems[i].changeAttributes)
                                     {
-                                        manager.startItems[i].attributes = item.attributes.CopyAsNew();
-                                    }
-                                    else if (manager.startItems[i].attributes.Count != item.attributes.Count)
-                                    {
-                                        manager.startItems[i].attributes = item.attributes.CopyAsNew();
-                                    }
-                                    else
-                                    {
-                                        for (int a = 0; a < manager.startItems[i].attributes.Count; a++)
+                                        if (GUILayout.Button("Reset", EditorStyles.miniButton))
                                         {
-                                            GUILayout.BeginHorizontal();
-                                            GUILayout.Label(manager.startItems[i].attributes[a].name.ToString());
-                                            manager.startItems[i].attributes[a].value = EditorGUILayout.IntField(manager.startItems[i].attributes[a].value, GUILayout.MaxWidth(60));
-                                            GUILayout.EndHorizontal();
+                                            manager.startItems[i].attributes = null;
+
+                                        }
+                                        if (manager.startItems[i].attributes == null)
+                                        {
+                                            manager.startItems[i].attributes = item.attributes.CopyAsNew();
+                                        }
+                                        else if (manager.startItems[i].attributes.Count != item.attributes.Count)
+                                        {
+                                            manager.startItems[i].attributes = item.attributes.CopyAsNew();
+                                        }
+                                        else
+                                        {
+                                            for (int a = 0; a < manager.startItems[i].attributes.Count; a++)
+                                            {
+                                                GUILayout.BeginHorizontal();
+                                                GUILayout.Label(manager.startItems[i].attributes[a].name.ToString());
+                                                manager.startItems[i].attributes[a].value = EditorGUILayout.IntField(manager.startItems[i].attributes[a].value, GUILayout.MaxWidth(60));
+                                                GUILayout.EndHorizontal();
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            GUILayout.EndVertical();
-                        }
-                        else
-                        {
-                            itemReferenceList.DeleteArrayElementAtIndex(i);
-                            EditorUtility.SetDirty(manager);
-                            serializedObject.ApplyModifiedProperties();
-                            break;
+                                GUILayout.EndVertical();
+                            }
+                            else
+                            {
+                                itemReferenceList.DeleteArrayElementAtIndex(i);
+                                EditorUtility.SetDirty(manager);
+                                serializedObject.ApplyModifiedProperties();
+                                break;
+                            }
                         }
                     }
+                    catch
+                    {
+
+                    }
+                    
 
                     GUILayout.EndScrollView();
                     GUI.skin.box = boxStyle;

@@ -5319,7 +5319,7 @@ MonoBehaviour:
   selectedToolbar: 1
   weaponCategory: Pistol
   shootFrequency: 0.25
-  isInfinityAmmo: 1
+  isInfinityAmmo: 0
   ammo: 8
   ignoreTags: []
   hitLayer:
@@ -5535,6 +5535,7 @@ MonoBehaviour:
   openCloseEvents: 0
   openCloseWindow: 0
   selectedToolbar: 0
+  attackObjectName: 
   damage:
     damageValue: 15
     staminaBlockCost: 5

@@ -232,8 +232,7 @@ MonoBehaviour:
   decalObjects:
   - tag: Metal
     impactEffect: {fileID: 11400000, guid: bafe0df184460ad48959c8cfbaa6df5d, type: 2}
-    additionalEffects:
-    - {fileID: 11400000, guid: 987e73845e02f7348b5346e5f5467bae, type: 2}
+    additionalEffects: []
   - tag: Wood
     impactEffect: {fileID: 11400000, guid: ec647edb005ce054292afe6b66e8edfa, type: 2}
     additionalEffects: []
@@ -242,8 +241,7 @@ MonoBehaviour:
     additionalEffects: []
   - tag: Concrete
     impactEffect: {fileID: 11400000, guid: c0ff2d16bbab9f44ba42c0191a303694, type: 2}
-    additionalEffects:
-    - {fileID: 11400000, guid: 987e73845e02f7348b5346e5f5467bae, type: 2}
+    additionalEffects: []
   - tag: Dirt
     impactEffect: {fileID: 11400000, guid: e1a8fa6bf2308344993f0b8168b5a00c, type: 2}
     additionalEffects: []
@@ -252,8 +250,7 @@ MonoBehaviour:
     additionalEffects: []
   - tag: Barrel
     impactEffect: {fileID: 11400000, guid: fcc7248b6f746954384a23fff2e8676e, type: 2}
-    additionalEffects:
-    - {fileID: 11400000, guid: 987e73845e02f7348b5346e5f5467bae, type: 2}
+    additionalEffects: []
 --- !u!1 &4237945129793484416
 GameObject:
   m_ObjectHideFlags: 0

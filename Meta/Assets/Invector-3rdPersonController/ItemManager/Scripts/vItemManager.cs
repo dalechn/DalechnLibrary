@@ -862,6 +862,8 @@ namespace Invector.vItemManager
                             itemReference.amount--;
                         }
                         items.Add(_item);
+                        onAddItem.Invoke(_item);
+                        onAddItemID.Invoke(_item.id);
                         if (itemReference.addToEquipArea)
                         {
                             itemReference.addToEquipArea = false;
@@ -874,8 +876,6 @@ namespace Invector.vItemManager
                         }
                         else
                         {
-                            onAddItem.Invoke(_item);
-                            onAddItemID.Invoke(_item.id);
                             onFinish?.Invoke(_item);
                         }
                     }

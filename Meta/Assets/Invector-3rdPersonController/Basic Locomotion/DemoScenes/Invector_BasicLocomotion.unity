@@ -332,6 +332,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11450382, guid: a3d3e9322b030904995bcd87999ccfe6, type: 3}
+      propertyPath: selectedToolbar
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 266091336, guid: a3d3e9322b030904995bcd87999ccfe6, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -511,16 +515,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 499890161359758721, guid: 063c2094dce9b804ea8a45f866dfe0ea,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 499890161595593610, guid: 063c2094dce9b804ea8a45f866dfe0ea,
-        type: 3}
-      propertyPath: customCameraPoint
-      value: point_03
-      objectReference: {fileID: 0}
     - target: {fileID: 499890162373613074, guid: 063c2094dce9b804ea8a45f866dfe0ea,
         type: 3}
       propertyPath: m_Name
@@ -580,11 +574,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3398302651836888737, guid: 063c2094dce9b804ea8a45f866dfe0ea,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 063c2094dce9b804ea8a45f866dfe0ea, type: 3}

@@ -103,7 +103,7 @@ namespace Invector
                 return (currentHealth >= 0 && healthRecovery > 0 && currentHealth < maxHealth);
             }
         }
-
+       
         protected virtual IEnumerator RecoverHealth()
         {
             inHealthRecovery = true;
@@ -191,7 +191,17 @@ namespace Invector
             if (maxHealth < 0)
                 maxHealth = 0;
         }
-   
+
+        /// <summary>
+        /// Set a value to HealthRecovery to start recovering health
+        /// </summary>
+        /// <param name="value"></param>
+        public virtual void SetHealthRecovery(float value)
+        {
+            healthRecovery = value;
+            StartCoroutine(RecoverHealth());
+        }
+
         /// <summary>
         /// Apply Damage to Current Health
         /// </summary>

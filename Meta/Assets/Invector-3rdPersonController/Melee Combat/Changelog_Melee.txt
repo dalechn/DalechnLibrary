@@ -19,10 +19,22 @@ VSTORE: https://sellfy.com/invector
 FORUM: http://invector.proboards.com/
 YOUTUBE: https://www.youtube.com/channel/UCSEoY03WFn7D0m1uMi6DxZQ
 WEBSITE: http://www.invector.xyz/
-PATREON: https://www.patreon.com/invector
 ONLINE DOCUMENTATION: https://www.invector.xyz/thirdpersondocumentation
 
-Invector Team - 2021
+Invector Team - 2022
+
+MeleeCombat 2.6.1b Hotfix 22/01/2021
+
+- [Melee]		Fix missing script on SimpleMelee AI in some scenes from internal packages (2.5d, topdown, mobile)
+- [Inventory]	Fix inventory Started Items with a limited count
+- [Controller]	Fix footstep AudioSurface editor not openning the list of audioclips and texture list 
+- [Controller]	Fix stopCharacter and StopCharacterWithLerp methods not stopping the character correctly
+- [Controller]	Fix jump and Rotate option not working when Strafing
+- [Controller]	Fix some parameters not showing in the inspector on Unity 2020+
+- [Controller]	Fix AutoCrouch not working correctly on some situations 
+- [Template]	Improvements in the demo scenes (adjust/fix scene prefabs, adjust settings, etc...)
+
+-----------------------------------------------------------------------------------------------------
 
 MeleeCombat 2.6.1a Improvements & Fixes 22/11/2021
 

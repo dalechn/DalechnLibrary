@@ -66,7 +66,7 @@ MonoBehaviour:
     cameraMode: 0
   - Name: Aiming
     forward: -1
-    right: 0.25
+    right: 0.3
     defaultDistance: 1.5
     maxDistance: 1.5
     minDistance: 0.25
@@ -83,6 +83,29 @@ MonoBehaviour:
     cullingHeight: 1.5
     cullingMinDist: 0.1
     fov: 35
+    useZoom: 0
+    fixedAngle: {x: 0, y: 0}
+    lookPoints: []
+    cameraMode: 0
+  - Name: CrouchingAiming
+    forward: -1
+    right: 0.35
+    defaultDistance: 1.5
+    maxDistance: 1.5
+    minDistance: 0.25
+    height: 1.5
+    smooth: 10
+    smoothDamp: 2
+    xMouseSensitivity: 1
+    yMouseSensitivity: 1
+    yMinLimit: -65
+    yMaxLimit: 70
+    xMinLimit: -360
+    xMaxLimit: 360
+    rotationOffSet: {x: 8, y: 0, z: 0}
+    cullingHeight: 1.5
+    cullingMinDist: 0.1
+    fov: 45
     useZoom: 0
     fixedAngle: {x: 0, y: 0}
     lookPoints: []

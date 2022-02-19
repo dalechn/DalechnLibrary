@@ -29,7 +29,9 @@ namespace Invector.vCharacterController
         public float lineMaxTime = 10f;
         public int maxThrowObjects = 6;
         public int currentThrowObject;
-        public float exitThrowModeDelay = 0.5f;    
+        public float exitThrowModeDelay = 0.5f;
+        [Tooltip("Set ignore collision to the grenade to not collide with the Player")]
+        public bool setIgnoreCollision;
         public bool debug;
         [vSeparator("Only for ThirdPerson Camera Style")]
         [Tooltip("The Third person camera right will be applied as offset to throw start point")]
@@ -56,7 +58,8 @@ namespace Invector.vCharacterController
         public UnityEngine.Events.UnityEvent onThrowObject;
         public UnityEngine.Events.UnityEvent onCollectObject;
         public UnityEngine.Events.UnityEvent onFinishThrow;
-       
+
+        public Collider[] selfColliders;
         public virtual  vThrowUI ui
         {
             get
@@ -106,6 +109,7 @@ namespace Invector.vCharacterController
             }
 
             lineRenderer = GetComponent<LineRenderer>();
+          
             if (lineRenderer)
             {
                 lineRenderer.useWorldSpace = true;
@@ -114,8 +118,10 @@ namespace Invector.vCharacterController
             canUseThrow = true;
 
             tpInput = GetComponentInParent<vThirdPersonInput>();
+            if (currentThrowObject > maxThrowObjects) currentThrowObject = maxThrowObjects;
             if (tpInput)
             {
+                selfColliders = tpInput.GetComponentsInChildren<Collider>(true);
                 tpInput.onUpdate -= UpdateThrowInput;
                 tpInput.onUpdate += UpdateThrowInput;
                 tpInput.onFixedUpdate -= UpdateThrowBehavior;
@@ -214,6 +220,7 @@ namespace Invector.vCharacterController
 
         protected virtual void LaunchObject(Rigidbody projectily)
         {
+            
             projectily.AddForce(StartVelocity, ForceMode.VelocityChange);
         }
 
@@ -306,9 +313,20 @@ namespace Invector.vCharacterController
         {           
             yield return new WaitForSeconds(throwDelayTime);
             var obj = Instantiate(objectToThrow, startPoint, throwStartPoint.rotation);
+            if (setIgnoreCollision)
+            {
+                var coll = obj.GetComponent<Collider>();
+                if (coll)
+                {
 
+                    for (int i = 0; i < selfColliders.Length; i++)
+                    {
+                        Physics.IgnoreCollision(coll, selfColliders[i], true);
+                    }
+                }
+            }
             obj.isKinematic = false;
-            LaunchObject(obj);
+            LaunchObject(obj);          
             if (ui)
             {
                 ui.UpdateCount(this);
@@ -316,13 +334,7 @@ namespace Invector.vCharacterController
 
             onThrowObject.Invoke();
 
-            yield return new WaitForSeconds(2 * lineStepPerTime);
-            var coll = obj.GetComponent<Collider>();
-            if (coll)
-            {
-                coll.isTrigger = false;
-            }
-
+            yield return new WaitForSeconds(2 * lineStepPerTime);          
             inThrow = false;
 
             if (currentThrowObject <= 0)
@@ -395,6 +407,7 @@ namespace Invector.vCharacterController
             {
                 RaycastHit hit;
                 var dist = Vector3.Distance(startPoint, aimPoint);
+
                 if (debug)
                 {
                     Debug.DrawLine(startPoint, aimPoint);
@@ -402,9 +415,9 @@ namespace Invector.vCharacterController
 
                 if (cameraStyle == CameraStyle.ThirdPerson)
                 {
-                    if (Physics.Raycast(startPoint, aimDirection.normalized, out hit, obstacles))
+                    if (Physics.Raycast(startPoint, aimDirection.normalized, out hit,aimDirection.magnitude, obstacles))
                     {
-                        dist = hit.distance;
+                        dist = hit.distance;                      
                     }
                 }
 

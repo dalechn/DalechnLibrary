@@ -10854,7 +10854,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 1
+  selectedToolbar: 5
   _isDead: 0
   _currentHealth: 0
   isImmortal: 0
@@ -10954,6 +10954,29 @@ MonoBehaviour:
     runningSpeed: 4
     sprintSpeed: 6
     crouchSpeed: 2
+  walkRotationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  runRotationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  sprintRotationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  currentRotationSpeed: 0
+  rotationCurveTime: 0
+  timeToDisableHorizontal: 1
+  useHorizontal: 0
+  rotationTimer: 0
   disableAnimations: 0
   useRootMotion: 0
   useLeanMovementAnim: 1
@@ -10966,6 +10989,7 @@ MonoBehaviour:
   jumpWithRigidbodyForce: 0
   jumpAndRotate: 1
   jumpTimer: 0.3
+  jumpStandingDelay: 0.25
   jumpHeight: 4
   airSpeed: 5
   airSmooth: 2
@@ -10992,13 +11016,14 @@ MonoBehaviour:
   groundDetectionDistance: 10
   useSnapGround: 1
   snapPower: 0.5
-  groundMinDistance: 0.1
+  groundMinDistance: 0.25
   groundMaxDistance: 0.5
   stopMoveLayer:
     serializedVersion: 2
     m_Bits: 0
   stopMoveRayDistance: 1
-  stopMoveCheckMethod: 0
+  stopMoveMaxHeight: 1.6
+  stopMoveCheckMethod: 2
   useSlopeLimit: 1
   slopeLimit: 75
   stopSlopeMargin: 20
@@ -11010,8 +11035,8 @@ MonoBehaviour:
   useSlide: 1
   slideDownVelocity: 7
   slideDownSmooth: 2
-  slideSidewaysVelocity: 5
-  slidingEnterTime: 0.1
+  slideSidewaysVelocity: 0.5
+  slidingEnterTime: 0.2
   rotateSlopeEnterTime: 0.1
   rotateDownSlopeSmooth: 8
   useStepOffset: 1

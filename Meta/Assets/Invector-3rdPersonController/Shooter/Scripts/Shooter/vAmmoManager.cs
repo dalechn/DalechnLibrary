@@ -44,7 +44,6 @@ namespace Invector.vItemManager
             return ammos.Find(a => a.ammoID == id);
         }
 
-
         /// <summary>
         /// Use with AmmoStandalone Solution
         /// </summary>      
@@ -87,7 +86,7 @@ namespace Invector.vItemManager
         /// </summary>
         /// <param name="item"></param>
         public void AddAmmo(vItem item)
-        {
+        {            
             if (item.type == vItemType.Ammo)
             {
                 var ammo = ammos.Find(a => a.ammoID == item.id);

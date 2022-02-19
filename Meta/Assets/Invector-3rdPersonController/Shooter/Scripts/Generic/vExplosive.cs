@@ -89,7 +89,7 @@ namespace Invector
         }
 
         protected virtual void OnCollisionEnter(Collision collision)
-        {
+        {            
             if (method == ExplosiveMethod.collisionEnter)
                 Explode();
             else if (method == ExplosiveMethod.collisionEnterTimer)

@@ -124,7 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 1
   openCloseWindow: 0
-  selectedToolbar: 2
+  selectedToolbar: 3
   inputType: 0
   actionInput:
     useInput: 1
@@ -158,11 +158,12 @@ MonoBehaviour:
   destroyDelay: 0
   customCameraState: 
   playAnimation: 
+  crossFadeTransition: 0.25
+  animatorLayer: 0
   endActionManualy: 0
   endExitTimeAnimation: 0.8
   animatorActionState: 0
   resetAnimatorActionState: 1
-  useAnimatorMatchTarget: 1
   matchTarget: {fileID: 0}
   avatarTarget: 0
   useLocalX: 0
@@ -266,10 +267,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  matchPos: {x: 0, y: 0, z: 0}
-  matchRot: 0
-  startMatchTarget: 0
-  endMatchTarget: 0
   onPressActionDelay: 0
   OnPressActionInput:
     m_PersistentCalls:
@@ -306,6 +303,15 @@ MonoBehaviour:
       m_Calls: []
   OnPlayerEnter:
     m_PersistentCalls:
+      m_Calls: []
+  OnPlayerStay:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerExit:
+    m_PersistentCalls:
+      m_Calls: []
+  OnValidate:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 156982}
         m_MethodName: SetActive
@@ -318,10 +324,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  OnPlayerStay:
-    m_PersistentCalls:
-      m_Calls: []
-  OnPlayerExit:
+  OnInvalidate:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 156982}
@@ -335,12 +338,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  OnValidate:
-    m_PersistentCalls:
-      m_Calls: []
-  OnInvalidate:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &11454632
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -269,11 +269,11 @@ namespace Invector.vCharacterController
             lockInput = value;
             if (value)
             {
-                cc.input = Vector2.zero;
-                cc.isSprinting = false;
-                cc.animator.SetFloat("InputHorizontal", 0, 0.25f, Time.deltaTime);
-                cc.animator.SetFloat("InputVertical", 0, 0.25f, Time.deltaTime);
-                cc.animator.SetFloat("InputMagnitude", 0, 0.25f, Time.deltaTime);
+                //cc.input = Vector2.zero;
+                //cc.isSprinting = false;
+                //cc.animator.SetFloat("InputHorizontal", 0, 0.25f, Time.deltaTime);
+                //cc.animator.SetFloat("InputVertical", 0, 0.25f, Time.deltaTime);
+                //cc.animator.SetFloat("InputMagnitude", 0, 0.25f, Time.deltaTime);
             }
         }
 
@@ -443,7 +443,7 @@ namespace Invector.vCharacterController
                 // gets input
                 cc.input.x = horizontalInput.GetAxisRaw();
                 cc.input.z = verticallInput.GetAxisRaw();
-            }
+            }            
 
             if (Input.GetKeyDown(toggleWalk))
             {
@@ -525,7 +525,7 @@ namespace Invector.vCharacterController
         /// <returns></returns>
         protected virtual bool RollConditions()
         {
-            return (!cc.isRolling || cc.canRollAgain) && cc.input != Vector3.zero && !cc.customAction && cc.isGrounded && cc.currentStamina > cc.rollStamina && !cc.isJumping && !cc.isSliding;
+            return (!cc.isRolling || cc.canRollAgain) && cc.isGrounded && cc.input != Vector3.zero && !cc.customAction && cc.currentStamina > cc.rollStamina && !cc.isJumping && !cc.isSliding;
         }
 
         /// <summary>

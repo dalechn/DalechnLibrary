@@ -1,4 +1,4 @@
-
+﻿
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -35,7 +35,7 @@ namespace Invector.vCharacterController
         [vEditorToolbar("Crouch", order = 3)]
         [Range(1, 2.5f)]
         public float crouchHeightReduction = 1.5f;
-       
+
         [Tooltip("What objects can make the character auto crouch")]
         public LayerMask autoCrouchLayer = 1 << 0;
         [Tooltip("[SPHERECAST] ADJUST IN PLAY MODE - White Spherecast put just above the head, this will make the character Auto-Crouch if something hit the sphere.")]
@@ -61,7 +61,7 @@ namespace Invector.vCharacterController
         public LocomotionType locomotionType = LocomotionType.FreeWithStrafe;
 
         public vMovementSpeed freeSpeed, strafeSpeed;
-
+       
         [vSeparator("Extra Animation Settings")]
 
         [Tooltip("Use it for debug purposes")]
@@ -90,7 +90,7 @@ namespace Invector.vCharacterController
         public bool useContinuousSprint = true;
         [Tooltip("Check this to sprint always in free movement")]
         public bool sprintOnlyFree = true;
-        
+
         public enum CustomFixedTimeStep { Default, FPS30, FPS60, FPS75, FPS90, FPS120, FPS144 };
 
         [vHelpBox("Set the FixedTimeStep to match the FPS of your Game, \nEx: If your game aims to run at 30fps, select FPS30 to match the FixedUpdate Physics")]
@@ -107,6 +107,8 @@ namespace Invector.vCharacterController
         public bool jumpAndRotate = true;
         [Tooltip("How much time the character will be jumping")]
         public float jumpTimer = 0.3f;
+        [Tooltip("Delay to match the animation anticipation")]
+        public float jumpStandingDelay = 0.25f;
         internal float jumpCounter;
         [Tooltip("Add Extra jump height, if you want to jump only with Root Motion leave the value with 0.")]
         public float jumpHeight = 4f;
@@ -150,7 +152,7 @@ namespace Invector.vCharacterController
         public bool noDamageWhileRolling = true;
         [Tooltip("Ignore damage that needs to activate ragdoll")]
         public bool noActiveRagdollWhileRolling = true;
-        
+
         public enum GroundCheckMethod
         {
             Low, High
@@ -181,12 +183,13 @@ namespace Invector.vCharacterController
         [Tooltip("Max angle to walk")]
 
         [vSeparator("StopMove")]
-        
+
         public LayerMask stopMoveLayer;
         [vHelpBox("Character will stop moving, ex: walls - set the layer to nothing to not use")]
-        public float stopMoveRayDistance = 1f;        
+        public float stopMoveRayDistance = 1f;
+        public float stopMoveMaxHeight = 1.6f;
         public StopMoveCheckMethod stopMoveCheckMethod = StopMoveCheckMethod.RayCast;
-        
+
 
         [vSeparator("Slope Limit")]
         public bool useSlopeLimit = true;
@@ -206,15 +209,15 @@ namespace Invector.vCharacterController
         public bool useSlide = true;
         [Tooltip("Velocity to slide down when on a slope limit ramp")]
         [Range(0, 30)]
-        public float slideDownVelocity = 7f;
+        public float slideDownVelocity = 10f;
         [Tooltip("Smooth to slide down the controller")]
         public float slideDownSmooth = 2f;
         [Tooltip("Velocity to slide sideways when on a slope limit ramp")]
-        [Range(0, 15)]
-        public float slideSidewaysVelocity = 5f;
+        [Range(0, 1)]
+        public float slideSidewaysVelocity = 0.5f;
         [Range(0f, 1f)]
         [Tooltip("Delay to start sliding once the character is standing on a slope")]
-        public float slidingEnterTime = 0f;
+        public float slidingEnterTime = 0.2f;
         internal float _slidingEnterTime;
         [Range(0f, 1f)]
         [Tooltip("Delay to rotate once the character started sliding")]
@@ -326,8 +329,10 @@ namespace Invector.vCharacterController
         internal float defaultSpeedMultiplier = 1;
         internal float inputMagnitude;                      // sets the inputMagnitude to update the animations in the animator controller
         internal float rotationMagnitude;                   // sets the rotationMagnitude to update the animations in the animator controller
-        internal float verticalSpeed;                       // set the verticalSpeed based on the verticalInput
-        internal float horizontalSpeed;                     // set the horizontalSpeed based on the horizontalInput       
+        internal float verticalSpeed;                       // set the verticalSpeed based on the verticalInput        
+        internal float horizontalSpeed;                     // set the horizontalSpeed based on the horizontalInput
+        internal bool invertVerticalSpeed;
+        internal bool invertHorizontalSpeed;
         internal float moveSpeed;                           // set the current moveSpeed for the MoveCharacter method        
         internal float verticalVelocity;                    // set the vertical velocity of the rigidbody
         internal float colliderRadius, colliderHeight;      // storage capsule collider extra information                       
@@ -400,6 +405,11 @@ namespace Invector.vCharacterController
 
         #endregion
 
+        private void Awake()
+        {
+            SetCustomFixedTimeStep();
+        }
+
         protected override void Start()
         {
             base.Start();
@@ -455,8 +465,6 @@ namespace Invector.vCharacterController
             {
                 currentHealth = maxHealth;
             }
-
-            SetCustomFixedTimeStep();
 
             currentHealthRecoveryDelay = healthRecoveryDelay;
             currentStamina = maxStamina;
@@ -679,7 +687,7 @@ namespace Invector.vCharacterController
         }
 
         public virtual void SetControllerMoveSpeed(vMovementSpeed speed)
-        {
+        {           
             if (isCrouching)
             {
                 moveSpeed = Mathf.Lerp(moveSpeed, speed.crouchSpeed, speed.movementSmooth * Time.fixedDeltaTime);
@@ -695,6 +703,7 @@ namespace Invector.vCharacterController
                 moveSpeed = Mathf.Lerp(moveSpeed, isSprinting ? speed.sprintSpeed : speed.runningSpeed, speed.movementSmooth * Time.fixedDeltaTime);
             }
         }
+      
 
         public virtual void MoveCharacter(Vector3 _direction)
         {
@@ -709,11 +718,7 @@ namespace Invector.vCharacterController
             _direction.y = 0;
             _direction = _direction.normalized * Mathf.Clamp(_direction.magnitude, 0, 1f);
             Vector3 targetPosition = (useRootMotion ? animator.rootPosition : _rigidbody.position) + _direction * (moveSpeed * speedMultiplier) * (useRootMotion ? vTime.deltaTime : vTime.fixedDeltaTime);
-            Vector3 targetVelocity = (targetPosition - transform.position) / (useRootMotion ? vTime.deltaTime : vTime.fixedDeltaTime);
-            if (inputSmooth.magnitude < 0.1f)
-            {
-                targetVelocity = Vector3.zero;
-            }
+            Vector3 targetVelocity = (targetPosition - transform.position) / (useRootMotion ? vTime.deltaTime : vTime.fixedDeltaTime);           
 
             bool useVerticalVelocity = true;
 
@@ -784,12 +789,11 @@ namespace Invector.vCharacterController
             float distance = colliderRadiusDefault + stopMoveRayDistance;
             switch (stopMoveCheckMethod)
             {
-
                 case StopMoveCheckMethod.SphereCast:
 
                 case StopMoveCheckMethod.CapsuleCast:
                     Vector3 p1 = origin + transform.up * (slopeLimitHeight);
-                    Vector3 p2 = origin + transform.up * (_capsuleCollider.height - _capsuleCollider.radius);
+                    Vector3 p2 = origin + transform.up * (stopMoveMaxHeight - _capsuleCollider.radius);
                     return Physics.CapsuleCast(p1, p2, _capsuleCollider.radius, direction, out hit, distance, stopMoveLayer);
                 default:
                     return Physics.Raycast(origin, direction, out hit, distance, stopMoveLayer);
@@ -858,7 +862,12 @@ namespace Invector.vCharacterController
 
         public virtual void StopCharacterWithLerp()
         {
+            sprintWeight = 0f;
+            horizontalSpeed = 0f;
+            verticalSpeed = 0f;
+            moveDirection = Vector3.zero;
             input = Vector3.Lerp(input, Vector3.zero, 2f * Time.fixedDeltaTime);
+            inputSmooth = Vector3.Lerp(inputSmooth, Vector3.zero, 2f * Time.fixedDeltaTime);
             _rigidbody.velocity = Vector3.Lerp(_rigidbody.velocity, Vector3.zero, 4f * Time.fixedDeltaTime);
             inputMagnitude = Mathf.Lerp(inputMagnitude, 0f, 2f * Time.fixedDeltaTime);
             moveSpeed = Mathf.Lerp(moveSpeed, 0f, 2f * Time.fixedDeltaTime);
@@ -870,7 +879,12 @@ namespace Invector.vCharacterController
 
         public virtual void StopCharacter()
         {
+            sprintWeight = 0f;
+            horizontalSpeed = 0f;
+            verticalSpeed = 0f;
+            moveDirection = Vector3.zero;
             input = Vector3.zero;
+            inputSmooth = Vector3.zero;
             _rigidbody.velocity = Vector3.zero;
             inputMagnitude = 0f;
             moveSpeed = 0f;
@@ -1040,21 +1054,25 @@ namespace Invector.vCharacterController
 
         public virtual bool CanExitCrouch()
         {
-            // radius of SphereCast
-            float radius = _capsuleCollider.radius * 0.9f;
-            // Position of SphereCast origin stating in base of capsule
-            Vector3 pos = transform.position + Vector3.up * ((colliderHeight * 0.5f) - colliderRadius);
-            // ray for SphereCast
-            Ray ray2 = new Ray(pos, Vector3.up);
-            // sphere cast around the base of capsule for check ground distance
-            if (Physics.SphereCast(ray2, radius, out groundHit, crouchHeadDetect - (colliderRadius * 0.1f), autoCrouchLayer))
+            if (isCrouching)
             {
-                return false;
+                // radius of SphereCast
+                float radius = _capsuleCollider.radius * 0.9f;
+                // Position of SphereCast origin stating in base of capsule
+                Vector3 pos = transform.position + Vector3.up * ((colliderHeight * 0.5f) - colliderRadius);
+                // ray for SphereCast
+                Ray ray2 = new Ray(pos, Vector3.up);
+                // sphere cast around the base of capsule for check ground distance
+                if (Physics.SphereCast(ray2, radius, out groundHit, crouchHeadDetect - (colliderRadius * 0.1f), autoCrouchLayer))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
-            else
-            {
-                return true;
-            }
+            return true;
         }
 
         protected virtual void AutoCrouchExit(Collider other)
@@ -1106,7 +1124,7 @@ namespace Invector.vCharacterController
             // movement
             Vector3 deltaPosition = useRollRootMotion ? new Vector3(animator.deltaPosition.x, 0f, animator.deltaPosition.z) : transform.forward * Time.deltaTime;
             Vector3 v = ((deltaPosition * (rollSpeed > 0 ? rollSpeed : 1f)) / Time.deltaTime) * (1f - stopMoveWeight);
-            if (rollUseGravity && animator.GetNormalizedTime(0) >= rollUseGravityTime)
+            if (rollUseGravity && animator.GetNormalizedTime(baseLayer) >= rollUseGravityTime)
             {
                 v.y = _rigidbody.velocity.y;
             }
@@ -1146,10 +1164,7 @@ namespace Invector.vCharacterController
             {
                 if (groundDistance >= groundMaxDistance)
                 {
-                    if (!isRolling)
-                    {
-                        isGrounded = false;
-                    }
+                    isGrounded = false;
 
                     // check vertical velocity
                     verticalVelocity = _rigidbody.velocity.y;
@@ -1528,8 +1543,8 @@ namespace Invector.vCharacterController
                     " \n" +
                     "FPS " + fps.ToString("#,##0 fps") + "\n" +
                     "Health = " + currentHealth.ToString() + "\n" +
-                    "Input Vertical = " + input.z.ToString("0.0") + "\n" +
-                    "Input Horizontal = " + input.x.ToString("0.0") + "\n" +
+                    "Input Vertical = " + inputSmooth.z.ToString("0.0") + "\n" +
+                    "Input Horizontal = " + inputSmooth.x.ToString("0.0") + "\n" +
                     "Input Magnitude = " + inputMagnitude.ToString("0.0") + "\n" +
                     "Rotation Magnitude = " + rotationMagnitude.ToString("0.0") + "\n" +
                     "Vertical Velocity = " + verticalVelocity.ToString("0.00") + "\n" +
@@ -1543,7 +1558,7 @@ namespace Invector.vCharacterController
                     "Is Kinematic = " + BoolToRichText(_rigidbody.isKinematic) + "\n" +
                     "Lock Movement = " + BoolToRichText(lockMovement) + "\n" +
                     "Lock AnimMov = " + BoolToRichText(lockAnimMovement) + "\n" +
-                    "Lock Rotation = " + BoolToRichText(lockAnimRotation) + "\n" +
+                    "Lock Rotation = " + BoolToRichText(lockRotation) + "\n" +
                     "Lock AnimRot = " + BoolToRichText(lockAnimRotation) + "\n" +
                     "--- Actions Bools ---" + "\n" +
                     "Is Sliding = " + BoolToRichText(isSliding) + "\n" +

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 
@@ -27,7 +27,7 @@ namespace Invector.vCharacterController
         [vEditorToolbar("Debug", order = 9)]
         [HideInInspector]
         public bool debugActionListener;
-        public Animator animator { get; private set; }
+        public Animator animator { get; protected set; }
         public bool ragdolled { get; set; }
 
         [vEditorToolbar("Events")]
@@ -74,7 +74,7 @@ namespace Invector.vCharacterController
             }
         }
 
-        private bool _isCrouching;
+        protected bool _isCrouching;
 
         #endregion        
 

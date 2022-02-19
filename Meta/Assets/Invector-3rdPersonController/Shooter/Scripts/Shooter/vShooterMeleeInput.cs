@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 
 namespace Invector.vCharacterController
@@ -1171,33 +1171,35 @@ namespace Invector.vCharacterController
             {
                 RaycastHit hit;
                 Ray ray = new Ray(vOrigin, camT.forward);
-
+                
                 if (Physics.Raycast(ray, out hit, cameraMain.farClipPlane, shooterManager.damageLayer))
                 {
+                    bool canAimToHit = false;
                     if (hit.collider.transform.IsChildOf(transform))
-                    {
-                        var collider = hit.collider;
+                    {                       
+                        var playerChild = hit.collider.gameObject;
                         var hits = Physics.RaycastAll(ray, cameraMain.farClipPlane, shooterManager.damageLayer);
                         var dist = cameraMain.farClipPlane;
                         for (int i = 0; i < hits.Length; i++)
-                        {
-                            if (hits[i].distance < dist && hits[i].collider.gameObject != collider.gameObject && !hits[i].collider.transform.IsChildOf(transform))
+                        {                           
+                            if (hits[i].distance < dist && hits[i].collider.gameObject != playerChild.gameObject && !hits[i].collider.transform.IsChildOf(transform))
                             {
+                                canAimToHit = true;
                                 dist = hits[i].distance;
                                 hit = hits[i];
                             }
                         }
                     }
-
-                    if (hit.collider)
+                    else canAimToHit = true;
+                    if (hit.collider && canAimToHit)
                     {
                         if (!isUsingScopeView)
                         {
                             lastAimDistance = Vector3.Distance(camT.position, hit.point);
-                        }
-
+                        }                       
                         AimPosition = hit.point;
                     }
+                  
                 }
                 if (shooterManager.showCheckAimGizmos)
                 {
