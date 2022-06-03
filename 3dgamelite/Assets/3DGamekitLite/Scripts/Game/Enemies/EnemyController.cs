@@ -8,7 +8,7 @@ namespace Gamekit3D
 {
 //this assure it's runned before any behaviour that may use it, as the animator need to be fecthed
     [DefaultExecutionOrder(-1)]
-    [RequireComponent(typeof(NavMeshAgent))]
+    //[RequireComponent(typeof(NavMeshAgent))]
     public class EnemyController : MonoBehaviour
     {
         public bool interpolateTurning = false;
@@ -28,7 +28,8 @@ namespace Gamekit3D
         protected Vector3 m_ExternalForce;
         protected bool m_Grounded;
 
-        protected Rigidbody m_Rigidbody;
+        protected CharacterController cc;
+        //protected Rigidbody m_Rigidbody;
 
         const float k_GroundedRayDistance = .8f;
 
@@ -40,13 +41,16 @@ namespace Gamekit3D
 
             m_NavMeshAgent.updatePosition = false;
 
-            m_Rigidbody = GetComponentInChildren<Rigidbody>();
-            if (m_Rigidbody == null)
-                m_Rigidbody = gameObject.AddComponent<Rigidbody>();
+            cc = GetComponent<CharacterController>();
 
-            m_Rigidbody.isKinematic = true;
-            m_Rigidbody.useGravity = false;
-            m_Rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+            //m_Rigidbody = GetComponentInChildren<Rigidbody>();
+            //if (m_Rigidbody == null)
+            //    m_Rigidbody = gameObject.AddComponent<Rigidbody>();
+
+            //m_Rigidbody.isKinematic = true;
+            //m_Rigidbody.useGravity = false;
+            //m_Rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+            //m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
             m_FollowNavmeshAgent = true;
         }
@@ -74,12 +78,13 @@ namespace Gamekit3D
             if(m_ExternalForceAddGravity)
                 m_ExternalForce += Physics.gravity * Time.deltaTime;
 
-            RaycastHit hit;
             Vector3 movement = m_ExternalForce * Time.deltaTime;
-            if (!m_Rigidbody.SweepTest(movement.normalized, out hit, movement.sqrMagnitude))
-            {
-                m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
-            }
+            //RaycastHit hit;
+            //if (!m_Rigidbody.SweepTest(movement.normalized, out hit, movement.sqrMagnitude))
+            //{
+            //    m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
+            //}
+            cc.Move(movement);
 
             //m_NavMeshAgent.Warp(m_Rigidbody.position);
             m_NavMeshAgent.Warp(transform.position);
@@ -93,17 +98,18 @@ namespace Gamekit3D
             if (m_FollowNavmeshAgent)
             {
                 m_NavMeshAgent.speed = (m_Animator.deltaPosition / Time.deltaTime).magnitude;
-                //transform.position = m_NavMeshAgent.nextPosition;
-                m_Rigidbody.MovePosition(m_NavMeshAgent.nextPosition);
+                transform.position = m_NavMeshAgent.nextPosition;
+                //m_Rigidbody.MovePosition(m_NavMeshAgent.nextPosition);
             }
             else
             {
-                RaycastHit hit;
-                if (!m_Rigidbody.SweepTest(m_Animator.deltaPosition.normalized, out hit,
-                    m_Animator.deltaPosition.sqrMagnitude))
-                {
-                    m_Rigidbody.MovePosition(m_Rigidbody.position + m_Animator.deltaPosition);
-                }
+                //RaycastHit hit;
+                //if (!m_Rigidbody.SweepTest(m_Animator.deltaPosition.normalized, out hit,
+                //    m_Animator.deltaPosition.sqrMagnitude))
+                //{
+                //    m_Rigidbody.MovePosition(m_Rigidbody.position + m_Animator.deltaPosition);
+                //}
+                cc.Move(m_Animator.deltaPosition);
             }
 
             if (applyAnimationRotation)

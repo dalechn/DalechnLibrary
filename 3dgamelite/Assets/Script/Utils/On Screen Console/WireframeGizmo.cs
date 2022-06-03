@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace CJTools
+namespace Dalechn
 {
     [ExecuteInEditMode]
     public class WireframeGizmo : MonoBehaviour

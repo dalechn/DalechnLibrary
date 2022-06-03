@@ -1,0 +1,96 @@
+
+
+//定义规则:
+//1.100%理解的必须写入的
+//2.无法理解但是必须写入的需要及时查询资料处理,没时间处理的必须加上注释,注释都不知道怎么写的只能恶心自己了
+//3.不管是否正确必须遵守此规则
+
+//临时记忆,中期记忆,长期记忆
+//记忆方式:猜测,对比,外到里,总结
+
+//建立新语言模板->搜索类库
+环境搭建,注释,数据类型(string,number),方法,定义(数据结构,类,结构体,枚举)
+核心类库(控制台调试,日期,数学,随机,鼠标键盘,io,)
+
+
+
+微分中值定理:
+罗尔定理,柯西定理,达布定理,拉格朗日定理,泰勒公式,洛必达法则
+傅里叶级数变换
+
+__uuidof noexcept
+
+APACHE TOMCAT -java
+PHPStudy(mysql+apache) -php 
+IIS - asp.net
+node JS+express -js
+
+localhost,127.0.0.1
+80 8086
+tcp/ip ,get,set ,socket, tcp ,udp,ftp ,dns(domain name)
+http,https
+
+
+绑定到app .use 应用级别中间件
+              next           全局中间件
+            funName  第二个参数    局部中间件  
+              err 第一个参数         错误级别中间件,所有路由之后
+
+绑定到router.use          路由级别中间件
+
+内置中间件
+ static 解析html,css,js
+ json 解析json表单 (raw)
+ urlencoded     
+ querystring
+
+//Cookie (~4kb)???
+0.保存在本地
+1.自动发送
+2.域名独立
+3.过期时限
+4.不具有安全性
+
+
+post请求header,body???
+跨域访问???
+cors 
+jsonp
+//Session???
+前后端分离 jwt(json web tonken)认证(跨域)
+服务器端渲染   session认证 (非跨域)
+
+
+//LocalStorage(5mb)保存在本地,永久存储
+//SessionStorage(5mb)保存在本地,窗口关闭时会清空数据
+
+
+declare interface
+
+直接suicide
+炒币暴富-学东西-健身-孤独终老
+炒币暴富-躺平-精尽人亡
+送外卖-躺平-精尽人亡-被沙口恶心
+送外卖-学东西-健身-孤独终老-被沙口恶心
+敲ui-被优化-死
+去大公司-高强度脑力-戒色-健身-有机会
+去大公司-高强度脑力-戒色-健身-学双语-出国有机会
+
+
+random Physics string 英语 攀爬 雾效 水波(透明材质) 镜面 引擎比较 math/matrix  ui测试 js yield 数组 c++ map
+web:
+html css js dom bom jquery(包含ajax),bootstrap
+
+//windows地址格式:C:\Windows
+//web地址格式:../上一级目录 ./当前目录 /根目录 猜测:/就是表示\\
+
+function nodeJSTest()
+{
+    console.log('normalization : ' + path.normalize('\\/test/test1/34dsad//`5/2slashes/1slash/tab/..')); // 格式化路径
+    console.log('joint path : ' + path.join('/test', 'test1', '2slashes/1slash', 'tab', '..')); // 连接路径
+    console.log('resolve : ' +__dirname+ path.resolve('main.js'));// 转换为绝对路径
+    console.log('ext name : ' + path.extname('main.js')); // 路径中文件的后缀名
+}
+
+multer
+

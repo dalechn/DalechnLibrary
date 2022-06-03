@@ -20,7 +20,7 @@ namespace Gamekit3D
                 return;
             }
 
-            if (m_MonoBehaviour.target == null || m_MonoBehaviour.target.respawning)
+            if (m_MonoBehaviour.target == null /*|| m_MonoBehaviour.target.respawning*/)
             {//if the target was lost or is respawning, we stop the pursit
                 m_MonoBehaviour.StopPursuit();
             }

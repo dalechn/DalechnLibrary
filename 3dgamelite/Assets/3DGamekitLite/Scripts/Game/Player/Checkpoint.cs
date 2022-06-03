@@ -10,7 +10,7 @@ namespace Gamekit3D
         private void Awake()
         {
             //we make sure the checkpoint is part of the Checkpoint layer, which is set to interact ONLY with the player layer.
-            gameObject.layer = LayerMask.NameToLayer("Checkpoint");
+            //gameObject.layer = LayerMask.NameToLayer("Checkpoint");
         }
 
         private void OnTriggerEnter(Collider other)

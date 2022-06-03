@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CJTools
+namespace Dalechn
 {
     [ExecuteAlways]
     public class MeshBoundingBoxGenerator : MonoBehaviour

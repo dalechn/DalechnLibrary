@@ -5,7 +5,7 @@ using System.Collections;
  * Class for debug drawing certain shapes.
  * Creates the specified shapes by the use of multiple Debug.DrawLine calls.
  */
- namespace CJTools
+ namespace Dalechn
 {
 
     public class DebugShapes : MonoBehaviour

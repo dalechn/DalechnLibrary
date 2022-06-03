@@ -173,6 +173,99 @@ namespace Gamekit3D
         {
             m_FreeArcs[index] = true;
         }
-    }
 
+        [System.Serializable]
+        public struct TargetInfo
+        {
+            public Transform target;
+            public Vector3 forward;
+            public float distance;
+
+            public TargetInfo(Transform target, Vector3 forward, float distance)
+            {
+                this.target = target;
+                this.forward = forward;
+                this.distance = distance;
+            }
+            public void Clear()
+            {
+                target = default;
+                forward = default;
+                distance = default;
+            }
+        }
+
+        public float horizontalAngle = 60;
+        public float verticalAngle = 45;
+        public bool closeBackAttack = false;
+
+        [vHelpBox("ReadOnly")]
+        public HashSet<Transform> enemyList = new HashSet<Transform>();
+
+        List<TargetInfo> allResult = new List<TargetInfo>();
+        [vHelpBox("ReadOnly")]
+        public List<TargetInfo> fovList = new List<TargetInfo>();
+       [HideInInspector] public TargetInfo target = new TargetInfo();
+
+
+        public void RegistEnemy(Transform tr)
+        {
+            //if (!enemyList.Contains(tr))
+            {
+                enemyList.Add(tr);
+            }
+        }
+
+        public void UnRegistEnemy(Transform tr)
+        {
+            //if(enemyList.Contains(tr))
+            {
+                enemyList.Remove(tr);
+            }
+        }
+
+        public void UpdateTarget(Transform player, Vector3 forward)
+        {
+
+            fovList.Clear();
+            target.Clear();
+            allResult.Clear();
+
+            foreach (var val in enemyList)
+            {
+                Vector3 dir = val.position - player.position;
+                float distance = dir.magnitude;
+
+                Vector3 normal = player.up;
+                Vector3 tangent = dir;
+                Vector3.OrthoNormalize(ref normal, ref tangent);
+
+                TargetInfo t = new TargetInfo(val, tangent, distance);
+
+                //Debug.Log(Vector3.Angle(tangent, forward) + " " + Vector3.Angle(tangent, dir));
+
+                if (Vector3.Angle(tangent, forward) < horizontalAngle && Vector3.Angle(tangent, dir) < verticalAngle)
+                {
+                    fovList.Add(t);
+                }
+                allResult.Add(t);
+            }
+            //Debug.Log(fovList.Count+ " "+allResult.Count);
+
+            if (fovList.Count > 0)
+            {
+                fovList.Sort((a, b) => a.distance.CompareTo(b.distance));
+                target = fovList[0];
+
+                return;
+            }
+
+            if (allResult.Count > 0&&!closeBackAttack)
+            {
+                allResult.Sort((a, b) => a.distance.CompareTo(b.distance));
+                target = allResult[0];
+            }
+        }
+
+    }
 }

@@ -3,11 +3,18 @@ using System.Collections;
 
 namespace RootMotion.Demos {
 	
+    public enum MoveMode
+    {
+        Joystick,
+        ClickMove
+    }
+
 	/// <summary>
 	/// User input for an AI controlled character controller.
 	/// </summary>
 	public class UserControlAI : UserControlThirdPerson {
 
+        public MoveMode moveMode = MoveMode.ClickMove;
 		public Transform moveTarget;
 		public float stoppingDistance = 0.5f;
 		public float stoppingThreshold = 1.5f;
@@ -22,29 +29,32 @@ namespace RootMotion.Demos {
 
         protected override void MoveState() {
 
-            if(moveTarget)
+            if( moveMode == MoveMode.ClickMove)
             {
-                float moveSpeed = walkByDefault ? 0.5f : 1f;
-
-                // If using Unity Navigation
-                if (navigator.activeTargetSeeking)
+                if(moveTarget )
                 {
-                    navigator.Update(moveTarget.position);
-                    state.move = navigator.normalizedDeltaPosition * moveSpeed;
-                }
-                // No navigation, just move straight to the target
-                else
-                {
-                    Vector3 direction = moveTarget.position - transform.position;
-                    float distance = direction.magnitude;
+                    float moveSpeed = walkByDefault ? 0.5f : 1f;
 
-                    Vector3 normal = transform.up;
-                    Vector3.OrthoNormalize(ref normal, ref direction);
+                    // If using Unity Navigation
+                    if (navigator.activeTargetSeeking)
+                    {
+                        navigator.Update(moveTarget.position);
+                        state.move = navigator.normalizedDeltaPosition * moveSpeed;
+                    }
+                    // No navigation, just move straight to the target
+                    else
+                    {
+                        Vector3 direction = moveTarget.position - transform.position;
+                        float distance = direction.magnitude;
 
-                    float sD = state.move != Vector3.zero ? stoppingDistance : stoppingDistance * stoppingThreshold;
+                        Vector3 normal = transform.up;
+                        Vector3.OrthoNormalize(ref normal, ref direction);
 
-                    state.move = distance > sD ? direction * moveSpeed : Vector3.zero;
-                    state.lookPos = moveTarget.position;
+                        float sD = state.move != Vector3.zero ? stoppingDistance : stoppingDistance * stoppingThreshold;
+
+                        state.move = distance > sD ? direction * moveSpeed : Vector3.zero;
+                        state.lookPos = moveTarget.position;
+                    }
                 }
             }
             else
@@ -55,9 +65,16 @@ namespace RootMotion.Demos {
 
         public override void SetLookObject(GameObject lookObject)
         {
-            state.lookObject = lookObject;
-          
-            moveTarget = lookObject? lookObject.transform:null;
+            if(moveMode == MoveMode.ClickMove)
+            {
+                state.lookObject = lookObject;
+
+                moveTarget = lookObject ? lookObject.transform : null;
+            }
+           else
+            {
+                base.SetLookObject(lookObject);
+            }
         }
 
         // Visualize the navigator

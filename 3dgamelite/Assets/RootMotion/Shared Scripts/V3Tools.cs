@@ -11,7 +11,7 @@ namespace RootMotion {
         /// <summary>
         /// Returns yaw angle (-180 - 180) of 'forward' vector.
         /// </summary>
-        public static float GetYaw(Vector3 forward)//heading,turn,绕y轴旋(xz平面)
+        public static float GetYaw(Vector3 forward)
         {
             return Mathf.Atan2(forward.x, forward.z) * Mathf.Rad2Deg;
         }
@@ -19,7 +19,7 @@ namespace RootMotion {
         /// <summary>
         /// Returns pitch angle (-90 - 90) of 'forward' vector.
         /// </summary>
-        public static float GetPitch(Vector3 forward) //gradient,绕x轴旋转(yz平面)
+        public static float GetPitch(Vector3 forward) 
         {
             forward = forward.normalized; // Asin range -1 - 1
             return -Mathf.Asin(forward.y) * Mathf.Rad2Deg;
@@ -28,7 +28,7 @@ namespace RootMotion {
         /// <summary>
         /// Returns bank angle (-180 - 180) of 'forward' and 'up' vectors.
         /// </summary>
-        public static float GetBank(Vector3 forward, Vector3 up)//roll,绕z轴旋转(xy平面)
+        public static float GetBank(Vector3 forward, Vector3 up)
         {
             Quaternion q = Quaternion.Inverse(Quaternion.LookRotation(Vector3.up, forward));
             up = q * up;

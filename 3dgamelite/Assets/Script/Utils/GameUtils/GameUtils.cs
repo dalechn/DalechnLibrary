@@ -106,81 +106,13 @@ public static class Extensions
     {
         return new Vector3(eulerAngle.x.NormalizeAngle180(), eulerAngle.y.NormalizeAngle180(), eulerAngle.z.NormalizeAngle180());
     }
+
 }
 
-//public class Singleton<T> : MonoBehaviour where T : Singleton<T>
-//{
-//    public static T Instance { get; private set; }
-
-//    protected virtual void Awake()
-//    {
-//        if (Instance == null)
-//        {
-//            Instance = (T)this;
-//        }
-//        else
-//        {
-//            Destroy(gameObject);
-//        }
-//    }
-//}
-
-namespace CJTools
+namespace Dalechn
 {
     public static partial class GameUtils
     {
-        public static GameObject GetNearestGameObject(List<GameObject> listTemp, GameObject obj)
-        {
-            if (listTemp != null && listTemp.Count > 0)
-            {
-                GameObject targetTemp = listTemp.Count > 0 ? listTemp[0] : null;
-                float dis = Vector3.Distance(obj.transform.position, listTemp[0].transform.position);
-                float disTemp;
-                for (int i = 1; i < listTemp.Count; i++)
-                {
-                    disTemp = Vector3.Distance(obj.transform.position, listTemp[i].transform.position);
-                    if (disTemp < dis)
-                    {
-                        targetTemp = listTemp[i];
-                        dis = disTemp;
-                    }
-                }
-                return targetTemp;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public static Vector3 GetNearestGameObject(List<Vector3> listTemp, GameObject obj, out int index)
-        {
-            if (listTemp != null && listTemp.Count > 0)
-            {
-                Vector3 targetTemp = listTemp.Count > 0 ? listTemp[0] : Vector3.zero;
-                float dis = Vector3.Distance(obj.transform.position, listTemp[0]);
-                float disTemp;
-                int indexTemp = 0;
-                for (int i = 1; i < listTemp.Count; i++)
-                {
-                    disTemp = Vector3.Distance(obj.transform.position, listTemp[i]);
-                    if (disTemp < dis)
-                    {
-                        targetTemp = listTemp[i];
-                        dis = disTemp;
-
-                        indexTemp = i;
-                    }
-                }
-                index = indexTemp;
-                return targetTemp;
-            }
-            else
-            {
-                index = 0;
-                return Vector3.zero;
-            }
-        }
 
         public static void DampAnimation(GameObject target, float duration = 1.0f, UnityAction call = null)
         {

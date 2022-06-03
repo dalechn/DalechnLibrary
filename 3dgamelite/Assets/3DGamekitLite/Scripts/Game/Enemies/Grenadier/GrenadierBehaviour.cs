@@ -47,7 +47,7 @@ namespace Gamekit3D
 
         public bool shieldUp { get { return shield.activeSelf; } }
 
-        public PlayerController target { get { return m_Target; } }
+        public TargetDistributor target { get { return m_Target; } }
         public Damageable damageable { get { return m_Damageable; } }
 
         [Header("Audio")]
@@ -57,7 +57,7 @@ namespace Gamekit3D
         public RandomAudioPlayer throwAudioPlayer;
         public RandomAudioPlayer punchAudioPlayer;
 
-        protected PlayerController m_Target;
+        protected TargetDistributor m_Target;
         //used to store the position of the target when the Grenadier decide to shoot, so if the player
         //move between the start of the animation and the actual grenade launch, it shoot were it was not where it is now
         protected Vector3 m_GrenadeTarget;
@@ -87,6 +87,8 @@ namespace Gamekit3D
             shield.SetActive(false);
 
             m_Damageable = GetComponentInChildren<Damageable>();
+
+            playerScanner = GetComponent<TargetScanner>();
         }
 
         private void Update()
@@ -201,13 +203,13 @@ namespace Gamekit3D
             return OrientationState.IN_TRANSITION;
         }
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
 
-        private void OnDrawGizmosSelected()
-        {
-           playerScanner.EditorGizmo(transform);
-        }
+//        private void OnDrawGizmosSelected()
+//        {
+//           playerScanner.EditorGizmo(transform);
+//        }
 
-#endif
+//#endif
     }
 }

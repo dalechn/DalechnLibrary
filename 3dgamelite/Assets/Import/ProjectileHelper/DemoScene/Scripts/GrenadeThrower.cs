@@ -66,7 +66,7 @@ public class GrenadeThrower : MonoBehaviour
 		if ( m_GrenadeObject == null)
 			return;
 			
-		if (Input.GetButtonDown("Fire1"))
+		if (Input.GetKeyDown(KeyCode.Space))
 		{
 			Vector3 direction     = new Vector3(1.0f, 0.0f, 0.0f);
 			Vector3 bankingAxis   = new Vector3(0.0f, 1.0f, 0.0f);

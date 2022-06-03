@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Internal;
 
-namespace CJTools
+namespace Dalechn
 {
     public class bl_UpdateManager : MonoBehaviour
     {
@@ -311,9 +312,9 @@ namespace CJTools
             }
         }
 
-        #region StaticFunc
+        #region DoActionStaticFunc
 
-        public static DoAction RunAction(string actName, float duration, UnityAction<float, float> stepCall, UnityAction overCall = null, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
+        public static DoAction RunAction([DefaultValue("")]string actName, float duration, UnityAction<float, float> stepCall, UnityAction overCall = null, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
         {
             DoAction s = new DoAction();
             s.mode = mode;
@@ -328,7 +329,7 @@ namespace CJTools
             return s;
         }
 
-        public static DoAction RunAction(string actName, float duration, float delay, UnityAction<float,float> stepCall, UnityAction onceCall = null, UnityAction overCall = null, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
+        public static DoAction RunAction([DefaultValue("")]string actName, float duration, float delay, UnityAction<float,float> stepCall, UnityAction onceCall = null, UnityAction overCall = null, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
         {
             DoAction s = new DoAction();
             s.mode = mode;
@@ -345,7 +346,7 @@ namespace CJTools
             return s;
         }
 
-        public static DoAction RunActionOnce(string actName, float delay, UnityAction onceCall, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
+        public static DoAction RunActionOnce([DefaultValue("")]string actName, float delay, UnityAction onceCall, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
         {
             DoAction s = new DoAction();
             s.mode = mode;
@@ -364,7 +365,6 @@ namespace CJTools
         }
 
         #endregion
-
     }
 
     public enum ActionMode
@@ -385,7 +385,7 @@ namespace CJTools
         public float realTime = 0;
         public bool removed;
 
-        public UnityAction<float,float> stepCall;
+        public UnityAction<float, float> stepCall;
         public UnityAction overCall;
         public UnityAction onceCall;
 

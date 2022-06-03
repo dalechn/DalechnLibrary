@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CJTools
+namespace Dalechn
 {
     public static partial class GameUtils
     {
 
-        public static T RandomListNotRepeat<T>(List<T> list, HashSet<int> set)
+        public static T RandomListNotRepeat<T>(List<T> list, ref HashSet<int> set)
         {
             if (list.Count != 0)
             {
-                int n = RandomIntNotRepeat(0, list.Count, set);
+                int n = RandomIntNotRepeat(0, list.Count, ref set);
 
                 T child = list[n];
                 return child;
@@ -19,29 +19,21 @@ namespace CJTools
             return default(T);
         }
 
-        private static bool IsExit(HashSet<int> set, int value)
-        {
-            if (!set.Contains(value))
-            {
-                set.Add(value);
-                return false;
-            }
-
-            return true;
-        }
-
-        private static int RandomIntNotRepeat(int min, int max, HashSet<int> set)
+        public static int RandomIntNotRepeat(int min, int max,ref HashSet<int> set)
         {
             if (max - min == set.Count)
             {
                 set.Clear();
             }
 
-            int num = UnityEngine.Random.Range(min, max);
-            while (IsExit(set, num))
+            int num = 0;
+            do
             {
                 num = UnityEngine.Random.Range(min, max);
-            }
+               
+            } while (set.Contains(num));
+            set.Add(num);
+
             return num;
         }
 

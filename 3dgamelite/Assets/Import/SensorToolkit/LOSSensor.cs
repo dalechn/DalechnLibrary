@@ -136,6 +136,8 @@ namespace Micosmo.SensorToolkit {
 
             UpdateAllSignals(workList);
             OnPulsed?.Invoke();
+
+            //Debug.Log(GetNearestTarget());
         }
 
         List<Collider> clist = new List<Collider>();
@@ -216,6 +218,30 @@ namespace Micosmo.SensorToolkit {
             inputSensor?.OnValidate();
             pulseRoutine?.OnValidate();
         }
+
+        //public GameObject GetNearestTarget()
+        //{
+        //    if(PulseMode == PulseRoutine.Modes.Manual)
+        //    {
+        //        Pulse();
+        //    }
+
+        //    GameObject obj = GetNearestDetection();
+
+        //    if (!obj)
+        //    {
+        //        List<ILOSResult> results = GetAllResults();
+        //        results.Sort((a, b) => (a.OutputSignal.Object.transform.position - transform.position).magnitude.CompareTo(
+        //            (b.OutputSignal.Object.transform.position - transform.position).magnitude));
+
+        //        if (results.Count > 0)
+        //        {
+        //            obj = results[0].OutputSignal.Object;
+        //        }
+        //    }
+
+        //    return obj;
+        //}
 
         void InputSensorChangedHandler(Sensor prev, Sensor next) {
             if (prev != null) {

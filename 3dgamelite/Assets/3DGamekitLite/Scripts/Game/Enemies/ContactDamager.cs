@@ -5,6 +5,7 @@ using UnityEditor;
 
 namespace Gamekit3D
 {
+    //反伤,没有trigget就不会触发
     public class ContactDamager : MonoBehaviour
     {
         [HelpBox] public string helpString = @"
@@ -15,6 +16,11 @@ Also Remember to place that object in a layer that collide with what you want to
 
         public int amount;
         public LayerMask damagedLayers;
+
+        private void Start()
+        {
+            
+        }
 
         private void OnTriggerStay(Collider other)
         {

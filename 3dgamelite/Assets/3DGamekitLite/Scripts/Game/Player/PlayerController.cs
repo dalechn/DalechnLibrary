@@ -5,8 +5,8 @@ using UnityEngine.XR.WSA;
 
 namespace Gamekit3D
 {
-    [RequireComponent(typeof(CharacterController))]
-    [RequireComponent(typeof(Animator))]
+    //[RequireComponent(typeof(CharacterController))]
+    //[RequireComponent(typeof(Animator))]
     public class PlayerController : MonoBehaviour, IMessageReceiver
     {
         protected static PlayerController s_Instance;
@@ -48,9 +48,9 @@ namespace Gamekit3D
         protected CharacterController m_CharCtrl;      // Reference used to actually move Ellen.
         protected Animator m_Animator;                 // Reference used to make decisions based on Ellen's current animation and to set parameters.
         protected Material m_CurrentWalkingSurface;    // Reference used to make decisions about audio.
-        protected Quaternion m_TargetRotation;         // What rotation Ellen is aiming to have based on input.
-        protected float m_AngleDiff;                   // Angle in degrees between Ellen's current rotation and her target rotation.
-        protected Collider[] m_OverlapResult = new Collider[8];    // Used to cache colliders that are near Ellen.
+        //protected Quaternion m_TargetRotation;         // What rotation Ellen is aiming to have based on input.
+        //protected float m_AngleDiff;                   // Angle in degrees between Ellen's current rotation and her target rotation.
+        //protected Collider[] m_OverlapResult = new Collider[8];    // Used to cache colliders that are near Ellen.
         protected bool m_InAttack;                     // Whether Ellen is currently in the middle of a melee attack.
         protected bool m_InCombo;                      // Whether Ellen is currently in the middle of her melee combo.
         protected Damageable m_Damageable;             // Reference used to set invulnerablity and health based on respawning.
@@ -64,11 +64,16 @@ namespace Gamekit3D
         const float k_AirborneTurnSpeedProportion = 5.4f;
         const float k_GroundedRayDistance = 1f;
         const float k_JumpAbortSpeed = 10f;
-        const float k_MinEnemyDotCoeff = 0.2f;
+        //const float k_MinEnemyDotCoeff = 0.2f;
         const float k_InverseOneEighty = 1f / 180f;
         const float k_StickingGravityProportion = 0.3f;
         const float k_GroundAcceleration = 20f;
         const float k_GroundDeceleration = 25f;
+
+        const float k_CCRadiusMoving = 0.4f;
+        const float k_CCRadiusIdle = 0.01f;
+        const float k_AttackMoveSpeedMulti = 7f;
+        const float k_MinAttackMoveDis = 1f;
 
         // Parameters
 
@@ -104,6 +109,10 @@ namespace Gamekit3D
         {
             get { return !Mathf.Approximately(m_Input.MoveInput.sqrMagnitude, 0f); }
         }
+
+        [HideInInspector] public TargetDistributor targetDistributor;
+        [HideInInspector] public Vector3 resultingForward;
+        [HideInInspector] public Transform tr;
 
         public void SetCanAttack(bool canAttack)
         {
@@ -146,9 +155,13 @@ namespace Gamekit3D
             m_Animator = GetComponent<Animator>();
             m_CharCtrl = GetComponent<CharacterController>();
 
+            targetDistributor = GetComponent<TargetDistributor>();
+
             meleeWeapon.SetOwner(gameObject);
 
             s_Instance = this;
+
+            tr = transform;
         }
 
         // Called automatically by Unity after Awake whenever the script is enabled. 
@@ -173,8 +186,12 @@ namespace Gamekit3D
 
             for (int i = 0; i < m_Renderers.Length; ++i)
             {
-                m_Renderers[i].enabled = true;
+                if(m_Renderers[i])
+                {
+                    m_Renderers[i].enabled = true;
+                }
             }
+
         }
 
         // Called automatically by Unity once every Physics step.
@@ -186,7 +203,7 @@ namespace Gamekit3D
 
             EquipMeleeWeapon(IsWeaponEquiped());
 
-            m_Animator.SetFloat(m_HashStateTime, Mathf.Repeat(m_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f));
+            m_Animator.SetFloat(m_HashStateTime, Mathf.Repeat(m_CurrentStateInfo.normalizedTime, 1f));
             m_Animator.ResetTrigger(m_HashMeleeAttack);
 
             if (m_Input.Attack && canAttack)
@@ -195,16 +212,54 @@ namespace Gamekit3D
             CalculateForwardMovement();
             CalculateVerticalMovement();
 
-            SetTargetRotation();
+            //SetTargetRotation();
 
-            if (IsOrientationUpdated() && IsMoveInput)
-                UpdateOrientation();
+            //if (IsOrientationUpdated() && IsMoveInput)
+            //UpdateOrientation();
+
+            Rotate();
 
             PlayAudio();
 
             TimeoutToIdle();
 
             m_PreviouslyGrounded = m_IsGrounded;
+        }
+
+        void Rotate()
+        {
+            Vector3 localMovementDirection = new Vector3(m_Input.MoveInput.x, 0f, m_Input.MoveInput.y);
+
+            resultingForward = Quaternion.Euler(0f, cameraSettings.Current.m_XAxis.Value, 0f) * localMovementDirection;
+            resultingForward.y = 0f;
+            resultingForward.Normalize();
+
+            if (!IsMoveInput)
+            {
+                resultingForward = transform.forward;
+            }
+
+            float angleCurrent = Mathf.Atan2(transform.forward.x, transform.forward.z) * Mathf.Rad2Deg;
+            float targetAngle = Mathf.Atan2(resultingForward.x, resultingForward.z) * Mathf.Rad2Deg;
+
+            float angleDiff = Mathf.DeltaAngle(angleCurrent, targetAngle);
+
+            targetDistributor.UpdateTarget(tr,resultingForward);
+            if (m_InAttack && targetDistributor.target.target)
+            {
+                transform.rotation = Quaternion.LookRotation(targetDistributor.target.forward);
+            }
+
+            if (IsOrientationUpdated() /*&& IsMoveInput*/)
+            {
+                float groundedTurnSpeed = Mathf.Lerp(maxTurnSpeed, minTurnSpeed, m_ForwardSpeed / m_DesiredForwardSpeed);
+                float actualTurnSpeed = m_IsGrounded ? groundedTurnSpeed : Vector3.Angle(transform.forward, resultingForward) * k_InverseOneEighty * k_AirborneTurnSpeedProportion * groundedTurnSpeed;
+
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(resultingForward), actualTurnSpeed * Time.deltaTime);
+
+                m_Animator.SetFloat(m_HashAngleDeltaRad, angleDiff * Mathf.Deg2Rad);
+            }
+
         }
 
         // Called at the start of FixedUpdate to record the current state of the base layer of the animator.
@@ -241,14 +296,15 @@ namespace Gamekit3D
         // Called each physics step with a parameter based on the return value of IsWeaponEquiped.
         void EquipMeleeWeapon(bool equip)
         {
-            meleeWeapon.gameObject.SetActive(equip);
+            //meleeWeapon.gameObject.SetActive(equip);
             //m_InAttack = false;
-            m_InCombo = equip;
-            if(!m_InCombo)
+            
+            m_InCombo =  equip;
+            if (!m_InCombo)
             {
-                m_InAttack = false;
+                MeleeAttackEnd();
             }
-            //Debug.Log(m_InAttack);
+
             if (!equip)
                 m_Animator.ResetTrigger(m_HashMeleeAttack);
         }
@@ -310,91 +366,10 @@ namespace Gamekit3D
                 {
                     m_VerticalSpeed = 0f;
                 }
-                
+
                 // If Ellen is airborne, apply gravity.
                 m_VerticalSpeed -= gravity * Time.deltaTime;
             }
-        }
-
-        // Called each physics step to set the rotation Ellen is aiming to have.
-        void SetTargetRotation()
-        {
-            // Create three variables, move input local to the player, flattened forward direction of the camera and a local target rotation.
-            Vector2 moveInput = m_Input.MoveInput;
-            Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
-            
-            Vector3 forward = Quaternion.Euler(0f, cameraSettings.Current.m_XAxis.Value, 0f) * Vector3.forward;
-            forward.y = 0f;
-            forward.Normalize();
-
-            Quaternion targetRotation;
-            
-            // If the local movement direction is the opposite of forward then the target rotation should be towards the camera.
-            if (Mathf.Approximately(Vector3.Dot(localMovementDirection, Vector3.forward), -1.0f))
-            {
-                targetRotation = Quaternion.LookRotation(-forward);
-            }
-            else
-            {
-                // Otherwise the rotation should be the offset of the input from the camera's forward.
-                Quaternion cameraToInputOffset = Quaternion.FromToRotation(Vector3.forward, localMovementDirection);
-                targetRotation = Quaternion.LookRotation(cameraToInputOffset * forward);
-            }
-
-            // The desired forward direction of Ellen.
-            Vector3 resultingForward = targetRotation * Vector3.forward;
-
-            // If attacking try to orient to close enemies.
-            if (m_InAttack)
-            {
-                // Find all the enemies in the local area.
-                Vector3 centre = transform.position + transform.forward * 2.0f + transform.up;
-                Vector3 halfExtents = new Vector3(3.0f, 1.0f, 2.0f);
-                int layerMask = 1 << LayerMask.NameToLayer("Enemy");
-                int count = Physics.OverlapBoxNonAlloc(centre, halfExtents, m_OverlapResult, targetRotation, layerMask);
-
-                // Go through all the enemies in the local area...
-                float closestDot = 0.0f;
-                Vector3 closestForward = Vector3.zero;
-                int closest = -1;
-
-                for (int i = 0; i < count; ++i)
-                {
-                    // ... and for each get a vector from the player to the enemy.
-                    Vector3 playerToEnemy = m_OverlapResult[i].transform.position - transform.position;
-                    playerToEnemy.y = 0;
-                    playerToEnemy.Normalize();
-
-                    // Find the dot product between the direction the player wants to go and the direction to the enemy.
-                    // This will be larger the closer to Ellen's desired direction the direction to the enemy is.
-                    float d = Vector3.Dot(resultingForward, playerToEnemy);
-
-                    // Store the closest enemy.
-                    if (d > k_MinEnemyDotCoeff && d > closestDot)
-                    {
-                        closestForward = playerToEnemy;
-                        closestDot = d;
-                        closest = i;
-                    }
-                }
-
-                // If there is a close enemy...
-                if (closest != -1)
-                {
-                    // The desired forward is the direction to the closest enemy.
-                    resultingForward = closestForward;
-                    
-                    // We also directly set the rotation, as we want snappy fight and orientation isn't updated in the UpdateOrientation function during an atatck.
-                    transform.rotation = Quaternion.LookRotation(resultingForward);
-                }
-            }
-
-            // Find the difference between the current rotation of the player and the desired rotation of the player in radians.
-            float angleCurrent = Mathf.Atan2(transform.forward.x, transform.forward.z) * Mathf.Rad2Deg;
-            float targetAngle = Mathf.Atan2(resultingForward.x, resultingForward.z) * Mathf.Rad2Deg;
-
-            m_AngleDiff = Mathf.DeltaAngle(angleCurrent, targetAngle);
-            m_TargetRotation = targetRotation;
         }
 
         // Called each physics step to help determine whether Ellen can turn under player input.
@@ -405,19 +380,6 @@ namespace Gamekit3D
             bool updateOrientationForLanding = !m_IsAnimatorTransitioning && m_CurrentStateInfo.shortNameHash == m_HashLanding || m_NextStateInfo.shortNameHash == m_HashLanding;
 
             return updateOrientationForLocomotion || updateOrientationForAirborne || updateOrientationForLanding || m_InCombo && !m_InAttack;
-        }
-
-        // Called each physics step after SetTargetRotation if there is move input and Ellen is in the correct animator state according to IsOrientationUpdated.
-        void UpdateOrientation()
-        {
-            m_Animator.SetFloat(m_HashAngleDeltaRad, m_AngleDiff * Mathf.Deg2Rad);
-
-            Vector3 localInput = new Vector3(m_Input.MoveInput.x, 0f, m_Input.MoveInput.y);
-            float groundedTurnSpeed = Mathf.Lerp(maxTurnSpeed, minTurnSpeed, m_ForwardSpeed / m_DesiredForwardSpeed);
-            float actualTurnSpeed = m_IsGrounded ? groundedTurnSpeed : Vector3.Angle(transform.forward, localInput) * k_InverseOneEighty * k_AirborneTurnSpeedProportion * groundedTurnSpeed;
-            m_TargetRotation = Quaternion.RotateTowards(transform.rotation, m_TargetRotation, actualTurnSpeed * Time.deltaTime);
-
-            transform.rotation = m_TargetRotation;
         }
 
         // Called each physics step to check if audio should be played and if so instruct the relevant random audio player to do so.
@@ -503,15 +465,17 @@ namespace Gamekit3D
             {
                 // ... raycast into the ground...
                 RaycastHit hit;
-                Ray ray = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, -Vector3.up);
+                Ray ray = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f/*+ transform.forward*0.5f*/, -Vector3.up);
                 if (Physics.Raycast(ray, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
                 {
                     // ... and get the movement of the root motion rotated to lie along the plane of the ground.
                     movement = Vector3.ProjectOnPlane(m_Animator.deltaPosition, hit.normal);
-                    
+
                     // Also store the current walking surface so the correct audio is played.
                     Renderer groundRenderer = hit.collider.GetComponentInChildren<Renderer>();
                     m_CurrentWalkingSurface = groundRenderer ? groundRenderer.sharedMaterial : null;
+
+                    m_CharCtrl.radius = k_CCRadiusMoving;
                 }
                 else
                 {
@@ -519,12 +483,23 @@ namespace Gamekit3D
                     // Theoretically this should rarely happen as when grounded the ray should always hit.
                     movement = m_Animator.deltaPosition;
                     m_CurrentWalkingSurface = null;
+
+                    if(!m_InCombo)
+                    {
+                        m_CharCtrl.radius = k_CCRadiusIdle;
+                    }
                 }
             }
             else
             {
                 // If not grounded the movement is just in the forward direction.
                 movement = m_ForwardSpeed * transform.forward * Time.deltaTime;
+            }
+
+            if (m_InAttack && targetDistributor.target.target&& targetDistributor.target.distance> k_MinAttackMoveDis)
+            {
+                //Debug.Log(targetDistributor.target.distance);
+                movement = (targetDistributor.target.distance)* k_AttackMoveSpeedMulti * transform.forward * Time.deltaTime;
             }
 
             // Rotate the transform of the character controller by the animation's root rotation.
@@ -547,7 +522,7 @@ namespace Gamekit3D
             // Send whether or not Ellen is on the ground to the animator.
             m_Animator.SetBool(m_HashGrounded, m_IsGrounded);
         }
-        
+
         // This is called by an animation event when Ellen swings her staff.
         public void MeleeAttackStart(int throwing = 0)
         {
@@ -574,7 +549,7 @@ namespace Gamekit3D
         {
             StartCoroutine(RespawnRoutine());
         }
-        
+
         protected IEnumerator RespawnRoutine()
         {
             // Wait for the animator to be transitioning from the EllenDeath state.
@@ -582,7 +557,7 @@ namespace Gamekit3D
             {
                 yield return null;
             }
-            
+
             // Wait for the screen to fade out.
             yield return StartCoroutine(ScreenFader.FadeSceneOut());
             while (ScreenFader.IsFading)
@@ -604,17 +579,17 @@ namespace Gamekit3D
             {
                 Debug.LogError("There is no Checkpoint set, there should always be a checkpoint set. Did you add a checkpoint at the spawn?");
             }
-            
+
             // Set the Respawn parameter of the animator.
             m_Animator.SetTrigger(m_HashRespawn);
-            
+
             // Start the respawn graphic effects.
             spawn.StartEffect();
-            
+
             // Wait for the screen to fade in.
             // Currently it is not important to yield here but should some changes occur that require waiting until a respawn has finished this will be required.
             yield return StartCoroutine(ScreenFader.FadeSceneIn());
-            
+
             m_Damageable.ResetDamage();
         }
 
@@ -622,7 +597,7 @@ namespace Gamekit3D
         public void RespawnFinished()
         {
             m_Respawning = false;
-            
+
             //we set the damageable invincible so we can't get hurt just after being respawned (feel like a double punitive)
             m_Damageable.isInvulnerable = false;
         }
@@ -682,5 +657,7 @@ namespace Gamekit3D
             m_Respawning = true;
             m_Damageable.isInvulnerable = true;
         }
+
+      
     }
 }

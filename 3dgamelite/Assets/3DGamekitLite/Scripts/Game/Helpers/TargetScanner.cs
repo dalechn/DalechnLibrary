@@ -6,8 +6,8 @@ namespace Gamekit3D
 {
     //use this class to simply scan & spot the player based on the parameters.
     //Used by enemies behaviours.
-    [System.Serializable]
-    public class TargetScanner
+    //[System.Serializable]
+    public class TargetScanner:MonoBehaviour
     {
         public float heightOffset = 0.0f;
         public float detectionRadius = 10;
@@ -16,13 +16,15 @@ namespace Gamekit3D
         public float maxHeightDifference = 1.0f;
         public LayerMask viewBlockerLayerMask;
 
+        public float playerDetectionRadius = 5;
+
         /// <summary>
         /// Check if the player is visible according to that Scanner parameter.
         /// </summary>
         /// <param name="detector">The transform from which run the detection</param>
         /// /// <param name="useHeightDifference">If the computation should comapre the height difference to the maxHeightDifference value or ignore</param>
         /// <returns>The player controller if visible, null otherwise</returns>
-        public PlayerController Detect(Transform detector, bool useHeightDifference = true)
+        public TargetDistributor Detect(Transform detector, bool useHeightDifference = true)
         {
             //if either the player is not spwned or they are spawning, we do not target them
             if (PlayerController.instance == null || PlayerController.instance.respawning)
@@ -58,15 +60,68 @@ namespace Gamekit3D
                         viewBlockerLayerMask, QueryTriggerInteraction.Ignore);
 
                     if (canSee)
-                        return PlayerController.instance;
+                        return PlayerController.instance.targetDistributor;
                 }
             }
 
             return null;
         }
 
+        private void OnDisable()
+        {
+            PlayerController.instance.targetDistributor.UnRegistEnemy(transform);
+        }
+
+        private void Update()
+        {
+            PlayerDetect();
+        }
+
+        public void PlayerDetect()
+        {
+            //if either the player is not spwned or they are spawning, we do not target them
+            if (PlayerController.instance == null || PlayerController.instance.respawning)
+            {
+                return;
+            }
+
+            Vector3 eyePos = transform.position + Vector3.up * heightOffset;
+            Vector3 toPlayer = PlayerController.instance.transform.position - eyePos;
+            Vector3 toPlayerTop = PlayerController.instance.transform.position + Vector3.up * 1.5f - eyePos;
+
+            Vector3 toPlayerFlat = toPlayer;
+            toPlayerFlat.y = 0;
+
+            if (toPlayerFlat.sqrMagnitude <= playerDetectionRadius * playerDetectionRadius)
+            {
+
+                bool canSee = false;
+
+                Debug.DrawRay(eyePos, toPlayer, Color.green);
+                Debug.DrawRay(eyePos, toPlayerTop, Color.green);
+
+                canSee |= !Physics.Raycast(eyePos, toPlayer.normalized, playerDetectionRadius,
+                    viewBlockerLayerMask, QueryTriggerInteraction.Ignore);
+
+                canSee |= !Physics.Raycast(eyePos, toPlayerTop.normalized, toPlayerTop.magnitude,
+                    viewBlockerLayerMask, QueryTriggerInteraction.Ignore);
+
+                if (canSee)
+                    PlayerController.instance.targetDistributor.RegistEnemy(transform);
+
+            }
+            else
+            {
+                PlayerController.instance.targetDistributor.UnRegistEnemy(transform);
+            }
+        }
 
 #if UNITY_EDITOR
+
+        private void OnDrawGizmosSelected()
+        {
+            EditorGizmo(transform);
+        }
 
         public void EditorGizmo(Transform transform)
         {

@@ -37,13 +37,14 @@ namespace Gamekit3D
         public RandomAudioPlayer spottedAudio;
 
         public EnemyController controller { get { return m_Controller; } }
-        public PlayerController target { get { return m_Target; } }
+        public TargetDistributor target { get { return m_Target; } }
 
-        protected PlayerController m_Target = null;
+        protected TargetDistributor m_Target = null;
         protected EnemyController m_Controller;
         protected bool m_Fleeing = false;
 
         protected Vector3 m_RememberedTargetPosition;
+
 
         protected void OnEnable()
         {
@@ -53,6 +54,7 @@ namespace Gamekit3D
 
             SceneLinkedSMB<SpitterBehaviour>.Initialise(m_Controller.animator, this);
 
+            playerScanner = GetComponent<TargetScanner>();
         }
 
         public void OnReceiveMessage(Message.MessageType type, object sender, object msg)
@@ -91,8 +93,8 @@ namespace Gamekit3D
 
         public void ApplyDamage(Damageable.DamageMessage msg)
         {
-            if (msg.damager.name == "Staff")
-                CameraShake.Shake(0.06f, 0.1f);
+            //if (msg.damager.name == "Staff")
+            //    CameraShake.Shake(0.06f, 0.1f);
 
             float verticalDot = Vector3.Dot(Vector3.up, msg.direction);
             float horizontalDot = Vector3.Dot(transform.right, msg.direction);
@@ -102,7 +104,7 @@ namespace Gamekit3D
             pushForce.y = 0;
 
             transform.forward = -pushForce.normalized;
-            controller.AddForce(pushForce.normalized * 5.5f, false);
+            controller.AddForce(pushForce.normalized * 5.5f);
 
             controller.animator.SetFloat(hashVerticalDot, verticalDot);
             controller.animator.SetFloat(hashHorizontalDot, horizontalDot);
@@ -195,12 +197,12 @@ namespace Gamekit3D
             m_Controller.animator.SetBool(hashHaveEnemy, m_Target != null);
         }
 
-#if UNITY_EDITOR
-        private void OnDrawGizmosSelected()
-        {
-            playerScanner.EditorGizmo(transform);
-        }
-#endif
+//#if UNITY_EDITOR
+//        private void OnDrawGizmosSelected()
+//        {
+//            playerScanner.EditorGizmo(transform);
+//        }
+//#endif
     }
     
     
@@ -209,15 +211,17 @@ namespace Gamekit3D
     public class SpitterBehaviourEditor : Editor
     {
         SpitterBehaviour m_Target;
+        TargetScanner playerScanner;
 
         void OnEnable()
         {
             m_Target = target as SpitterBehaviour;
+            playerScanner = m_Target. GetComponent<TargetScanner>();
         }
 
         public override void OnInspectorGUI()
         {
-            if (m_Target.playerScanner.detectionRadius < m_Target.fleeingDistance)
+            if (playerScanner.detectionRadius < m_Target.fleeingDistance)
             {
                 EditorGUILayout.HelpBox("The scanner detection radius is smaller than the fleeing range.\n" +
                     "The spitter will never shoot at the player as it will flee past the range at which it can see the player",

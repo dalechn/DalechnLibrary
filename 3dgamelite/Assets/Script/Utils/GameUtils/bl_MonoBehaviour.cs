@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace CJTools
+namespace Dalechn
 {
-    public class bl_MonoBehaviour : MonoBehaviour
+    public class bl_MonoBehaviour : vMonoBehaviour
     {
         private bool isRegister = false;
 

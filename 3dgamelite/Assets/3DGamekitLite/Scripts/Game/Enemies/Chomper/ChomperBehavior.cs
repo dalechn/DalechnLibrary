@@ -21,7 +21,7 @@ namespace Gamekit3D
 
         public EnemyController controller { get { return m_Controller; } }
 
-        public PlayerController target { get { return m_Target; } }
+        public TargetDistributor target { get { return m_Target; } }
         public TargetDistributor.TargetFollower followerData { get { return m_FollowerInstance; } }
 
         public Vector3 originalPosition { get; protected set; }
@@ -44,7 +44,7 @@ namespace Gamekit3D
 
         protected float m_TimerSinceLostTarget = 0.0f;
 
-        protected PlayerController m_Target = null;
+        protected TargetDistributor m_Target = null;
         protected EnemyController m_Controller;
         protected TargetDistributor.TargetFollower m_FollowerInstance = null;
 
@@ -59,6 +59,8 @@ namespace Gamekit3D
             m_Controller.animator.Play(hashIdleState, 0, Random.value);
 
             SceneLinkedSMB<ChomperBehavior>.Initialise(m_Controller.animator, this);
+
+            playerScanner = GetComponent<TargetScanner>();
         }
 
         /// <summary>
@@ -70,16 +72,16 @@ namespace Gamekit3D
             if (frontStepAudio != null && frontFoot == 1)
                 frontStepAudio.PlayRandomClip();
             else if (backStepAudio != null && frontFoot == 0)
-                backStepAudio.PlayRandomClip ();
+                backStepAudio.PlayRandomClip();
         }
 
         /// <summary>
         /// Called by animation events.
         /// </summary>
-        public void Grunt ()
+        public void Grunt()
         {
             if (gruntAudio != null)
-                gruntAudio.PlayRandomClip ();
+                gruntAudio.PlayRandomClip();
         }
 
         public void Spotted()
@@ -107,7 +109,7 @@ namespace Gamekit3D
         public void FindTarget()
         {
             //we ignore height difference if the target was already seen
-            PlayerController target = playerScanner.Detect(transform, m_Target == null);
+            TargetDistributor target = playerScanner.Detect(transform, m_Target == null);
 
             if (m_Target == null)
             {
@@ -152,9 +154,9 @@ namespace Gamekit3D
 
                         m_Target = target;
 
-                        TargetDistributor distributor = target.GetComponentInChildren<TargetDistributor>();
-                        if (distributor != null)
-                            m_FollowerInstance = distributor.RegisterNewFollower();
+                        //TargetDistributor distributor = target.GetComponentInChildren<TargetDistributor>();
+                        //if (distributor != null)
+                            m_FollowerInstance = target.RegisterNewFollower();
                     }
 
                     m_TimerSinceLostTarget = 0.0f;
@@ -252,8 +254,8 @@ namespace Gamekit3D
         public void ApplyDamage(Damageable.DamageMessage msg)
         {
             //TODO : make that more generic, (e.g. move it to the MeleeWeapon code with a boolean to enable shaking of camera on hit?)
-            if (msg.damager.name == "Staff")
-                CameraShake.Shake(0.06f, 0.1f);
+            //if (msg.damager.name == "Staff")
+            //    CameraShake.Shake(0.06f, 0.1f);
 
             float verticalDot = Vector3.Dot(Vector3.up, msg.direction);
             float horizontalDot = Vector3.Dot(transform.right, msg.direction);
@@ -263,7 +265,7 @@ namespace Gamekit3D
             pushForce.y = 0;
 
             transform.forward = -pushForce.normalized;
-            controller.AddForce(pushForce.normalized * 5.5f, false);
+            controller.AddForce(pushForce.normalized * 5.5f);
 
             controller.animator.SetFloat(hashVerticalDot, verticalDot);
             controller.animator.SetFloat(hashHorizontalDot, horizontalDot);
@@ -273,11 +275,11 @@ namespace Gamekit3D
             hitAudio.PlayRandomClip();
         }
 
-#if UNITY_EDITOR
-        private void OnDrawGizmosSelected()
-        {
-            playerScanner.EditorGizmo(transform);
-        }
-#endif
+        //#if UNITY_EDITOR
+        //        private void OnDrawGizmosSelected()
+        //        {
+        //            playerScanner.EditorGizmo(transform);
+        //        }
+        //#endif
     }
 }
