@@ -18,12 +18,7 @@
 罗尔定理,柯西定理,达布定理,拉格朗日定理,泰勒公式,洛必达法则
 傅里叶级数变换
 
-__uuidof noexcept
-
-APACHE TOMCAT -java
-PHPStudy(mysql+apache) -php 
-IIS - asp.net
-node JS+express -js
+__uuidof noexcept 
 
 localhost,127.0.0.1
 80 8086
@@ -75,22 +70,19 @@ declare interface
 敲ui-被优化-死
 去大公司-高强度脑力-戒色-健身-有机会
 去大公司-高强度脑力-戒色-健身-学双语-出国有机会
-
+网站项目-成功-会员捞金-卖掉-找女朋友-健身-有机会
+网站项目-成功-米哈游-找女朋友-健身-有机会
+网站项目-失败-米哈游-当狗-健身-戒色-有机会
 
 random Physics string 英语 攀爬 雾效 水波(透明材质) 镜面 引擎比较 math/matrix  ui测试 js yield 数组 c++ map
 web:
 html css js dom bom jquery(包含ajax),bootstrap
 
-//windows地址格式:C:\Windows
-//web地址格式:../上一级目录 ./当前目录 /根目录 猜测:/就是表示\\
-
-function nodeJSTest()
-{
-    console.log('normalization : ' + path.normalize('\\/test/test1/34dsad//`5/2slashes/1slash/tab/..')); // 格式化路径
-    console.log('joint path : ' + path.join('/test', 'test1', '2slashes/1slash', 'tab', '..')); // 连接路径
-    console.log('resolve : ' +__dirname+ path.resolve('main.js'));// 转换为绝对路径
-    console.log('ext name : ' + path.extname('main.js')); // 路径中文件的后缀名
-}
-
 multer
+
+vs插件:express ,auto complate path,auto close tag
+
+如何实现继承基类成员重写???
+unity泛型能否序列化??
+
 

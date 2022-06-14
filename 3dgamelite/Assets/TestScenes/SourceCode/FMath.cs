@@ -179,12 +179,14 @@ public class FMath : MonoBehaviour
     {
         return (float)Mathf.Pow(f, p);
     }
+
+    //y= e^x
+    public static float Exp(float power) { return Mathf.Exp(power); }
+
     //求次方数
     //y = log p f
     public static float Log(float f, float p) { return Mathf.Log(f, p); }
 
-    //y= e^x
-    public static float Exp(float power) { return Mathf.Exp(power); }
     // y = log e f //自然对数natural logarithm (lnN)
     public static float Log(float f) { return Mathf.Log(f); }
     // y = log10 f //常用对数common logarithm (lgN)

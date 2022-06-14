@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices; //dll
@@ -25,18 +26,22 @@ namespace Dalechn
 
     public abstract class CSharpTestBase
     {
+        int baseInt;
+
+        public CSharpTestBase() { }
+        public CSharpTestBase(int baseInt) { this.baseInt = baseInt; }
         abstract public void Init();
     }
 
     public enum EEnumTest { ENUMTEST}
 
-    public struct SStructTest
+    public struct StructTest
     {
         int structTest;
     }
 
     // 命名空间下的class/struct/interface前面只能加public或者不加,类内定义的class /struct/interface无限制
-    // 结构体(struct)是数值型,在迭代器里会有各种限制,无法初始化
+    // 结构体(struct)是数值型,在迭代器里会有各种限制,无法初始化,不能继承,建议存储值类型时使用struct
     // 类是(class)引用型
     // 接口(interface)无法创建成员变量,不需要加abstract/virtual,不可以加static,默认public(无法修改访问限制)
     // 抽象类(abstract class)抽象成员必须加abstract,static不可以加abstract/virtual
@@ -113,6 +118,9 @@ namespace Dalechn
             char aChar = 'a'; //16位                 //Char
 
             int aInt = 0; // 32位                        //Int32
+            int aIntb = 0b01; // 2进制                     
+            int aInto = 016; // 8进制                      
+            int aIntx = 0xf5; // 16进制                       
             long aLong = 0L; // 64位               //Int64
             short aShort = 0; //16位                 //Int16
             sbyte aSbyte = 0; //8位有符号                  //SByte
@@ -132,7 +140,7 @@ namespace Dalechn
             object obj3 = aInt; //隐式装箱              
             int int1 = (int)obj; //拆箱
             object obj4 = 1;
-            object obj2 = obj4 ?? obj;
+            object obj2 = obj4 ?? obj; // 未知:左边的变量好像不能是自身?
             //COALESCE 表达式相当于
             //obj2 = obj4 != null ? obj4 : obj;
             //  空合并运算符为右结合运算符，即操作时从右向左进行组合的。如，“a ?? b ?? c”的形式按“a ?? (b ?? c)”
@@ -156,14 +164,18 @@ namespace Dalechn
             //  \t 水平制表符 \a 警告(产生蜂鸣) \v垂直制表符 \b退格
 
             //猜测:数组为Array类型?
-            int[] myArray1 = new int[4];
-            int[] myArray2 = new int[4] { 1, 3, 5, 7 };
-            int[] myArray3 = new int[] { 1, 3, 5, 7 };
-            int[] myArray4 = { 1, 3, 5, 7 };
+            int[] arr1 = new int[4];
+            int[] arr2 = new int[4] { 1, 3, 5, 7 };
+            int[] arr3 = new int[] { 1, 3, 5, 7 };
+            int[] arr4 = { 1, 3, 5, 7 };
 
-            int[,] myArray2d1 = new int[5,3];
-            int[,] myArray2d2 = new int[,] { { 1, 2 }, { 3, 4}, { 5 ,6}, { 7 ,8} };
-            int[][] myArray2d4 = new int[4][];
+            int[,] arr2d1 = new int[5,3];
+            int[,] arr2d2 = new int[,] { { 1, 2 }, { 3, 4}, { 5 ,6}, { 7 ,8} };
+            int[][] arr2d3 = new int[4][];
+            //int[][] arr2d4= new int[4][5];//这样还报错cnm
+
+            arr2d1[1, 2] = 10;
+            arr2d3[2][2] = 10;
 
             dynamic dy; //c# 4.0(动态编译,不需要初始化)
             var val = 0;        //c#3.0(静态编译,需要初始化)
@@ -216,7 +228,6 @@ namespace Dalechn
                 findVal = intList.FindLast(e => e.age == 45); // 找到最后一个
                                                               //intList.Remove(findVal); //第二种删除方式
 
-
                 List<Person> findVals = intList.FindAll(e => e.age == 45);
                 int findIndex = intList.FindIndex(e => e.age == 45);
                 findIndex = intList.FindLastIndex(e => e.age == 45);
@@ -243,33 +254,36 @@ namespace Dalechn
             HashSet<string> hashSet = new HashSet<string>();
             hashSet.Add("123");
 
-            //有装箱操作
+            //有装箱操作,,key不可重复,不可为null
             Hashtable table = new Hashtable();
             table.Add(1, "table");
+            //table.Add(null, "table");
             Hashtable.Synchronized(table);//线程安全,只有一个线程写  多个线程读
 
-            //字典不是线程安全 
-            Dictionary<int, string> dic = new Dictionary<int, string>();
+            //字典不是线程安全 ,key不可重复,不可为null
+            Dictionary<object, string> dic = new Dictionary<object, string>();
             dic.Add(1, "dic");
+            //dic.Add(null, "dic");
 
-            //  不允许重复
+            // 排序, 不允许重复
             SortedSet<string> sortedSet = new SortedSet<string>();
             sortedSet.Add("123");
 
-            // 有装箱操作 不允许重复
-            SortedList sortedList = new SortedList();//IComparer
-            sortedList.Add(1, "sortedList");
-            sortedList.Add(0, "sortedList");
-
-            // 不允许重复
+            // 排序,不允许重复
             SortedDictionary<int, string> sortedDic = new SortedDictionary<int, string>();
             sortedDic.Add(1, "sortedDic");
             sortedDic.Add(0, "sortedDic");
+
+            // 排序,有装箱操作 不允许重复
+            SortedList sortedList = new SortedList();//IComparer
+            sortedList.Add(1, "sortedList");
+            sortedList.Add(0, "sortedList");
 
             //foreach (DictionaryEntry val in sortedList)
             //{
             //    Debug.Log(val.Key + " " + val.Value);
             //}
+            //ConcurrentBag 线程安全版本的List?
             //ConcurrentQueue 线程安全版本的Queue
             //ConcurrentStack 线程安全版本的Stack
             //ConcurrentDictionary 线程安全版本的Dictionary
@@ -376,7 +390,7 @@ namespace Dalechn
 
 
         public CSharpTest() { }
-
+        public CSharpTest(int baseInt):base(baseInt) { }
 
         // overload(重载)是不同参数的同名func
         // overwrite(重写,覆盖,隐藏), 使用new 关键字或者不写 当父类引用调用此方法时还是调用的父类,父类不一定需要virtual
@@ -386,7 +400,7 @@ namespace Dalechn
         {
             //DataTypeTest();
 
-            //DataStructTest();
+            DataStructTest();
 
             //TestDel();
 
@@ -398,7 +412,7 @@ namespace Dalechn
 
             //CPPTest();
 
-            IEnumeratorTest();
+            //IEnumeratorTest();
         }
 
         private void TimeTest()
@@ -429,11 +443,11 @@ namespace Dalechn
 
         public int age   // 属性:attribute (带get或set的field)
         {
-            //get { return m_age; }
-            //set { m_age = value; }
+            get { return m_age; }
+            set { m_age = value; }
 
-            get => m_age;
-            set => age = value;
+            //get => m_age;
+            //set => age = value; //stack overflow????
         }
 
         private int m_age; // 字段:field 最好不为public
@@ -564,23 +578,32 @@ namespace Dalechn
     }
 
 }
+//泛型约束
+public class MyClass<T, U, V, HL, W, HE, HW>
+where T : class //约束T必须是引用类型
+where U : T //约束U必须是T类型或者T类型的子类
+where V : struct //约束V必须是值类型
+where HL : IComparable //约束HL必须实现了 IComparable 接口
+where HW : class, new()//约束HE必须是引用类型，且有无参构造函数
+{ } 
 
-//public class Singleton<T> : MonoBehaviour where T : Singleton<T>
-//{
-//    public static T Instance { get; private set; }
+public class Singleton<T> : MonoBehaviour 
+    where T : Singleton<T>
+{
+    public static T Instance { get; private set; }
 
-//    protected virtual void Awake()
-//    {
-//        Instance = (T)this;
+    protected virtual void Awake()
+    {
+        Instance = (T)this;
 
-//        //if (Instance == null)
-//        //{
-//        //    Instance = (T)this;
-//        //}
-//        //else
-//        //{
-//        //    Destroy(gameObject);
-//        //}
-//    }
-//}
+        //if (Instance == null)
+        //{
+        //    Instance = (T)this;
+        //}
+        //else
+        //{
+        //    Destroy(gameObject);
+        //}
+    }
+}
 

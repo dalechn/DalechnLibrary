@@ -496,6 +496,7 @@ namespace Gamekit3D
                 movement = m_ForwardSpeed * transform.forward * Time.deltaTime;
             }
 
+            //新增:攻击时自动移动至目标
             if (m_InAttack && targetDistributor.target.target&& targetDistributor.target.distance> k_MinAttackMoveDis)
             {
                 //Debug.Log(targetDistributor.target.distance);

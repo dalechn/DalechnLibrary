@@ -160,7 +160,7 @@ Shader "Normal/Lighting" {
 
 						// 1.漫反射
 						// 取得光源方向(指向灯光位置)
-						float3 normalizedLightDir = normalize(_WorldSpaceLightPos0.xyz);
+						float3 normalizedLightDir = normalize(UnityWorldSpaceLightDir(f.worldPos));
 
 						//fixed dotValue = max(0, dot(normalizedLightDir, f.normalizedWorldNormal)); // lambert
 						fixed dotValue = dot(normalizedLightDir, f.normalizedWorldNormal) * 0.5 + 0.5; // half-lambert
@@ -175,7 +175,7 @@ Shader "Normal/Lighting" {
 					   // 取得反射光方向 // Phone需要
 					   fixed3 reflectDir = normalize(reflect(-normalizedLightDir, f.normalizedWorldNormal));
 					   // 取得视野方向
-					   fixed3 viewDir = normalize(_WorldSpaceCameraPos.xyz - f.worldPos);
+					   fixed3 viewDir = normalize(UnityWorldSpaceViewDir(f.worldPos));
 					   // 视野方向和光源方向的中间量 //Blinn-Phone需要
 					  fixed3 halfDir = normalize(viewDir + normalizedLightDir);
 

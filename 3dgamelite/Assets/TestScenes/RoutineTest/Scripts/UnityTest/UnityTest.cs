@@ -50,17 +50,38 @@ namespace Dalechn
         public LayerMask finalLayer;
         public LayerMask testLayer;
 
+        [ContextMenuItem("TestFuncName", "TestFunc")] //和ContextMenu一样,用于成员变量
         public RotDebug prefab;
 
+        //这玩意东西有点多??
+        //返回值决定了TestFuncStatic是否可点击(必须static) 
+        [UnityEditor.MenuItem("Test/TestFuncStatic", true, 1001)]
+        public static bool ValidateTest()
+        {
+            return UnityEditor.Selection.activeTransform != null;
+        }
+
         //  快捷键与字符串用空格分割，_w: 单一的快捷键     #w shift+w     %w: ctrl+w     &w: Alt+w
-        //[UnityEditor.MenuItem("Test/TestFuncStatic")] //将static方法添加到菜单栏中
-        //[UnityEditor.MenuItem("CONTEXT/Functest/TestFuncStatic")] //将static方法添加到脚本右侧的设置菜单中 (必须带上类名)
-        public static void TestFuncStatic([DefaultValue("0")]int i) { } // defaultvalue好像只是起到提示作用
+        //将方法添加到最上方的菜单栏中(必须static) 
+        [UnityEditor.MenuItem("Test/TestFuncStatic #w", false, -1000)] 
+        public static void TestFuncStatic() { }
 
-        //[ContextMenu("TestFunc")]  //将方法添加到脚本右侧的设置菜单中（不用带上类名,不用静态类）
-        public void TestFunc() { }
+        //将方法添加到GameObject中(必须static) //优先级默认1000,GameObject需要<49
+        [UnityEditor.MenuItem("GameObject/TestGameObject", false,-1000)] 
+        public static void TestGameObject() { }
 
-        private void ObjTest()
+        //将方法添加到Asset中(必须static) 
+        [UnityEditor.MenuItem("Assets/TestAsset", false, -1000)] 
+        public static void TestAsset() { }
+
+        //和ContextMenu一样,CONTEXT/类名/方法名 是固定格式(必须static)
+        [UnityEditor.MenuItem("CONTEXT/UnityTest/TestFuncStatic", false, 22)]
+        static void TestFuncInspector(){}
+
+        [ContextMenu("TestFunc")]  //右键组件时的菜单栏(不可以是static)
+        public  void TestFunc() { }
+
+        private void ObjTest([DefaultValue("0")] int i = 0) // defaultvalue好像只是起到提示作用
         {
             GameObject obj = new GameObject();
             RotDebug rotDebug = Instantiate(prefab, transform);
@@ -160,11 +181,11 @@ namespace Dalechn
 
         private void Start()
         {
-            //gameObject.AddComponent<UnityCSharpTest>();
+            gameObject.AddComponent<UnityCSharpTest>();
             //gameObject.AddComponent<GimbalLockTest>();
             //gameObject.AddComponent<FloatTest>();
             //gameObject.AddComponent<UnityCoroutineTest>();
-            gameObject.AddComponent<RandomTest>();
+            //gameObject.AddComponent<RandomTest>();
         }
 
         //private void FixedUpdate()

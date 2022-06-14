@@ -14,6 +14,12 @@ namespace Dalechn
             Debug.Log(date1.ToString("yyyyMMddHH:mm:ss"));          //    2008060606:06:06 
             Debug.Log(date2.ToString("yyyy-MM-dd★HH→mm☆ss"));     //    2008-06-06★06→06☆06 
 
+            //未知:暂时还没搞清楚?
+            int second = date1.Second;  // 1s = 1000 ms(millisecond)(毫秒)
+            int millisecond = date1.Millisecond; // 1ms = 1000ns(nanosecond)纳秒
+            long tick = date1.Ticks;    //0.1 纳秒
+
+            Debug.Log(second+" "+ millisecond + " "+tick);
             //只要确定了seed 每次随机出来的都是一样的(以程序运行一次为单位)
             System.Random random = new System.Random(-20);
             Debug.Log(random.Next(0, 1)); //[m,n)
@@ -31,7 +37,13 @@ namespace Dalechn
 
         }
 
-        public  void Update()
+        void Sleep(int ms)
+        {
+            var unixtime_ms = System.DateTime.Now;
+            while (System.DateTime.Now < unixtime_ms + new System.TimeSpan(0, 0, 0, 0, ms)) { }
+        }
+
+        public void Update()
         {
             HashSet<int> hashSet = new HashSet<int>();
             vFisherYatesRandom vFisher = new vFisherYatesRandom();

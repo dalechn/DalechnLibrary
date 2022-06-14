@@ -1,8 +1,14 @@
 
+//欧氏距离(欧几里得距离)(euclidean distance): √(x1-x2)²+(y1-y2)²
+//曼哈顿距离/哈密顿距离(manhattan/hamilton distance):|x1-x2|+|y1-y2|
+//切比雪夫距离(chebyshev distance):max(|x1-x2|,|y1-y2|)
+//闵氏距离(闵可夫斯基距离)(Minkowski Distance):以上距离的概括性表述
+
 //∈(属于) ∩(交集) ∪(并集)
 //求和符号  ∑i*x(下标i = 1,上标200) = x+2*x+3*x+...+200*x
 //阶乘符号: n! = 1*2*3*...n-1*n , n =(n-1)!*n,  0!=1
-//√根号,∫积分(integral)，∮曲线积分(curvilinear integral), df(x)=f'(x)dx 微分(differential)，f'(x0)= df(x0)/dx导数(derivative)
+//连乘符号: ∏ , 大写的π
+//√根号,∮曲线积分(curvilinear integral),∫:积分(integral),f'(t)dt=df(t) :微分(differential)，f'(t)= f'(t)dt/dt = dy/dx=lim △s/△t = lim f(x1)-f(x0)/t1-t0 :导数(derivative)
 //α(alpha),β(beta),δ(△)(delta),ε(epsilon),π(pi),θ(theta),λ(lambda),φ(phi),ω(Ω)(omiga)
 
 // add/plus(adj) +, subtract/minus(adj) -, multiply/times(adj)*,  divided by或者over(除以) 6/2,divided into(除) 2/6  ,remainder取余 %
@@ -18,9 +24,16 @@
 // trigonometry(三角学),sine(正弦) ,cosine (余弦),tangent (正切),cotangent(余切), secant(正割) ,cosecant(余割)
 
 
-// nonnegative whole number/natural number(N非负整数,自然数[0,+∞]),positive whole number/natural number(N*(N+)正整数[1,+∞],正自然数),negative whole number(负整数[-∞,-1]) ,integer (整数[-∞,+∞])
-// prime number(质数,素数),composite number(合数), fraction (分数),float/decimal (小数), 
-// irrational number (无理数CrQ (无限不循环小数)),rational number(Q(quotient)有理数(整数+分数)),complex number (复数), real number (R实数),odd number(奇数), even number (偶数)
+N：			非负整数集合/自然数[0,+∞]					(nonnegative whole number/natural number)
+N*或N+：正整数/正自然数[1,+∞]							(positive whole number/natural number)
+				负整数:[-∞,-1]										(negative whole number)
+Z：			整数[-∞,+∞]											(integer)
+Q：			有理数(整数+小数)									(rational number/quotient)
+CrQ:			无理数(无限不循环小数)							(irrational number)
+R：			实数(包括有理数和无理数						(real number)
+C：			复数														(complex number)
+∅ ：空集（不含有任何元素的集合）
+// prime number(质数,素数),composite number(合数), fraction (分数),float/decimal (小数), odd number(奇数), even number (偶数)
 // capacity(容量),formula (公式), 
 
 // theoretical physics(理论物理),applied physics(应用物理), classical physics(经典物理学),mechanics(力学), kinematics(运动学),magnetics(磁学),magnet(磁体)
@@ -51,21 +64,20 @@
 //  ax+by+c=0(a，b≠0)        二元一次方程 quadratic equation with one unknown
 //  ax²+bxy+cy+dx+ey+f=0   二元二次方程 binary quadratic equations
 
-// 直线的参数方程 
-// p = p0+ t * u
 
 // 平面参数方程 点+法向量
 // n.(p - p1) = 0
 
-//直线的参数方程
-// 过(h,k),斜率为m的直线
-// x = h+t
-// y = k+mt
+// 直线的参数方程 (斜截式,知道斜率和截距)
+// y= p0+ m * x
+
+//直线的参数方程(点斜式,知道一个点和斜率,知道2个点就是(两点式))
+//y-y1 = m(x-x1) ,m = (y2-y1)/(x2-x1)
 
 // 直线的标准方程
 // a*x+b*y+c*z+d = 0
 
-// 圆的参数方程 (极坐标系(Polar coordinate system))
+// 圆的参数方程 (极坐标系(Polar coordinate system)),圆心(x0,y0),半径r
 // x = x0 + r*cos(ω*△t)
 // y = y0 + r*sin(ω*△t)
 
@@ -89,29 +101,29 @@
 
 //匀速直线运动(uniform rectilinear motion) 
 //匀速曲线运动(uniform curvilinear motion)(圆周运动(circular motion),curvilinear motion(曲线运动))
-//s(displacement) = v(velocity)*t               s = ω*r*t
+//△s(displacement) = v(velocity)*△t               △s = ω*r*△t
 
 // 周期( 周长/线速度)T = 2πr/v = 2π/ω      (转速)n = 1/T
 //=>线速度:v=ω*r = △s/△t = 2πr/T = 2πr*n
 //=>角速度:ω = v/r = △θ/△t = 2π/T = 2π*n
 
 // 匀加速运动(uniformly accelerated motion)
-// 位移是速度对时间的积分,direction*velocity就是速度
+// 位移是速度对时间的积分,direction*speed就是速度
 // 速度是加速度对时间的积分
 // 加速度是速度对时间的导数
 // 速度是位移对时间的导数
-// s = 1/2*(vt+v0)*t 平均速度和位移
-// vt² -v0² = 2*a*s 速度和位移的关系
-// s = v0*t+1/2*a*t² 位移和时间的关系
+// vt² -v0² = 2*a*s 
 
-// s = s0+v0*t
-// vt = v0+a*t  速度和时间的关系
-
+// s = s0+v0*t =>
+// vt = v0+a*t  =>
+// s = 1/2*(vt+v0)*t =>1/2*(v0+a*t+v0)*t (和平均速度的关系)
+// s = v0*t+1/2*a*t² 
 
 //抛体运动(projectile motion)(加速度为g的匀加速运动)
 //水平位移:x = v0*t          =>水平速度:vx = v0
 //垂直位移:y = 1/2 *g*t²  =>垂直速度:vy = g*t
 
+//未知:还没搞懂??
 // 力 F = ma , 向心力(centripetal force) F =m* v²/r = m*ω²*r ,力矩M = F*r*sinθ
 // 加速度 a  = F/m ,向心加速度(centripetal acceleration) a= v²/r = ω²*r
 
@@ -119,5 +131,11 @@
 //动量定理(冲量,动量的变化) I = F*t = △P(m*vt- m*v0)                       动量守恒定律△P1+△P2=0 动量单位:kg·m/s
 
 //胡克定律:F = kx
+
+//1、牛顿第一运动定律：孤立质点保持静止或做匀速直线运动。
+//2、牛顿第二运动定律f= ma：物体加速度的大小跟作用力成正比，跟物体的质量成反比，且与物体质量的倒数成正比；加速度的方向跟作用力的方向相同。
+//3、牛顿第三运动定律：相互作用的两个质点之间的作用力和反作用力总是大小相等，方向相反，作用在同一条直线上。
+
+
 
 
