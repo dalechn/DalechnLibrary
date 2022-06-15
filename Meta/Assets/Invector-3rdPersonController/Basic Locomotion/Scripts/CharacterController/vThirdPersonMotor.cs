@@ -1,4 +1,5 @@
-﻿
+using com.mobilin.games;
+
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,7 +7,7 @@ using UnityEngine.Events;
 namespace Invector.vCharacterController
 {
     using vEventSystems;
-    public class vThirdPersonMotor : vCharacter, vIAnimatorStateInfoController
+    public class vThirdPersonMotor : mvCharacter, vIAnimatorStateInfoController
     {
         #region Variables               
 

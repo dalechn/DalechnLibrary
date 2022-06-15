@@ -7,17 +7,18 @@ using UnityEngine;
 //数据结构与算法(data structure and algorithm)
 //编译原理(principle of compiling)
 //计算机组成原理(principles of computer composition)
-//增删改查:crud (增加(Create),检索(Retrieve),更新(Update),删除(Delete))
 
 //array/array2d
-//线性表(linelist) :增加(front,back)/修改 √ ,  删除/插入/搜索 ×
+//线性表(linelist) :增加(front,back)/修改 √ ,  删除/插入(insert)/搜索 ×
 //vector(c++)/List(c#)/ArrayList(java)
-//增加(add(front,back))/插入(insert),删除(delete),修改(modify)
 
-//搜索(search/find) 
-//二分查找(binary search)
-//集合 - HashSet(java/c#)/unordered_set(c++) ,TreeSet(java)/set(c++)
-//映射(mapping) - unordered_map(c++)/HashMap(java)/Dictionary(c#)) ,TreeMap(java)/map(c++)(红黑树)
+//增删改查:crud (增加(Create),检索(Retrieve),更新(Update),删除(Delete))
+//增加-front,back,insert,删除(delete),修改(modify/update)
+
+//搜索(search/index/retrieve) 
+//-二分查找(binary search)
+//-集合(set) - HashSet(java/c#)/unordered_set(c++) ,TreeSet(java)/set(c++)
+//-映射(mapping) - unordered_map(c++)/HashMap(java)/Dictionary(c#)) ,TreeMap(java)/map(c++)(红黑树)
 
 // 排序(sort)
 // 比较排序(Comparison Sorting)
@@ -113,9 +114,11 @@ namespace Dalechn
             //StartCoroutine(UniquePaths());
             //StartCoroutine(Trap());
 
-            ThreadStart childRef = new ThreadStart(MaxAreaOfIsland);
-            Thread childThread = new Thread(childRef);
-            childThread.Start();
+            //ThreadStart childRef = new ThreadStart(MaxAreaOfIsland);
+            //Thread childThread = new Thread(childRef);
+            //childThread.Start();
+
+            StartCoroutine(MaxAreaOfIslandDFS());
         }
 
         // 题解来自leetcode用户:zhai
@@ -151,9 +154,6 @@ namespace Dalechn
                     infoList.Add(new Info("res", res));
                     infoList.Add(new Info("ans", ans));
                 }
-                //list2d.pointerStartTwo.MoveNext("res", res, true);
-                //list2d.pointerStartThree.MoveNext("ans", ans, true);
-                //list2d.pointerStartOne.MoveNext("cur", cur);
 
                 list2d.pointerListLeft.Translate(ref infoList, list2d.dp2dEditor[0][i]);
 
@@ -256,7 +256,7 @@ namespace Dalechn
                 if (height[left] < height[right])
                 {
                     ans += leftMax - height[left];
-
+                    
                     infoList = new List<Info>();
                     infoList.Add(new Info("leftMax", leftMax));
                     infoList.Add(new Info("ans", ans));
@@ -264,11 +264,7 @@ namespace Dalechn
 
                     ++left;
 
-                    //list2d.pointerStartOne.MoveNext("leftMax", leftMax);
-                    //list2d.pointerStartTwo.MoveNext("ans", ans);
-
                     yield return new WaitForSeconds(0.3f);
-                    //list2d.dp2dEditor[0][left].pointer.ChangeColor(Color.red);
                 }
                 else
                 {
@@ -281,11 +277,7 @@ namespace Dalechn
 
                     --right;
 
-                    //list2d.pointerEndOne.MoveNext("rightMax", rightMax, false, true);
-                    //list2d.pointerEndTwo.MoveNext("ans", ans, false, true);
-
                     yield return new WaitForSeconds(0.3f);
-                    //list2d.dp2dEditor[0][right].pointer.ChangeColor(Color.green);
                 }
             }
 
@@ -562,7 +554,7 @@ namespace Dalechn
             __b = __tmp;
         }
 
-        int MaxAreaOfIslandDFS()
+        IEnumerator MaxAreaOfIslandDFS()
         {
             List<List<int>> grid = list2d.GetArr();
 
@@ -576,15 +568,33 @@ namespace Dalechn
                     Queue<int> queuej = new Queue<int>();
                     queuei.Enqueue(i);
                     queuej.Enqueue(j);
+
+                    List<Info> infoList = new List<Info>();
+                    infoList.Add(new Info("ans", ans));
+
+                    list2d.pointerListUp.Translate(ref infoList, list2d.dp2dEditor[i][j], false, ColorUtils.white);
+                    yield return new WaitForSeconds(0.3f);
+
                     while (queuei.Count > 0)
                     {
-                        int cur_i = queuei.Peek(), cur_j = queuej.Peek();
-                        queuei.Dequeue();
-                        queuej.Dequeue();
+                        int cur_i = queuei.Dequeue();
+                        int cur_j = queuej.Dequeue();
+
+                        if (list2d.validIndex(cur_i, cur_j))
+                        {
+                            list2d.pointerListUp.Translate(ref infoList, list2d.dp2dEditor[cur_i][cur_j], false, ColorUtils.blue);
+                        }
+
                         if (cur_i < 0 || cur_j < 0 || cur_i == grid.Count || cur_j == grid[0].Count || grid[cur_i][cur_j] != 1)
                         {
+                            yield return new WaitForSeconds(0.1f);
+
                             continue;
                         }
+
+                        list2d.dp2dEditor[cur_i][cur_j].pointer.SetValue(0, Color.red);
+                        yield return new WaitForSeconds(0.3f);
+
                         ++cur;
                         grid[cur_i][cur_j] = 0;
                         int[] di = { 0, 0, 1, -1 };
@@ -594,13 +604,15 @@ namespace Dalechn
                             int next_i = cur_i + di[index], next_j = cur_j + dj[index];
                             queuei.Enqueue(next_i);
                             queuej.Enqueue(next_j);
+
                         }
                     }
                     ans = Mathf.Max(ans, cur);
                 }
             }
+
             Debug.Log(ans);
-            return ans;
+            //return ans;
         }
 
         int MaxAreaOfIslandBFSStack()
@@ -617,6 +629,8 @@ namespace Dalechn
                     Stack<int> stackj = new Stack<int>();
                     stacki.Push(i);
                     stackj.Push(j);
+
+
                     while (stacki.Count > 0)
                     {
                         int cur_i = stacki.Pop();
@@ -634,6 +648,7 @@ namespace Dalechn
                             int next_i = cur_i + di[index], next_j = cur_j + dj[index];
                             stacki.Push(next_i);
                             stackj.Push(next_j);
+
                         }
                     }
                     ans = Mathf.Max(ans, cur);
@@ -646,29 +661,23 @@ namespace Dalechn
 
         private void Update()
         {
-            if (list2d.validIndex(i, j))
-            {
-                if (setColor)
-                {
-                    list2d.dp2dEditor[i][j].pointer.SetValue(0, Color.red);
-                }
-                //list2d.pointerUpOne.MovePosition(list2d.dp2dEditor, i, j, ans);
-                //list2d.pointerUpOne.ChangeColor(currentColor);
+            //if (list2d.validIndex(i, j))
+            //{
+            //    if (setColor)
+            //    {
+            //        list2d.dp2dEditor[i][j].pointer.SetValue(0, Color.red);
+            //    }
 
-                List<Info> infoList = new List<Info>();
-                infoList.Add(new Info("leftMax", ans));
-                list2d.pointerListUp.Translate(ref infoList, list2d.dp2dEditor[i][j], true, currentColor);
-            }
-            if(cleanPath)
-            {
-                list2d.pointerListUp.SetActivePath(false);
-            }
+            //    List<Info> infoList = new List<Info>();
+            //    infoList.Add(new Info("ans", ans));
+            //    list2d.pointerListUp.Translate(ref infoList, list2d.dp2dEditor[i][j], false, currentColor);
+            //}
+
         }
 
         int i, j, ans;
         int currentColor = ColorUtils.white;
         bool setColor;
-        bool cleanPath;
         int dfs(ref List<List<int>> grid, int cur_i, int cur_j)
         {
             if (cur_i < 0 || cur_j < 0 || cur_i == grid.Count || cur_j == grid[0].Count || grid[cur_i][cur_j] != 1)
@@ -686,7 +695,6 @@ namespace Dalechn
             {
                 int next_i = cur_i + di[index], next_j = cur_j + dj[index]; //分别向四个方向递归(右,下,左,上)
 
-                cleanPath = false;
                 currentColor = ColorUtils.blue;
                 setColor = true;
                 i = cur_i;
@@ -713,13 +721,11 @@ namespace Dalechn
             {
                 for (int j = 0; j != grid[0].Count; ++j)
                 {
-                    cleanPath = false;
                     currentColor = ColorUtils.white;
                     setColor = false;
                     this.i = i;
                     this.j = j;
                     Thread.Sleep(300);                  //延迟可视化还需要更多思考??
-                    cleanPath = true;
 
                     ans = Mathf.Max(ans, dfs(ref grid, i, j));
                     this.ans = ans;

@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace Invector.vShooter
 {
-    using System.Collections.Generic;
     using vCharacterController;
 
     [vClassHeader("Draw/Hide Shooter Melee Weapons", "This component works with vItemManager, vWeaponHolderManager and vShooterMeleeInput", useHelpBox = true)]
@@ -15,11 +14,39 @@ namespace Invector.vShooter
         public bool aim = true;
         public bool hipFire = true;
 
-
         protected override void Start()
         {
             base.Start();
             shooter = GetComponent<vShooterMeleeInput>();
+        }
+
+        protected override void ControlWeapons()
+        {
+            if (isLocked || shooter.cc == null || shooter.cc.customAction)
+                return;
+
+            HandleInput();
+            DrawWeaponsImmediateHandle();
+
+            if (shooter.shooterManager && shooter.shooterManager.CurrentWeapon)
+            {
+            }
+            else
+            {
+                HideWeaponsAutomatically();
+            }
+        }
+
+        //×¢²áÎªshootermanager equipÊÂ¼þ
+        public void RegistShootHideEvent(GameObject g, bool b)
+        {
+            if (handleInputHideWeapons)
+            {
+                RemoveHideEvent();
+
+                shooter.cc.OnStartSprinting.AddListener(SprintHide);
+                shooter.cc.OnRoll.AddListener(RollHide);
+            }
         }
 
         protected override bool CanHideWeapons()

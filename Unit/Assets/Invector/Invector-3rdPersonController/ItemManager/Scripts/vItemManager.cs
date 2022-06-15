@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Invector.vItemManager
 {
-    
+
     using Invector.vCharacterController;
     using Invector.vEventSystems;
     using System.Linq;
@@ -862,6 +862,8 @@ namespace Invector.vItemManager
                             itemReference.amount--;
                         }
                         items.Add(_item);
+                        onAddItem.Invoke(_item);
+                        onAddItemID.Invoke(_item.id);
                         if (itemReference.addToEquipArea)
                         {
                             itemReference.addToEquipArea = false;
@@ -874,8 +876,6 @@ namespace Invector.vItemManager
                         }
                         else
                         {
-                            onAddItem.Invoke(_item);
-                            onAddItemID.Invoke(_item.id);
                             onFinish?.Invoke(_item);
                         }
                     }
@@ -1829,7 +1829,7 @@ namespace Invector.vItemManager
         protected virtual IEnumerator DisplayCollectedItems(float delay, params CollectedItemInfo[] _items)
         {
             for (int i = 0; i < _items.Length; i++)
-            {               
+            {
                 onCollectItem.Invoke(_items[i]);
                 if (vItemCollectionDisplay.Instance)
                 {

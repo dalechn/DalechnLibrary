@@ -10,18 +10,18 @@ namespace Invector.vCharacterController
     {
         #region variables
 
-      
+
         public enum CameraStyle
         {
             ThirdPerson, TopDown, SideScroll
         }
-      
+
         [vEditorToolbar("Settings")]
         public CameraStyle cameraStyle;
         public bool canUseThrow;
         public Transform throwStartPoint;
         public GameObject throwEnd;
-        public Rigidbody objectToThrow; 
+        public Rigidbody objectToThrow;
         public LayerMask obstacles = 1 << 0;
         public float throwMaxForce = 15f;
         public float throwDelayTime = .25f;
@@ -29,7 +29,9 @@ namespace Invector.vCharacterController
         public float lineMaxTime = 10f;
         public int maxThrowObjects = 6;
         public int currentThrowObject;
-        public float exitThrowModeDelay = 0.5f;    
+        public float exitThrowModeDelay = 0.5f;
+        [Tooltip("Set ignore collision to the grenade to not collide with the Player")]
+        public bool setIgnoreCollision;
         public bool debug;
         [vSeparator("Only for ThirdPerson Camera Style")]
         [Tooltip("The Third person camera right will be applied as offset to throw start point")]
@@ -46,7 +48,7 @@ namespace Invector.vCharacterController
 
 
         [vEditorToolbar("Animations")]
-        [Tooltip("Delay to exit the Throw Aiming Mode and get back to default locomotion")]      
+        [Tooltip("Delay to exit the Throw Aiming Mode and get back to default locomotion")]
         public string throwAnimation = "ThrowObject";
         public string holdingAnimation = "HoldingObject";
         public string cancelAnimation = "CancelThrow";
@@ -56,8 +58,9 @@ namespace Invector.vCharacterController
         public UnityEngine.Events.UnityEvent onThrowObject;
         public UnityEngine.Events.UnityEvent onCollectObject;
         public UnityEngine.Events.UnityEvent onFinishThrow;
-       
-        public virtual  vThrowUI ui
+
+        public Collider[] selfColliders;
+        public virtual vThrowUI ui
         {
             get
             {
@@ -106,6 +109,7 @@ namespace Invector.vCharacterController
             }
 
             lineRenderer = GetComponent<LineRenderer>();
+
             if (lineRenderer)
             {
                 lineRenderer.useWorldSpace = true;
@@ -114,8 +118,10 @@ namespace Invector.vCharacterController
             canUseThrow = true;
 
             tpInput = GetComponentInParent<vThirdPersonInput>();
+            if (currentThrowObject > maxThrowObjects) currentThrowObject = maxThrowObjects;
             if (tpInput)
             {
+                selfColliders = tpInput.GetComponentsInChildren<Collider>(true);
                 tpInput.onUpdate -= UpdateThrowInput;
                 tpInput.onUpdate += UpdateThrowInput;
                 tpInput.onFixedUpdate -= UpdateThrowBehavior;
@@ -128,7 +134,7 @@ namespace Invector.vCharacterController
                     tpInput.cc.strafeSpeed.rotateWithCamera = true;
                 }
             }
-            if(cameraStyle != CameraStyle.ThirdPerson)
+            if (cameraStyle != CameraStyle.ThirdPerson)
             {
                 useCameraRightAsOffset = false;
                 rotateWhileAiming = true;
@@ -147,7 +153,7 @@ namespace Invector.vCharacterController
                 isThrowInput = false;
                 return;
             }
-            
+
             MoveAndRotate();
         }
 
@@ -203,7 +209,7 @@ namespace Invector.vCharacterController
                     case CameraStyle.TopDown:
                         var dir = aimDirection;
                         dir.y = 0;
-                        if(inThrow|| rotateWhileAiming)  tpInput.cc.RotateToDirection(dir);
+                        if (inThrow || rotateWhileAiming) tpInput.cc.RotateToDirection(dir);
                         break;
                     case CameraStyle.SideScroll:
                         ///
@@ -214,6 +220,7 @@ namespace Invector.vCharacterController
 
         protected virtual void LaunchObject(Rigidbody projectily)
         {
+
             projectily.AddForce(StartVelocity, ForceMode.VelocityChange);
         }
 
@@ -303,10 +310,21 @@ namespace Invector.vCharacterController
         }
 
         protected virtual IEnumerator Launch()
-        {           
+        {
             yield return new WaitForSeconds(throwDelayTime);
             var obj = Instantiate(objectToThrow, startPoint, throwStartPoint.rotation);
+            if (setIgnoreCollision)
+            {
+                var coll = obj.GetComponent<Collider>();
+                if (coll)
+                {
 
+                    for (int i = 0; i < selfColliders.Length; i++)
+                    {
+                        Physics.IgnoreCollision(coll, selfColliders[i], true);
+                    }
+                }
+            }
             obj.isKinematic = false;
             LaunchObject(obj);
             if (ui)
@@ -317,12 +335,6 @@ namespace Invector.vCharacterController
             onThrowObject.Invoke();
 
             yield return new WaitForSeconds(2 * lineStepPerTime);
-            var coll = obj.GetComponent<Collider>();
-            if (coll)
-            {
-                coll.isTrigger = false;
-            }
-
             inThrow = false;
 
             if (currentThrowObject <= 0)
@@ -381,9 +393,9 @@ namespace Invector.vCharacterController
             get
             {
                 Vector3 point = throwStartPoint.position;
-                if (useCameraRightAsOffset && tpInput && tpInput.tpCamera && tpInput.tpCamera.lerpState!=null)
+                if (useCameraRightAsOffset && tpInput && tpInput.tpCamera && tpInput.tpCamera.lerpState != null)
                 {
-                    point += tpInput.tpCamera.transform.right * tpInput.tpCamera.lerpState.right* cameraRightOffsetMultiplier * tpInput.tpCamera.switchRight;
+                    point += tpInput.tpCamera.transform.right * tpInput.tpCamera.lerpState.right * cameraRightOffsetMultiplier * tpInput.tpCamera.switchRight;
                 }
                 return point;
             }
@@ -395,6 +407,7 @@ namespace Invector.vCharacterController
             {
                 RaycastHit hit;
                 var dist = Vector3.Distance(startPoint, aimPoint);
+
                 if (debug)
                 {
                     Debug.DrawLine(startPoint, aimPoint);
@@ -402,7 +415,7 @@ namespace Invector.vCharacterController
 
                 if (cameraStyle == CameraStyle.ThirdPerson)
                 {
-                    if (Physics.Raycast(startPoint, aimDirection.normalized, out hit, obstacles))
+                    if (Physics.Raycast(startPoint, aimDirection.normalized, out hit, aimDirection.magnitude, obstacles))
                     {
                         dist = hit.distance;
                     }

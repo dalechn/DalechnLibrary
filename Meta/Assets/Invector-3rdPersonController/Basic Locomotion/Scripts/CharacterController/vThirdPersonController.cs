@@ -1,10 +1,11 @@
-﻿using System.Collections;
+using com.mobilin.games;
+using System.Collections;
 using UnityEngine;
 
 namespace Invector.vCharacterController
 {
     [vClassHeader("THIRD PERSON CONTROLLER", iconName = "controllerIcon")]
-    public class vThirdPersonController : vThirdPersonAnimator
+    public class vThirdPersonController : mvThirdPersonAnimator
     {
         /// <summary>
         /// Move the controller to a specific Position, you must Lock the Input first 

@@ -46,7 +46,13 @@ public class BowController : vShooterWeapon
         if(!shooting)
         {
             //Debug.Log(springDist);
-            bend.angle = bendFactor * springDist;
+            bend.angle =  bendFactor * springDist;
+
+            if (Mathf.Abs( bend.angle)<0.01f)
+            {
+                bend.angle = 0;
+            }
+
         }
     }
 

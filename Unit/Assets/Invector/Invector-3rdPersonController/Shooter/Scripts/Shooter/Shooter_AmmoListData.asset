@@ -17,7 +17,7 @@ MonoBehaviour:
   ammos:
   - ammoName: Rifle Ammo
     ammoID: 13
-    _count: 100
+    _count: 0
     ammoItems: []
   - ammoName: Handgun Ammo
     ammoID: 14

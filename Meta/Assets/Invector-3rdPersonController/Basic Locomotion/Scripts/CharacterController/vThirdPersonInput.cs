@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using com.mobilin.games;
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -62,7 +63,7 @@ namespace Invector.vCharacterController
         [HideInInspector]
         public bool smoothCameraState;                      // generic bool to know if the state will change with or without lerp
         [HideInInspector]
-        public vThirdPersonController cc;                   // access the ThirdPersonController component
+        public mvThirdPersonController cc;                   // access the ThirdPersonController component
         [HideInInspector]
         public vHUDController hud;                          // acess vHUDController component
         protected bool updateIK = false;
@@ -105,7 +106,7 @@ namespace Invector.vCharacterController
             {
                 if (cc == null)
                 {
-                    cc = GetComponent<vThirdPersonController>();
+                    cc = GetComponent<mvThirdPersonController>();
                 }
 
                 if (cc.animator == null)
@@ -123,7 +124,7 @@ namespace Invector.vCharacterController
 
         protected virtual void Start()
         {
-            cc = GetComponent<vThirdPersonController>();
+            cc = GetComponent<mvThirdPersonController>();
 
             if (cc != null)
             {

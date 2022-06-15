@@ -1,11 +1,12 @@
-﻿
+using com.mobilin.games;
+
 using UnityEngine;
 
 namespace Invector.vCharacterController
 {
     using System.Collections;
     using vEventSystems;
-    public class vThirdPersonAnimator : vThirdPersonMotor
+    public class vThirdPersonAnimator : mvThirdPersonMotor
     {
         #region Variables      
 

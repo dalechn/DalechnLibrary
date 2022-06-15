@@ -9,6 +9,9 @@ namespace Invector
         protected vFootStepBase _fT;
         public UnityEvent OnStep;
 
+        protected Vector3 lastPos;
+        protected const float stepInterval = 0.3f; //一般是collider的半径
+
         void OnDrawGizmos()
         {
             if (!trigger) return;
@@ -24,13 +27,14 @@ namespace Invector
         void Start()
         {
             _fT = GetComponentInParent<vFootStepBase>();
+            lastPos = transform.position;
 
-            var r = gameObject.GetComponent<Rigidbody>();
-            if (r == null)
-                gameObject.AddComponent<Rigidbody>().isKinematic = true;
-            else
-                r.isKinematic = true;
-           
+            //var r = gameObject.GetComponent<Rigidbody>();
+            //if (r == null)
+            //    gameObject.AddComponent<Rigidbody>().isKinematic = true;
+            //else
+            //    r.isKinematic = true;
+
             if (_fT == null)
             {
                 Debug.Log(gameObject.name + " can't find the FootStepFromTexture");
@@ -41,8 +45,8 @@ namespace Invector
                 var colliders = _fT.gameObject.GetComponentsInChildren<Collider>(true);
                 for (int i = 0; i < colliders.Length; i++)
                 {
-                    var c = colliders[i];                  
-                    if (c!=null && c.gameObject != trigger.gameObject)
+                    var c = colliders[i];
+                    if (c != null && c.gameObject != trigger.gameObject)
                     {
                         Physics.IgnoreCollision(c, trigger, true);
                     }
@@ -54,7 +58,7 @@ namespace Invector
         {
             get
             {
-                if (_trigger == null) _trigger =gameObject.GetComponent<Collider>();
+                if (_trigger == null) _trigger = gameObject.GetComponent<Collider>();
                 return _trigger;
             }
         }
@@ -62,28 +66,34 @@ namespace Invector
         protected Collider lastCollider;
 
         internal FootStepObject footstepObj;
-       
+
         void OnTriggerEnter(Collider other)
         {
-            if (_fT == null) return;         
-            if ((lastCollider == null || lastCollider != other) || footstepObj == null)
-            {
-                footstepObj = new FootStepObject(transform, other);
-                lastCollider = other;
-            }            
+            if (_fT == null) return;
 
-            if (footstepObj.isTerrain) //Check if trigger objet is a terrain
-            {                
-                _fT.StepOnTerrain(footstepObj);
-                OnStep.Invoke();
-            }
-            else
-            {                
-                _fT.StepOnMesh(footstepObj);
-                OnStep.Invoke();
+            if (Vector3.Distance(lastPos, transform.position) > stepInterval)
+            {
+                lastPos = transform.position;
+
+                if ((lastCollider == null || lastCollider != other) || footstepObj == null)
+                {
+                    footstepObj = new FootStepObject(transform, other);
+                    lastCollider = other;
+                }
+
+                if (footstepObj.isTerrain) //Check if trigger objet is a terrain
+                {
+                    _fT.StepOnTerrain(footstepObj);
+                    OnStep.Invoke();
+                }
+                else
+                {
+                    _fT.StepOnMesh(footstepObj);
+                    OnStep.Invoke();
+                }
             }
         }
-      
+
     }
 
     /// <summary>
@@ -104,13 +114,13 @@ namespace Invector
         public bool spawnParticleEffect;
         public float volume;
         public FootStepObject(Transform sender, Collider ground)
-        {            
+        {
             this.name = "";
             this.sender = sender;
             this.ground = ground;
             this.stepHandle = ground.GetComponent<vFootStepHandler>();
 
-            if(!stepHandle)
+            if (!stepHandle)
             {
                 this.terrain = ground.GetComponent<Terrain>();
                 this.renderer = ground.GetComponent<Renderer>();

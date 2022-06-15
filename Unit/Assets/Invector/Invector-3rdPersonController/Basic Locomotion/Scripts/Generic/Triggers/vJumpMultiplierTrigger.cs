@@ -13,7 +13,7 @@ namespace Invector.vCharacterController
             {
                 var motor = other.GetComponent<vThirdPersonController>();
 
-                if (motor && (motor.isJumping || !motor.isGrounded) && motor._rigidbody.velocity.y<0)
+                if (motor && (motor.isJumping || !motor.isGrounded) && motor._rigidbody.velocity.y <= 0)
                 {
                     motor.SetJumpMultiplier(multiplier, timeToReset);
                     motor.isJumping = false;

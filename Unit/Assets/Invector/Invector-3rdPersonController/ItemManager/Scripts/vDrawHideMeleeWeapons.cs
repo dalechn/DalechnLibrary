@@ -9,6 +9,7 @@ namespace Invector
     public class vDrawHideMeleeWeapons : vMonoBehaviour
     {
         [vEditorToolbar("Default")]
+        public bool handleInputHideWeapons = true;
         public bool hideWeaponsAutomatically = true;
         [vHideInInspector("hideWeaponsAutomatically")]
         public float hideWeaponsTimer = 5f;
@@ -28,11 +29,11 @@ namespace Invector
         [vReadOnly(false)]
         public bool weaponsHided;
         [vReadOnly(false)]
-        public bool previouslyWeaponsHided;     
+        public bool previouslyWeaponsHided;
 
         protected float currentTimer;
         protected bool forceHide;
-      
+
         protected virtual void Start()
         {
             holderManager = GetComponent<vWeaponHolderManager>();
@@ -41,10 +42,54 @@ namespace Invector
             if (holderManager && melee)
             {
                 melee.onUpdate -= ControlWeapons;
-                melee.onUpdate += ControlWeapons;              
+                melee.onUpdate += ControlWeapons;
+
                 if (melee == null) Debug.LogWarning("You're missing a vMeleeCombatInput, please add one", gameObject);
             }
         }
+
+        public virtual void RemoveHideEvent()
+        {
+            melee.cc.OnCrouch.RemoveListener(CrouchHide);
+            melee.cc.OnStartSprinting.RemoveListener(SprintHide);
+            melee.cc.OnRoll.RemoveListener(RollHide);
+        }
+
+        //注册为meleemanager equip事件
+        public virtual void RegistMeleeHideEvent(GameObject g, bool b)
+        {
+            if (handleInputHideWeapons)
+            {
+                RemoveHideEvent();
+
+                melee.cc.OnCrouch.AddListener(CrouchHide);
+                melee.cc.OnStartSprinting.AddListener(SprintHide);
+                melee.cc.OnRoll.AddListener(RollHide);
+                //melee.cc.OnJump.AddListener(()=> { HideWeapons(); });
+            }
+        }
+
+        protected virtual void HideConditionsThenHide(bool immediate = false)
+        {
+            if (HideTimerConditions())
+            {
+                HideWeapons(immediate);
+            }
+        }
+
+        protected virtual void CrouchHide()
+        {
+            HideConditionsThenHide();
+        }
+        protected virtual void SprintHide()
+        {
+            HideConditionsThenHide();
+        }
+        protected virtual void RollHide()
+        {
+            HideConditionsThenHide(true);
+        }
+
 
         protected virtual void ControlWeapons()
         {
@@ -58,13 +103,13 @@ namespace Invector
 
         protected virtual GameObject RightWeaponObject(bool checkIsActve = false)
         {
-            return melee && melee.meleeManager && melee.meleeManager.rightWeapon &&  
+            return melee && melee.meleeManager && melee.meleeManager.rightWeapon &&
                   (!checkIsActve || melee.meleeManager.rightWeapon.gameObject.activeInHierarchy) ? melee.meleeManager.rightWeapon.gameObject : null;
         }
 
         protected virtual GameObject LeftWeaponObject(bool checkIsActve = false)
         {
-            return melee && melee.meleeManager && melee.meleeManager.leftWeapon && 
+            return melee && melee.meleeManager && melee.meleeManager.leftWeapon &&
                 (!checkIsActve || melee.meleeManager.leftWeapon.gameObject.activeInHierarchy) ? melee.meleeManager.leftWeapon.gameObject : null;
         }
 
@@ -199,16 +244,16 @@ namespace Invector
         {
             if (hideAndDrawWeaponsInput.GetButtonDown() && !IsEquipping)
             {
-             
+
                 if (CanHideRightWeapon() || CanHideLeftWeapon())
-                {                  
+                {
                     HideWeapons();
-                }                   
+                }
                 else if (CanDrawRightWeapon() || CanDrawLeftWeapon())
-                {                   
+                {
                     DrawWeapons();
                 }
-                   
+
             }
         }
 
@@ -226,7 +271,7 @@ namespace Invector
                 return false;
             else
             {
-                return melee.weakAttackInput.GetButton()&& meleeWeakAttack || melee.strongAttackInput.GetButton() && meleeStrongAttack|| melee.blockInput.GetButton() && meleeBlock;
+                return melee.weakAttackInput.GetButton() && meleeWeakAttack || melee.strongAttackInput.GetButton() && meleeStrongAttack || melee.blockInput.GetButton() && meleeBlock;
             }
         }
 
@@ -237,7 +282,7 @@ namespace Invector
             {
                 var equipment = weapon.GetComponent<vEquipment>();
                 if (equipment == null || equipment.equipPoint == null || equipment.equipPoint.area == null)
-                {                  
+                {
                     return;
                 }
                 var holder = holderManager.GetHolder(weapon.gameObject, equipment.referenceItem.id);
@@ -284,7 +329,7 @@ namespace Invector
                     return;
                 }
                 if (equipment.equipPoint.area.isLockedToEquip) return;
-               
+
                 var holder = holderManager.GetHolder(weapon.gameObject, equipment.referenceItem.id);
                 DrawWeaponsHandle(melee, equipment, null,
                                                             () =>
@@ -309,7 +354,7 @@ namespace Invector
                     return;
                 }
                 if (equipment.equipPoint.area.isLockedToEquip) return;
-               
+
                 var holder = holderManager.GetHolder(weapon.gameObject, equipment.referenceItem.id);
 
                 DrawWeaponsHandle(melee, equipment, null,

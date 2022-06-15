@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using com.mobilin.games;
+using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 
@@ -9,7 +10,7 @@ namespace Invector.vCharacterController
     [System.Serializable]
 
     [vClassHeader("vCharacter")]
-    public class vCharacter : vHealthController, vICharacter
+    public class vCharacter : mvHealthController, vICharacter
     {
         #region Character Variables 
 

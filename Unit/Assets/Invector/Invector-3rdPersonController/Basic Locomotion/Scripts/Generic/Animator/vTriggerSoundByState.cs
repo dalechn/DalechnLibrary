@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using PathologicalGames;
 
 namespace Invector
 {
@@ -33,17 +34,32 @@ namespace Invector
             if (_random == null)
                 _random = new vFisherYatesRandom();
             isTrigger = true;
-            GameObject audioObject = null;
-            if (audioSource != null)
-                audioObject = Instantiate(audioSource.gameObject, animator.transform.position, Quaternion.identity) as GameObject;
-            else
+            //GameObject audioObject = null;
+            //if (audioSource != null)
+            //    audioObject = Instantiate(audioSource.gameObject, animator.transform.position, Quaternion.identity) as GameObject;
+            //else
+            //{
+            //    audioObject = new GameObject("audioObject");
+            //    audioObject.transform.position = animator.transform.position;
+            //}
+            //if (audioObject != null)
+            //{
+            //    var source = audioObject.gameObject.GetComponent<AudioSource>();
+            //    var clip = sounds[_random.Next(sounds.Count)];
+            //    source.PlayOneShot(clip);
+            //}
+
+            if(audioSource)
             {
-                audioObject = new GameObject("audioObject");
-                audioObject.transform.position = animator.transform.position;
-            }
-            if (audioObject != null)
-            {
-                var source = audioObject.gameObject.GetComponent<AudioSource>();
+                AudioSource source = null;
+                if (PoolManager.Pools.ContainsKey(ResDefine.FootPool))
+                {
+                    source = PoolManager.Pools[ResDefine.FootPool].Spawn(audioSource.GetComponent<AudioSource>(), animator.transform.position, Quaternion.identity);
+                }
+                else
+                {
+                    source = Instantiate(audioSource.gameObject, animator.transform.position, Quaternion.identity).GetComponent<AudioSource>();
+                }
                 var clip = sounds[_random.Next(sounds.Count)];
                 source.PlayOneShot(clip);
             }

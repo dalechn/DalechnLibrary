@@ -117,7 +117,7 @@ namespace Invector
 
         protected virtual void HealthRecovery()
         {
-            if (!canRecoverHealth||isDead) return;
+            if (!canRecoverHealth || isDead) return;
             if (currentHealthRecoveryDelay > 0)
                 currentHealthRecoveryDelay -= Time.deltaTime;
             else
@@ -191,7 +191,17 @@ namespace Invector
             if (maxHealth < 0)
                 maxHealth = 0;
         }
-   
+
+        /// <summary>
+        /// Set a value to HealthRecovery to start recovering health
+        /// </summary>
+        /// <param name="value"></param>
+        public virtual void SetHealthRecovery(float value)
+        {
+            healthRecovery = value;
+            StartCoroutine(RecoverHealth());
+        }
+
         /// <summary>
         /// Apply Damage to Current Health
         /// </summary>
@@ -199,12 +209,12 @@ namespace Invector
         public virtual void TakeDamage(vDamage damage)
         {
             if (damage != null)
-            {             
+            {
                 onStartReceiveDamage.Invoke(damage);
                 currentHealthRecoveryDelay = currentHealth <= 0 ? 0 : healthRecoveryDelay;
 
                 if (currentHealth > 0 && !isImmortal)
-                {                   
+                {
                     currentHealth -= damage.damageValue;
                 }
 

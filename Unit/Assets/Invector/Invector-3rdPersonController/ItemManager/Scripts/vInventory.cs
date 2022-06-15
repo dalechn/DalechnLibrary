@@ -49,6 +49,9 @@ namespace Invector.vItemManager
 
         [vEditorToolbar("Settings")]
 
+        [vHelpBox("PC only - use it to switchWeapon, index is equiparea,-1 is close", vHelpBoxAttribute.MessageType.Info)]
+        public int scrollSwitchWeaponIndex = -1;
+
         [vHelpBox("True: Play Item animation when the timeScale is 0 \n False: Ignore Item animation if timeScale equals 0")]
         public bool playItemAnimation = true;
 
@@ -348,6 +351,18 @@ namespace Invector.vItemManager
                             if (changeEquip.nextItemInput.GetButtonDown())
                             {
                                 changeEquip.equipArea.NextEquipSlot();
+                            }
+
+                            if (scrollSwitchWeaponIndex >= 0&& changeEquip == changeEquipmentControllers[scrollSwitchWeaponIndex])
+                            {
+                                if (Input.GetAxis("Mouse ScrollWheel") < 0)
+                                {
+                                    changeEquip.equipArea.PreviousEquipSlot();
+                                }
+                                if (Input.GetAxis("Mouse ScrollWheel") > 0)
+                                {
+                                    changeEquip.equipArea.NextEquipSlot();
+                                }
                             }
                         }
                         else if (vInput.instance.inputDevice == InputDevice.Joystick)

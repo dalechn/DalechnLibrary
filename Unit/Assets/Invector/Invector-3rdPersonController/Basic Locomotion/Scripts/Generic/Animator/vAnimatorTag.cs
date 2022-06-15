@@ -48,4 +48,21 @@ namespace Invector.vEventSystems
             OnStateExitEvent(tags.vToList());           
         }
     }
+
+    public static partial class vAnimatorTagDefines
+    {
+        public const string CustomAction = "CustomAction";
+        public const string LockMovement = "LockMovement";
+        public const string LockRotation = "LockRotation";
+        public const string IgnoreHeadtrack = "IgnoreHeadtrack";
+        public const string IgnoreIK = "IgnoreIK";
+        public const string Attack = "Attack";
+        public const string Upperbody = "Upperbody Pose";
+        public const string Shot = "Shot";
+        public const string IsEquipping = "IsEquipping";
+        public const string IsRolling = "IsRolling";
+        public const string Airborne = "Airborne";
+        public const string TurnOnSpot = "TurnOnSpot";
+        public const string ClimbLadder = "ClimbLadder";
+    }
 }

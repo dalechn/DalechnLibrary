@@ -725,7 +725,6 @@ namespace Invector.vCharacterController
             {
                 CalculateStepOffset(_direction.normalized, ref targetVelocity, ref useVerticalVelocity);
             }
-
             CheckStopMove(ref targetVelocity);
             if (useVerticalVelocity)
             {
@@ -738,10 +737,11 @@ namespace Invector.vCharacterController
         protected virtual void CheckStopMove(ref Vector3 targetVelocity)
         {
             RaycastHit hit;
-            Vector3 origin = transform.position + transform.up * colliderRadiusDefault;
+            //Vector3 origin = transform.position + transform.up * colliderRadiusDefault;
             Vector3 direction = moveDirection.normalized;
             direction = Vector3.ProjectOnPlane(direction, groundHit.normal);
-            float distance = colliderRadiusDefault + 1;
+            //float distance = colliderRadiusDefault + 1;
+
             float targetStopWeight = 0;
             float smooth = isStrafing ? strafeSpeed.movementSmooth : freeSpeed.movementSmooth;
             bool checkStopMoveCondition = isGrounded && !isJumping && !isInAirborne && !applyingStepOffset && !customAction;
@@ -763,15 +763,16 @@ namespace Invector.vCharacterController
                     targetStopWeight = -0.01f;
                 }
 
-                if (debugWindow)
-                {
-                    Debug.DrawLine(origin, hit.point, Color.cyan);
-                }
+                //if (debugWindow)
+                //{
+                //    Debug.DrawLine(origin, hit.point, Color.cyan);
+                //}
             }
             else
             {
                 targetStopWeight = -0.01f;
             }
+            // ¿ØÖÆanimatorµÄInputMagnitude
             stopMoveWeight = Mathf.Lerp(stopMoveWeight, targetStopWeight, smooth * Time.deltaTime);
             stopMoveWeight = Mathf.Clamp(stopMoveWeight, 0f, 1f);
 
@@ -788,6 +789,8 @@ namespace Invector.vCharacterController
                 case StopMoveCheckMethod.SphereCast:
 
                 case StopMoveCheckMethod.CapsuleCast:
+                    // ·ÀÖ¹Åö×²Ìå´©Í¸
+                    origin -=transform.forward * colliderRadiusDefault;
                     Vector3 p1 = origin + transform.up * (slopeLimitHeight);
                     Vector3 p2 = origin + transform.up * (_capsuleCollider.height - _capsuleCollider.radius);
                     return Physics.CapsuleCast(p1, p2, _capsuleCollider.radius, direction, out hit, distance, stopMoveLayer);
@@ -830,10 +833,10 @@ namespace Invector.vCharacterController
                 Vector3 pB = pA + dir.normalized * distance;
                 if (Physics.Linecast(pA, pB, out stepOffsetHit, groundLayer))
                 {
-                    if (debugWindow)
-                    {
-                        Debug.DrawLine(pA, stepOffsetHit.point);
-                    }
+                    //if (debugWindow)
+                    //{
+                    //    Debug.DrawLine(pA, stepOffsetHit.point);
+                    //}
 
                     distance = stepOffsetHit.distance + 0.1f;
                 }
@@ -1285,11 +1288,11 @@ namespace Invector.vCharacterController
 
         protected bool CheckForSlope(ref Vector3 targetVelocity)
         {
-            if (debugWindow)
-            {
-                Debug.DrawLine(transform.position + Vector3.up * (_capsuleCollider.height * slopeLimitHeight), transform.position + moveDirection.normalized *
-                    (steepSlopeAhead ? _capsuleCollider.radius + slopeMaxDistance : _capsuleCollider.radius + slopeMinDistance), Color.red, 0.01f);
-            }
+            //if (debugWindow)
+            //{
+            //    Debug.DrawLine(transform.position + Vector3.up * (_capsuleCollider.height * slopeLimitHeight), transform.position + moveDirection.normalized *
+            //        (steepSlopeAhead ? _capsuleCollider.radius + slopeMaxDistance : _capsuleCollider.radius + slopeMinDistance), Color.red, 0.01f);
+            //}
 
             if (!useSlopeLimit || moveDirection.magnitude == 0f || targetVelocity.magnitude == 0f)
             {
@@ -1308,7 +1311,7 @@ namespace Invector.vCharacterController
                     var normal = slopeHitInfo.normal;
                     normal.y = 0f;
                     var normalAngle = targetVelocity.normalized.AngleFormOtherDirection(-normal.normalized);
-                    var dir = Quaternion.AngleAxis(normalAngle.y > 0f ? 90f : -90, Vector3.up) * normal.normalized * targetVelocity.magnitude;
+                    //var dir = Quaternion.AngleAxis(normalAngle.y > 0f ? 90f : -90, Vector3.up) * normal.normalized * targetVelocity.magnitude;
 
                     if (Mathf.Abs(normalAngle.y) > stopSlopeMargin)
                     {
@@ -1319,7 +1322,8 @@ namespace Invector.vCharacterController
                         _slopeSidewaysSmooth = 1f;
                     }
 
-                    targetVelocity = Vector3.Lerp(dir, Vector3.zero, _slopeSidewaysSmooth);
+                    //targetVelocity = Vector3.Lerp(dir, Vector3.zero, _slopeSidewaysSmooth);
+                    targetVelocity = Vector3.Lerp(targetVelocity, Vector3.zero, _slopeSidewaysSmooth);
                     return true;
                 }
             }
@@ -1390,19 +1394,19 @@ namespace Invector.vCharacterController
                 rightMovement.y = 0f;
                 rightMovement.z = 0f;
                 rightMovement = transform.TransformDirection(rightMovement);
-                if (debugWindow)
-                {
-                    Debug.DrawRay(transform.position, rightMovement * slideSidewaysVelocity, Color.blue);
-                }
+                //if (debugWindow)
+                //{
+                //    Debug.DrawRay(transform.position, rightMovement * slideSidewaysVelocity, Color.blue);
+                //}
 
                 _rigidbody.AddForce(rightMovement * slideSidewaysVelocity, ForceMode.VelocityChange);
 
-                if (debugWindow)
-                {
-                    Debug.DrawRay(transform.position, Vector3.ProjectOnPlane(normal.normalized, groundHit.normal).normalized, Color.blue);
-                    Debug.DrawRay(transform.position, Quaternion.AngleAxis(90, groundHit.normal) * Vector3.ProjectOnPlane(normal.normalized, groundHit.normal).normalized, Color.red);
-                    Debug.DrawRay(transform.position, transform.TransformDirection(rightMovement.normalized * 2f), Color.green);
-                }
+                //if (debugWindow)
+                //{
+                //    Debug.DrawRay(transform.position, Vector3.ProjectOnPlane(normal.normalized, groundHit.normal).normalized, Color.blue);
+                //    Debug.DrawRay(transform.position, Quaternion.AngleAxis(90, groundHit.normal) * Vector3.ProjectOnPlane(normal.normalized, groundHit.normal).normalized, Color.red);
+                //    Debug.DrawRay(transform.position, transform.TransformDirection(rightMovement.normalized * 2f), Color.green);
+                //}
             }
             else
             {

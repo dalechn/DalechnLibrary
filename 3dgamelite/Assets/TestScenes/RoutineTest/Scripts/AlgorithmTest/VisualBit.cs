@@ -41,7 +41,7 @@ public class VisualBit : MonoBehaviour
     }
 
     //8 << 1的值为8* 2 = 16
-    //8 << 2的值为8* (2 ^ 2) = 32
+    //8 >> 2的值为8/ (2 ^ 2) = 2 //好像有个奇数偶数的问题???
     //8 << n的值为8* (2 ^ n)
     [ContextMenu("shift logical left")]
     public void SHL()//shift logical left：逻辑左移指令,SAL一样的

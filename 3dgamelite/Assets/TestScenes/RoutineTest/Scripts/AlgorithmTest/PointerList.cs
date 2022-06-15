@@ -9,7 +9,7 @@ namespace Dalechn
     {
         public List<DynamicPointer> pointerList = new List<DynamicPointer>();
         public LinkedList<DynamicPointer> pointerLinkList = new LinkedList<DynamicPointer>();
-        public HashSet<DynamicPointer> pointerSet = new HashSet<DynamicPointer>();
+        //public HashSet<DynamicPointer> pointerSet = new HashSet<DynamicPointer>();
         public Dictionary<DynamicPointer, VisualList.Item> pointerDict = new Dictionary<DynamicPointer, VisualList.Item>();
 
         public DynamicPointer prefab;
@@ -20,7 +20,7 @@ namespace Dalechn
         {
             pointerList.Add(dp);
             pointerLinkList.AddLast(dp);
-            pointerSet.Add(dp);
+            //pointerSet.Add(dp);
             pointerDict.Add(dp, item);
         }
 
@@ -59,22 +59,30 @@ namespace Dalechn
             //隐藏上一个对象
             if (!showTrail && pointer)
             {
-                pointer.gameObject.SetActive(false);
+                pointer.SetActive(false);
             }
 
             DynamicPointer newPointer = Instantiate(prefab, transform.parent);
+            newPointer.Init(item.currentPosition);
+
+            //foreach (var val in pointerDict)
+            //{
+            //    if (val.Key.active&&val.Value == item)
+            //    {
+            //        newPointer.Scale();
+            //        break;
+            //    }
+            //}
+
             Add(newPointer, item);
-            newPointer.transform.position = item.currentPosition;
-
             SetValue(ref info, color);
-
         }
 
         public void SetActivePath(bool active = false)
         {
             for (int i = 0; i < pointerList.Count; i++)
             {
-                pointerList[i].gameObject.SetActive(active);
+                pointerList[i].SetActive(active);
             }
         }
 

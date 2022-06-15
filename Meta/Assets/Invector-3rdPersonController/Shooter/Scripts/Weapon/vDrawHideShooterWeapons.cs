@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using com.mobilin.games;
+using UnityEngine;
 
 namespace Invector.vShooter
 {
@@ -6,7 +7,7 @@ namespace Invector.vShooter
     using vCharacterController;
 
     [vClassHeader("Draw/Hide Shooter Melee Weapons", "This component works with vItemManager, vWeaponHolderManager and vShooterMeleeInput", useHelpBox = true)]
-    public class vDrawHideShooterWeapons : vDrawHideMeleeWeapons
+    public class vDrawHideShooterWeapons : mvDrawHideMeleeWeapons
     {
         public virtual vShooterMeleeInput shooter { get; set; }
         [vEditorToolbar("Shooter")]

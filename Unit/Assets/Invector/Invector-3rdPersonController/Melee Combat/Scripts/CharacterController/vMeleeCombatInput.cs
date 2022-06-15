@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Invector.vCharacterController
 {
+    using System.Collections;
     using vEventSystems;
     using vMelee;
 
@@ -27,6 +28,11 @@ namespace Invector.vCharacterController
 
         [HideInInspector]
         public bool lockMeleeInput;
+
+        bool m_Attack;
+        Coroutine m_AttackWaitCoroutine;
+        const float k_AttackInputDuration = 0.2f;
+        WaitForSeconds m_AttackInputWait;
 
         public void SetLockMeleeInput(bool value)
         {
@@ -58,6 +64,8 @@ namespace Invector.vCharacterController
         protected override void Start()
         {
             base.Start();
+
+            m_AttackInputWait =  new WaitForSeconds(k_AttackInputDuration);
         }
 
         protected override void LateUpdate()
@@ -80,7 +88,7 @@ namespace Invector.vCharacterController
 
             base.InputHandle();
 
-            if (MeleeAttackConditions() && !lockMeleeInput)
+            if (MeleeAttackConditions() && !lockMeleeInput )
             {
                 MeleeWeakAttackInput();
                 MeleeStrongAttackInput();
@@ -104,11 +112,43 @@ namespace Invector.vCharacterController
             {
                 return;
             }
-
             if (weakAttackInput.GetButtonDown() && MeleeAttackStaminaConditions())
             {
-                TriggerWeakAttack();
+                //TriggerWeakAttack();
+                if (m_AttackWaitCoroutine != null)
+                    StopCoroutine(m_AttackWaitCoroutine);
+
+                m_AttackWaitCoroutine = StartCoroutine(AttackWait());
             }
+            //Debug.Log(m_Attack);
+            if (m_Attack)
+            {
+                if (cc.isCrouching )
+                {
+                    if( cc.CanExitCrouch())
+                    {
+                        cc.isCrouching = false;
+                        TriggerWeakAttack();
+                    }
+                }
+                else
+                {
+                    TriggerWeakAttack();
+                }
+            }
+            else
+            {
+                cc.animator.ResetTrigger(vAnimatorParameters.WeakAttack);
+            }
+        }
+
+        IEnumerator AttackWait()
+        {
+            m_Attack = true;
+
+            yield return m_AttackInputWait;
+
+            m_Attack = false;
         }
 
         public virtual void TriggerWeakAttack()
@@ -181,7 +221,7 @@ namespace Invector.vCharacterController
                 meleeManager = GetComponent<vMeleeManager>();
             }
 
-            return meleeManager != null && cc.isGrounded && !cc.customAction && !cc.isJumping && !cc.isCrouching && !cc.isRolling && !isEquipping && !cc.animator.IsInTransition(cc.baseLayer);
+            return meleeManager != null && cc.isGrounded && !cc.customAction && !cc.isJumping /*&& !cc.isCrouching*/ && !cc.isRolling && !isEquipping && !cc.animator.IsInTransition(cc.baseLayer);
         }
 
         protected override bool JumpConditions()

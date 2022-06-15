@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using com.mobilin.games;
+using UnityEngine;
 
 
 namespace Invector.vCharacterController
@@ -6,7 +7,7 @@ namespace Invector.vCharacterController
     using IK;
     using vShooter;
     [vClassHeader("SHOOTER/MELEE INPUT", iconName = "inputIcon")]
-    public class vShooterMeleeInput : vMeleeCombatInput, vIShooterIKController, PlayerController.vILockCamera
+    public class vShooterMeleeInput : mvMeleeCombatInput, vIShooterIKController, PlayerController.vILockCamera
     {
         #region Shooter Inputs
 

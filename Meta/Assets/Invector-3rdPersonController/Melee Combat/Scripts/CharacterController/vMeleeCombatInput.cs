@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using com.mobilin.games;
+using UnityEngine;
 
 namespace Invector.vCharacterController
 {
@@ -8,7 +9,7 @@ namespace Invector.vCharacterController
     // here you can modify the Melee Combat inputs
     // if you want to modify the Basic Locomotion inputs, go to the vThirdPersonInput
     [vClassHeader("MELEE INPUT MANAGER", iconName = "inputIcon")]
-    public class vMeleeCombatInput : vThirdPersonInput, vIMeleeFighter
+    public class vMeleeCombatInput : mvThirdPersonInput, vIMeleeFighter
     {
         #region Variables                
 
