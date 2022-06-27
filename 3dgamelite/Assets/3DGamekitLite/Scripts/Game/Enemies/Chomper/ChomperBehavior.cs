@@ -29,7 +29,6 @@ namespace Gamekit3D
         public float attackDistance = 3;
 
         public MeleeWeapon meleeWeapon;
-        public TargetScanner playerScanner;
         [Tooltip("Time in seconde before the Chomper stop pursuing the player when the player is out of sight")]
         public float timeToStopPursuit;
 
@@ -44,8 +43,9 @@ namespace Gamekit3D
 
         protected float m_TimerSinceLostTarget = 0.0f;
 
-        protected TargetDistributor m_Target = null;
         protected EnemyController m_Controller;
+        protected TargetScanner playerScanner;
+        protected TargetDistributor m_Target = null;
         protected TargetDistributor.TargetFollower m_FollowerInstance = null;
 
         protected void OnEnable()

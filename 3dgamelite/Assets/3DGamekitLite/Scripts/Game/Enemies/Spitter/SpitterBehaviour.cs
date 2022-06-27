@@ -23,7 +23,6 @@ namespace Gamekit3D
 
         public static readonly int hashIdleState = Animator.StringToHash("Idle");
 
-        public TargetScanner playerScanner;
         public float fleeingDistance = 3.0f;
         public RangeWeapon rangeWeapon;
 
@@ -39,6 +38,7 @@ namespace Gamekit3D
         public EnemyController controller { get { return m_Controller; } }
         public TargetDistributor target { get { return m_Target; } }
 
+        protected TargetScanner playerScanner;
         protected TargetDistributor m_Target = null;
         protected EnemyController m_Controller;
         protected bool m_Fleeing = false;

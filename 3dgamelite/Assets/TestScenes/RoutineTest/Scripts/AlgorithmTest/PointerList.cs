@@ -10,13 +10,13 @@ namespace Dalechn
         public List<DynamicPointer> pointerList = new List<DynamicPointer>();
         public LinkedList<DynamicPointer> pointerLinkList = new LinkedList<DynamicPointer>();
         //public HashSet<DynamicPointer> pointerSet = new HashSet<DynamicPointer>();
-        public Dictionary<DynamicPointer, VisualList.Item> pointerDict = new Dictionary<DynamicPointer, VisualList.Item>();
+        public Dictionary<DynamicPointer, VisualItem> pointerDict = new Dictionary<DynamicPointer, VisualItem>();
 
         public DynamicPointer prefab;
 
-        private VisualList list;
+        public VisualList list;
 
-        public void Add(DynamicPointer dp, VisualList.Item item)
+        public void Add(DynamicPointer dp, VisualItem item)
         {
             pointerList.Add(dp);
             pointerLinkList.AddLast(dp);
@@ -40,13 +40,13 @@ namespace Dalechn
         }
 
         //移动不需要数据改变时使用
-        public void Translate(VisualList.Item item, bool showTrail = true, int color = ColorUtils.white)
+        public void Translate(VisualItem item, bool showTrail = true, int color = ColorUtils.white)
         {
             List<Info> info = new List<Info>();
             Translate(ref info, item, showTrail, color);
         }
 
-        public void Translate(ref List<Info> info, VisualList.Item item, bool showTrail = true, int color = ColorUtils.white)
+        public void Translate(ref List<Info> info, VisualItem item, bool showTrail = true, int color = ColorUtils.white)
         {
             DynamicPointer pointer = GetCurrent();
 
@@ -104,7 +104,7 @@ namespace Dalechn
 
         void Awake()
         {
-            list = FindObjectOfType<VisualList>();
+            //list = FindObjectOfType<VisualList>();
         }
 
     }

@@ -1,84 +1,16 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices; //dll
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace Dalechn
 {
-
-    public interface IInterfaceTest
+    public class CSharpTest
     {
-        //object Current { get; }
-        //bool MoveNext();
-        //void Reset();
-
-        event EventHandler OnDataUpdate;
-        event EventHandler InternalOnDataUpdate;
-    }
-
-    internal static class StaticClass<T>{}
-
-    public partial class CSharpTest{}
-
-    public abstract class CSharpTestBase
-    {
-        int baseInt;
-
-        public CSharpTestBase() { }
-        public CSharpTestBase(int baseInt) { this.baseInt = baseInt; }
-        abstract public void Init();
-    }
-
-    public enum EEnumTest { ENUMTEST}
-
-    public struct StructTest
-    {
-        int structTest;
-    }
-
-    // 命名空间下的class/struct/interface前面只能加public或者不加,类内定义的class /struct/interface无限制
-    // 结构体(struct)是数值型,在迭代器里会有各种限制,无法初始化,不能继承,建议存储值类型时使用struct
-    // 类是(class)引用型
-    // 接口(interface)无法创建成员变量,不需要加abstract/virtual,不可以加static,默认public(无法修改访问限制)
-    // 抽象类(abstract class)抽象成员必须加abstract,static不可以加abstract/virtual
-    public sealed partial class CSharpTest : CSharpTestBase, IInterfaceTest
-    {
-        //接口带event的实现方式
-        public event EventHandler OnDataUpdate;
-
-        event EventHandler IInterfaceTest.InternalOnDataUpdate
-        {
-            add
-            {
-                OnDataUpdate += value;
-            }
-            remove
-            {
-                OnDataUpdate -= value;
-            }
-        }
-
-        //1. public 访问不受限制
-        //2. protected 类内和子类访问
-        //3. internal 当前程序集/命名空间内访问
-        //4. protected internal 当前程序集/命名空间 类内和子类访问
-        //5. private 类内访问
-        public readonly RangeFloat rangeTest;
-        protected internal static readonly RangeFloat3 range3Test; // 修饰任意类型,运行时确定值,无法在inspector显示 //未知:不知道存在哪?
-        internal const int testConst = 0; // 只能修饰基本类型 ,编译时确定值,无法在inspector显示
-
-        //Expression-bodied members
-        public void Command() => CPPTest();
-        public void Command1(int a) => Debug.Log(a);
-        public string ID => "man";
-        // 和上面写法都相当于只读属性
-        //public string ID { get; } = "man";
-
-
         [DllImport("wintest", EntryPoint = "Prime")]
         public static extern bool Prime(int num);
 
@@ -95,12 +27,19 @@ namespace Dalechn
             Debug.Log(val1);
         }
 
-        private  void InOutRefTest(in int test1, out int test2, ref int test3)
+        //函数默认参数,可变参数
+        //关键字测试
+        private void FunctionTest(in int test1, out int test2, ref int test3, int a = 0, params int[] para)
         {
             //test1 = 3;
             test2 = 4;
             test3 = 5;
+
+            Debug.Log(this is CSharpTest);
+            CSharpTest cls2 = this as CSharpTest;
+            Debug.Log(typeof(CSharpTest));
         }
+
 
         private void DataTypeTest()
         {
@@ -112,6 +51,7 @@ namespace Dalechn
             double? num4 = 3.14157;
 
             bool? boolval = new bool?();
+            Nullable<int> num5 = new Nullable<int>(3);
 
             // 值类型(value type)
             bool aBool = true; //8位无符号      //Boolean
@@ -157,7 +97,7 @@ namespace Dalechn
             string str4 = string.Intern(sb1.ToString());
 
             //猜测:只要是使用了toString()就不会查询暂存池
-            string str5 ="888"+ str3.ToString();
+            string str5 = "888" + str3.ToString();
 
             //@代表不解释转义字符
             //  \' 单引号 \f 换页 \" 双引号 \n 新行 \\ 反斜杠 \r 回车 \0 空字符 
@@ -169,9 +109,13 @@ namespace Dalechn
             int[] arr3 = new int[] { 1, 3, 5, 7 };
             int[] arr4 = { 1, 3, 5, 7 };
 
-            int[,] arr2d1 = new int[5,3];
-            int[,] arr2d2 = new int[,] { { 1, 2 }, { 3, 4}, { 5 ,6}, { 7 ,8} };
+            int[,] arr2d1 = new int[5, 3];
+            int[,] arr2d2 = new int[,] { { 1, 2 }, { 3, 4 }, { 5, 6 }, { 7, 8 } };
             int[][] arr2d3 = new int[4][];
+            for (int i = 0; i < arr2d3.Length; i++)
+            {
+                arr2d3[i] = new int[5];
+            }
             //int[][] arr2d4= new int[4][5];//这样还报错cnm
 
             arr2d1[1, 2] = 10;
@@ -189,7 +133,6 @@ namespace Dalechn
             //未知:暂时没用过?
             BitArray ba1 = new BitArray(8);
             BitArray ba2 = new BitArray(8);
-     
 
             // 有装箱
             ArrayList arrayList = new ArrayList() { 1, 2, 3, 4 };
@@ -307,6 +250,10 @@ namespace Dalechn
 
         private void TestDelgate()
         {
+
+            delTest = new TestDelegate(TestDelgate);
+            actTest = new Action<int, int>((a, b) => { });
+
             //在类的外部，事件只能用“+=”和“-=”去订阅/取消订阅，如果是委托的话还可以使用“=”
             eventTest = () => { Debug.Log("testEvent1"); };
             eventTest += delegate () { Debug.Log("testEvent2"); };
@@ -346,8 +293,8 @@ namespace Dalechn
 
         private void IEnumeratorTest()
         {
-            PeopleList<int> peopleList = new PeopleList<int>();
-            
+            PersonList<int> peopleList = new PersonList<int>();
+
             for (int i = 0; i < 10; i++)
             {
                 peopleList.AddPeople(i);
@@ -360,14 +307,14 @@ namespace Dalechn
                 Debug.Log(iEnum.Current);
             }
 
-            for (int i = 0; i < peopleList.peopleList.Count; i++)
-            {
-                Debug.Log(peopleList[i]);
-            }
-
             foreach (var val in peopleList)
             {
                 Debug.Log(val);
+            }
+
+            for (int i = 0; i < peopleList.peopleList.Count; i++)
+            {
+                Debug.Log(peopleList[i]);
             }
 
         }
@@ -380,7 +327,7 @@ namespace Dalechn
         {
             for (var i = 0; i < 100; i++)
             {
-                if(i>30)
+                if (i > 30)
                 {
                     yield break;
                 }
@@ -388,41 +335,96 @@ namespace Dalechn
             }
         }
 
-
-        public CSharpTest() { }
-        public CSharpTest(int baseInt):base(baseInt) { }
-
-        // overload(重载)是不同参数的同名func
-        // overwrite(重写,覆盖,隐藏), 使用new 关键字或者不写 当父类引用调用此方法时还是调用的父类,父类不一定需要virtual
-        // override(重写,覆盖),父类需要virtual
-        // sealed密封类
-        public sealed override void Init()
+        public void Init()
         {
             //DataTypeTest();
 
-            DataStructTest();
+            //DataStructTest();
 
             //TestDel();
 
-            //int test1 = 0; // in 必须初始化,方法内不可修改
-            //int test2; // out 无需初始化,方法内必须修改
-            //int test3 =2; // ref 必须初始化,无限制
-            //InOutRefTest(test1,out test2,ref test3);
+            int test1 = 0; // in 必须初始化,方法内不可修改
+            int test2; // out 无需初始化,方法内必须修改
+            int test3 = 2; // ref 必须初始化,无限制
+            FunctionTest(test1, out test2, ref test3);
             //Debug.Log(test1+" "+test2+" "+test3);
 
             //CPPTest();
 
             //IEnumeratorTest();
+
+            //CSharp7Test(out int x, out int y);
+
+            //Person p = new Person();
+            //p.ReflectTest();
+
+            //多态测试
+            AbstractClassBase abs = new GenericClass<int>(10);
+            abs.NewInit(10);
+            abs.VirtualInit(10);
+            Debug.Log(abs.ID);
         }
 
-        private void TimeTest()
+        private ref int CSharp7Test(out int x, out int y)
         {
+            //out 变量（out variables）
+            x = 0;
+            y = 0;
 
+            //元组(tuple):一个元组最多只能包含八个元素
+            var tuple = (1, "2"); // 未知:这玩意啥类型?
+
+            var tuple2 = ValueTuple.Create(1, 2);
+            var tuple3 = new ValueTuple<int, string>(1, "2");
+
+            Tuple<int, string, string> tupleClass = new Tuple<int, string, string>(1, "Steve", "Jobs");
+            Tuple<int, bool, string, string> tupleClass2 = Tuple.Create(1, true, "3", "4");
+
+            //元组/对象解构
+            var (one, two) = tuple;
+            var (name, age) = new Person("Mike", 30, "man");
+
+            //本地函数(local function)
+            int localFunction()
+            {
+                return 0;
+            }
+            localFunction();
+
+            // ref局部变量和返回ref变量
+            // 未知: tuple好像不能ref返回?
+            int number = 0;
+            ref int n1 = ref number;
+
+            int[] arr4 = { 1, 3, 5, 7 };
+            ref int n2 = ref arr4[0];
+
+            //二进制文字、数字分隔符
+            var binary = 0b0001;
+            decimal pi = 3.141_592_653_589m;
+
+            //拓展表达式体成员(More expression-bodied members)
+            //扩展异步返回类型（Generalized async return types)???
+            //拓展Throw 表达式（Throw expressions)???
+
+            //switch,is 更新
+            if (number is int val)
+            {
+                switch (number)
+                {
+                    case 0:                // 常量模式匹配
+                        break;
+                    case int ival: // 类型模式匹配  啥玩意?
+                        break;
+                }
+            }
+
+            return ref n2;
         }
 
         public void Update()
         {
-            //TimeTest();
+
         }
 
         //public static void Main(string[] args)
@@ -435,49 +437,9 @@ namespace Dalechn
 
     }
 
-
-    public class Person
-    {
-        public string pName { get; protected set; }
-        public string sex { get; set; }
-
-        public int age   // 属性:attribute (带get或set的field)
-        {
-            get { return m_age; }
-            set { m_age = value; }
-
-            //get => m_age;
-            //set => age = value; //stack overflow????
-        }
-
-        private int m_age; // 字段:field 最好不为public
-
-
-        public Person(string name, int age, string sex)
-        {
-            this.pName = name;
-            this.age = age;
-            this.sex = sex;
-        }
-
-        public class TestComparer : IComparer<Person>
-        {
-            public int Compare(Person p1, Person p2)
-            {
-                return p1.age.CompareTo(p2.age);
-
-                // 默认升序排列, CompareTo原理:
-                //当p1>p2时，return 1
-                //当p1 = p2时，return 0
-                //当p1 < p2时，return -1
-            }
-        }
-
-    }
-
     //未知:泛型问题很大?
     //泛型化接口,避免装箱
-    public class PeopleList<T> : IEnumerable<T>, IEnumerable //枚举器
+    public class PersonList<T> : IEnumerable<T>, IEnumerable //枚举器
     {
         public List<T> peopleList = new List<T>();
 
@@ -488,7 +450,7 @@ namespace Dalechn
             peopleList.Add(stu);
         }
 
-         IEnumerator<T> IEnumerable<T>.GetEnumerator()//显式接口实现,只能由接口访问 
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()//显式接口实现,只能由接口访问 
         {
             //foreach (var item in peopleList)
             //{
@@ -545,11 +507,11 @@ namespace Dalechn
             {
                 get
                 {
-                    if (_position == -1|| _position >= peopleList.Count)
+                    if (_position == -1 || _position >= peopleList.Count)
                     {
                         throw new InvalidOperationException();
                     }
-                   
+
                     return peopleList[_position];
                 }
             }
@@ -577,33 +539,252 @@ namespace Dalechn
 
     }
 
-}
-//泛型约束
-public class MyClass<T, U, V, HL, W, HE, HW>
-where T : class //约束T必须是引用类型
-where U : T //约束U必须是T类型或者T类型的子类
-where V : struct //约束V必须是值类型
-where HL : IComparable //约束HL必须实现了 IComparable 接口
-where HW : class, new()//约束HE必须是引用类型，且有无参构造函数
-{ } 
-
-public class Singleton<T> : MonoBehaviour 
-    where T : Singleton<T>
-{
-    public static T Instance { get; private set; }
-
-    protected virtual void Awake()
+    //部分类
+    public partial class Person 
     {
-        Instance = (T)this;
+        public string pName { get; protected set; }
+        public string sex { get; set; }
 
-        //if (Instance == null)
-        //{
-        //    Instance = (T)this;
-        //}
-        //else
-        //{
-        //    Destroy(gameObject);
-        //}
+        public int age { get; set; }
+        public int ID;
+
+        public Person()  { }
+        public Person(string name, int age, string sex) 
+        {
+            this.pName = name;
+            this.age = age;
+            this.sex = sex;
+        }
+
+        public class TestComparer : IComparer<Person>
+        {
+            public int Compare(Person p1, Person p2)
+            {
+                return p1.age.CompareTo(p2.age);
+
+                // 默认升序排列, CompareTo原理:
+                //当p1>p2时，return 1
+                //当p1 = p2时，return 0
+                //当p1 < p2时，return -1
+            }
+        }
+
+        //解构函数c#7.0,返回值为void,参数为out
+        public void Deconstruct(out string name, out int age)
+        {
+            name = pName;
+            age = this.age;
+        }
+
+
+        //反射:Type,Activator,Assembly
+        public int ReflectTest(int a) { return a; }
+        public void ReflectTest()
+        {
+            //流程:(Assembly加载程序)->获取Type->Activator创建对象
+            //Assembly主要用来加载其他程序集
+            //Activator是用于快速实例化对象的类
+
+            Type type = this.GetType(); //=typeof(CSharpTest)
+
+            Person testObj = Activator.CreateInstance(type) as Person;
+            Debug.Log(testObj.ID);
+
+            MemberInfo[] infos = type.GetMembers(); //Field+Property
+            for (int i = 0; i < infos.Length; i++)
+            {
+                Debug.Log(infos[i]);
+            }
+
+            FieldInfo[] fileldInfos = type.GetFields();
+            for (int i = 0; i < fileldInfos.Length; i++)
+            {
+                Debug.Log(fileldInfos[i]);
+            }
+
+            PropertyInfo infoJ = type.GetProperty("age");
+            Debug.Log(infoJ);
+
+            ConstructorInfo[] ctors = type.GetConstructors();
+            for (int i = 0; i < ctors.Length; i++)
+            {
+                Debug.Log(ctors[i]);
+            }
+
+            MethodInfo[] methods = type.GetMethods();
+            for (int i = 0; i < methods.Length; i++)
+            {
+                Debug.Log(methods[i]);
+            }
+            //得到ReflectTest(int)函数
+            MethodInfo method = type.GetMethod("ReflectTest", new Type[] { typeof(int) });
+            Debug.Log(method);
+
+            //如果是静态方法，Invoke中的第一个参数传null即可
+            object result = method.Invoke(testObj, new object[] { 10 });
+            Debug.Log(result);
+
+            //1、得到枚举：GetEnumName、GetEnumNames
+            //2、得到事件：GetEvent、GetEvents
+            //3、得到接口：GetInterface、GetInterfaces
+            //4、得到属性：GetProperty、GetProtertys
+        }
+
     }
-}
+    //静态类,只能有静态方法和静态成员变量
+    public static class StaticClass { }
 
+    // 抽象类(abstract class)抽象成员必须加abstract,static不可以加abstract/virtual
+    public abstract class AbstractClassBase
+    {
+        public int ID = -1;
+
+        public AbstractClassBase(int ID) { this.ID = ID; }
+        public AbstractClassBase(int ID, int a) { this.ID = ID; }
+
+        public virtual void NewInit(int a) { Debug.Log("Base NewInit"); }
+        public virtual void VirtualInit(int a) { Debug.Log("Base VirtualInit"); }
+        abstract public void Init();
+    }
+
+    public enum EEnumTest { ENUMTEST }
+
+    // 接口(interface)无法创建成员变量,不需要加abstract/virtual,不可以加static,默认public(无法修改访问限制)
+    public interface IInterfaceTest
+    {
+        //object Current { get; }
+        //bool MoveNext();
+        //void Reset();
+
+        event EventHandler OnDataUpdate;
+        event EventHandler InternalOnDataUpdate;
+    }
+
+    // 结构体(struct)是数值型,在迭代器里会有各种限制,无法初始化,不能继承,建议存储值类型时使用struct
+    public struct StructTest
+    {
+        int structTest;
+    }
+
+    //泛型接口
+   // 泛型约束
+    //E - 元素，主要由Java集合(Collections)框架使用
+    //K - 键，主要用于表示映射中的键的参数类型
+    //V - 值，主要用于表示映射中的值的参数类型
+    //N - 数字，主要用于表示数字
+    //T - 类型，主要用于表示第一类通用型参数
+    //S - 类型，主要用于表示第二类通用类型参数
+    //U - 类型，主要用于表示第三类通用类型参数
+    //V - 类型，主要用于表示第四个通用类型参数
+    public interface GenericInterface<E, K, N, T, S, U, V>
+        where N : struct                    //约束V必须是值类型
+    where T : class                      //约束T必须是引用类型
+    where U : T                             //约束U必须是T类型或者T类型的子类
+    where S : IComparable            //约束HL必须实现了 IComparable 接口
+    where V : class, new()              //约束HE必须是引用类型，且有无参构造函数 { }
+    { }
+
+    //泛型类 
+    // 命名空间下的class/struct/interface前面只能加public或者不加,类内定义的class /struct/interface无限制
+    // 类是(class)引用型
+    // sealed密封类/方法
+    //面向对象3大特征:封装(encapsulation),继承(extend),多态(Polymorphism)
+    public class GenericClass<T> : AbstractClassBase,  IInterfaceTest/*, Person*/ //不能有多个基类,可以有多个接口
+    {
+        //泛型方法,<T>可不写
+        public void GenericFunctionTest<T>(T parameter) { }
+
+        //1. public 访问不受限制
+        //2. protected 类内和子类访问
+        //3. internal 当前程序集/命名空间内访问
+        //4. protected internal 当前程序集/命名空间 类内和子类访问
+        //5. private 只能在类内访问
+        public readonly RangeFloat rangeTest;
+        protected internal static readonly RangeFloat3 range3Test; // readonly修饰任意类型,运行时确定值,无法在inspector显示 //未知:不知道存在哪?
+        internal const int testConst = 0;                                       // const只能修饰基本类型 ,编译时确定值,无法在inspector显示
+
+        public static int staticTest;
+        protected int protectedTest;
+        private int privateTest;
+
+        //接口带event的实现方式
+        public event EventHandler OnDataUpdate;
+
+        event EventHandler IInterfaceTest.InternalOnDataUpdate
+        {
+            add => OnDataUpdate += value;
+            remove
+            {
+                OnDataUpdate -= value;
+            }
+        }
+
+        //表达式主体成员(expression-bodied-members)
+        public void Command() => Init();
+        public void Command1(int a) => Debug.Log(a);
+
+        //成员函数没有virtual
+        //不管加不加new,当父类引用调用此方法时还是调用的父类
+        public new  string ID => "man";
+        //public string ID { get; } = "man";         // 和上面写法都相当于只读属性
+
+        public int Age   // 属性:property (带get或set的field)
+        {
+            //get { return m_age; }
+            //set { m_age = value; }
+
+            // c#7.0扩展
+            get => m_Age;
+            set => m_Age = value;
+        }
+
+        private int m_Age; // 字段:field 最好不为public
+
+        //不写构造函数的话,编译器默认会创建空的构造函数
+        //每个构造函数都要实现父类构造函数的参数,有多个有参数构造函数实现一个就行?
+        public GenericClass(int baseInt) : base(baseInt) { }
+        ~GenericClass() { }
+
+        //需要override才能密封
+        public sealed override void Init()
+        {
+            throw new NotImplementedException();
+        }
+
+        // overload(重载)是不同参数的同名func
+        public void Init(int para)
+        {}
+
+        // override(重写,覆盖),父类需要virtual
+        public override void VirtualInit(int a) { Debug.Log(" VirtualInit"); }
+
+        // overwrite(重写,覆盖,隐藏), 使用new 关键字或者不写,父类不一定需要virtual
+        // 当父类引用调用此方法时还是调用的父类
+        public new void NewInit(int a) { Debug.Log(" NewInit"); }
+
+        public static void staticFunc() { }
+    }
+
+    //单例
+    public class Singleton<T> : MonoBehaviour
+        where T : Singleton<T>
+    {
+        public static T Instance { get; private set; }
+
+        protected virtual void Awake()
+        {
+            Instance = (T)this;
+
+            //if (Instance == null)
+            //{
+            //    Instance = (T)this;
+            //}
+            //else
+            //{
+            //    Destroy(gameObject);
+            //}
+        }
+    }
+
+
+}

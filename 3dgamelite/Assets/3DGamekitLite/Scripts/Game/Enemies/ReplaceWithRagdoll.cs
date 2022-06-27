@@ -38,7 +38,7 @@ namespace Gamekit3D
                 {
                     // Get first child.
                     current = current.GetChild(0);
-                    ragdollCurrent = ragdollCurrent.GetChild(0);
+                    ragdollCurrent =  ragdollCurrent.GetChild(0);
                 }
                 else
                 {

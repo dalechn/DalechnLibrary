@@ -85,6 +85,7 @@ namespace Dalechn
         {
             GameObject obj = new GameObject();
             RotDebug rotDebug = Instantiate(prefab, transform);
+            //RotDebug rotDebug = Instantiate(prefab, transform.position, transform.rotation, transform);
             if (rotDebug)
             {
                 rotDebug.target = transform;
@@ -121,8 +122,9 @@ namespace Dalechn
             SendMessageUpwards("SendMessageUpwardsTest");
 
             //Debug.Log(transform.hierarchyCapacity+" "+transform.hierarchyCount); //未知
-            transform.SetSiblingIndex(0); // 设置hierarchy位置
+            transform.SetSiblingIndex(0); // 设置在hierarchy是第几个节点
 
+            Debug.Log(transform.GetSiblingIndex());
         }
 
         private void SendMessageUpwardsTest()
@@ -181,6 +183,8 @@ namespace Dalechn
 
         private void Start()
         {
+            //MaskTest();
+            //ObjTest();
             gameObject.AddComponent<UnityCSharpTest>();
             //gameObject.AddComponent<GimbalLockTest>();
             //gameObject.AddComponent<FloatTest>();

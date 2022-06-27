@@ -28,8 +28,8 @@ namespace Dalechn
         /// </summary>
         public static void AddItem(bl_MonoBehaviour behaviour)
         {
-            if (instance == null) return;
-            instance.AddItemToArray(behaviour);
+            if (s_Instance == null) return;
+            s_Instance.AddItemToArray(behaviour);
         }
 
         /// <summary>
@@ -46,9 +46,9 @@ namespace Dalechn
         /// <param name="behaviour"></param>
         public static void RemoveSpecificItem(bl_MonoBehaviour behaviour)
         {
-            if (instance != null)
+            if (s_Instance != null)
             {
-                instance.RemoveSpecificItemFromArray(behaviour);
+                s_Instance.RemoveSpecificItemFromArray(behaviour);
             }
 
         }
@@ -59,7 +59,7 @@ namespace Dalechn
         /// <param name="behaviour"></param>
         public static void RemoveSpecificItemAndDestroyIt(bl_MonoBehaviour behaviour)
         {
-            instance.RemoveSpecificItemFromArray(behaviour);
+            s_Instance.RemoveSpecificItemFromArray(behaviour);
 
             Destroy(behaviour.gameObject);
         }
@@ -281,7 +281,7 @@ namespace Dalechn
         }
 
         private static bl_UpdateManager _instance;
-        public static bl_UpdateManager instance
+        public static bl_UpdateManager s_Instance
         {
             get
             {
@@ -290,6 +290,7 @@ namespace Dalechn
             }
         }
 
+        // 考虑增加Dictionary来提升性能?
         public void RemoveAction(string actName)
         {
             for (int i = 0; i < actionList.Count; i++)
@@ -312,8 +313,23 @@ namespace Dalechn
             }
         }
 
+        public bool HasAction(string act)
+        {
+            for (int i = 0; i < actionList.Count; i++)
+            {
+                if (actionList[i].actionName == act)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         #region DoActionStaticFunc
 
+        /// <summary>
+        ///回调函数参数第一个是[0,1],第二个才是realTime
+        /// </summary>
         public static DoAction RunAction([DefaultValue("")]string actName, float duration, UnityAction<float, float> stepCall, UnityAction overCall = null, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
         {
             DoAction s = new DoAction();
@@ -324,7 +340,7 @@ namespace Dalechn
             s.overCall += (overCall);
             s.actionName = actName;
 
-            instance?.actionList.Add(s);
+            s_Instance?.actionList.Add(s);
 
             return s;
         }
@@ -341,7 +357,7 @@ namespace Dalechn
             s.onceCall += (onceCall);
             s.actionName = actName;
 
-            instance?.actionList.Add(s);
+            s_Instance?.actionList.Add(s);
 
             return s;
         }
@@ -354,14 +370,14 @@ namespace Dalechn
             s.delayTime = delay;
             s.onceCall += (onceCall);
             s.actionName = actName;
-            instance?.actionList.Add(s);
+            s_Instance?.actionList.Add(s);
 
             return s;
         }
 
         public static void StopAction(string actName, ActionMode mode = ActionMode.MUpdate)
         {
-            instance?.RemoveAction(actName);
+            s_Instance?.RemoveAction(actName);
         }
 
         #endregion
