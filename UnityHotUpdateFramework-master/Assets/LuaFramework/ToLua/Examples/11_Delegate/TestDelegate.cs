@@ -123,7 +123,7 @@ public class TestDelegate: MonoBehaviour
         state = new LuaState();
         state.Start();
         LuaBinder.Bind(state);
-        Bind(state);
+        TestEventListener. Bind(state);
 
         state.LogGC = true;
         state.DoString(script);
@@ -143,19 +143,6 @@ public class TestDelegate: MonoBehaviour
         RemoveSelfClick = state.GetFunction("RemoveSelfClick");
     }
 
-    void Bind(LuaState L)
-    {
-        L.BeginModule(null);
-        TestEventListenerWrap.Register(state);
-        L.EndModule();
-
-        DelegateFactory.dict.Add(typeof(TestEventListener.OnClick), TestEventListener_OnClick);
-        DelegateFactory.dict.Add(typeof(TestEventListener.VoidDelegate), TestEventListener_VoidDelegate);
-
-        DelegateTraits<TestEventListener.OnClick>.Init(TestEventListener_OnClick);
-        DelegateTraits<TestEventListener.VoidDelegate>.Init(TestEventListener_VoidDelegate);
-    }
-
     void CallLuaFunction(LuaFunction func)
     {
         tips = "";
@@ -163,61 +150,6 @@ public class TestDelegate: MonoBehaviour
         func.Push(listener);
         func.PCall();
         func.EndPCall();                
-    }
-
-    //自动生成代码后拷贝过来
-    class TestEventListener_OnClick_Event : LuaDelegate
-    {
-        public TestEventListener_OnClick_Event(LuaFunction func) : base(func) { }
-
-        public void Call(UnityEngine.GameObject param0)
-        {
-            func.BeginPCall();
-            func.Push(param0);
-            func.PCall();
-            func.EndPCall();
-        }
-    }
-
-    public static TestEventListener.OnClick TestEventListener_OnClick(LuaFunction func, LuaTable self, bool flag)
-    {
-        if (func == null)
-        {
-            TestEventListener.OnClick fn = delegate { };
-            return fn;
-        }
-
-        TestEventListener_OnClick_Event target = new TestEventListener_OnClick_Event(func);
-        TestEventListener.OnClick d = target.Call;
-        target.method = d.Method;
-        return d;
-    }
-
-    class TestEventListener_VoidDelegate_Event : LuaDelegate
-    {
-        public TestEventListener_VoidDelegate_Event(LuaFunction func) : base(func) { }
-
-        public void Call(UnityEngine.GameObject param0)
-        {
-            func.BeginPCall();
-            func.Push(param0);
-            func.PCall();
-            func.EndPCall();
-        }
-    }
-
-    public static TestEventListener.VoidDelegate TestEventListener_VoidDelegate(LuaFunction func, LuaTable self, bool flag)
-    {
-        if (func == null)
-        {
-            TestEventListener.VoidDelegate fn = delegate { };
-            return fn;
-        }
-
-        TestEventListener_VoidDelegate_Event target = new TestEventListener_VoidDelegate_Event(func);
-        TestEventListener.VoidDelegate d = target.Call;
-        target.method = d.Method;
-        return d;
     }
 
     void OnGUI()
