@@ -17,6 +17,7 @@ public static class LuaBinder
 		PrefabObjBinderWrap.Register(L);
 		VersionMgrWrap.Register(L);
 		AnimationEventTriggerWrap.Register(L);
+		SwitchCarWrap.Register(L);
 		ManagerWrap.Register(L);
 		BaseWrap.Register(L);
 		L.BeginModule("LuaInterface");
@@ -104,6 +105,13 @@ public static class LuaBinder
 		LuaFramework_LuaManagerWrap.Register(L);
 		LuaFramework_NetworkManagerWrap.Register(L);
 		L.EndModule();
+		L.BeginModule("frame8");
+		L.BeginModule("ScrollRectItemsAdapter");
+		L.BeginModule("Classic");
+		frame8_ScrollRectItemsAdapter_Classic_ClassicSRIA_CellViewsHolderWrap.Register(L);
+		L.EndModule();
+		L.EndModule();
+		L.EndModule();
 		L.BeginModule("System");
 		L.RegFunction("Action", System_Action);
 		L.RegFunction("Predicate_int", System_Predicate_int);
@@ -113,6 +121,7 @@ public static class LuaBinder
 		L.RegFunction("Action_bool", System_Action_bool);
 		L.RegFunction("Action_string", System_Action_string);
 		L.RegFunction("Func_bool", System_Func_bool);
+		L.RegFunction("Action_UnityEngine_PhysicsScene_Unity_Collections_NativeArray_UnityEngine_ModifiableContactPair", System_Action_UnityEngine_PhysicsScene_Unity_Collections_NativeArray_UnityEngine_ModifiableContactPair);
 		L.RegFunction("Action_UnityEngine_AsyncOperation", System_Action_UnityEngine_AsyncOperation);
 		L.EndModule();
 		L.EndModule();
@@ -554,6 +563,33 @@ public static class LuaBinder
 			{
 				LuaTable self = ToLua.CheckLuaTable(L, 2);
 				Delegate arg1 = DelegateTraits<System.Func<bool>>.Create(func, self);
+				ToLua.Push(L, arg1);
+			}
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int System_Action_UnityEngine_PhysicsScene_Unity_Collections_NativeArray_UnityEngine_ModifiableContactPair(IntPtr L)
+	{
+		try
+		{
+			int count = LuaDLL.lua_gettop(L);
+			LuaFunction func = ToLua.CheckLuaFunction(L, 1);
+
+			if (count == 1)
+			{
+				Delegate arg1 = DelegateTraits<System.Action<UnityEngine.PhysicsScene,Unity.Collections.NativeArray<UnityEngine.ModifiableContactPair>>>.Create(func);
+				ToLua.Push(L, arg1);
+			}
+			else
+			{
+				LuaTable self = ToLua.CheckLuaTable(L, 2);
+				Delegate arg1 = DelegateTraits<System.Action<UnityEngine.PhysicsScene,Unity.Collections.NativeArray<UnityEngine.ModifiableContactPair>>>.Create(func, self);
 				ToLua.Push(L, arg1);
 			}
 			return 1;

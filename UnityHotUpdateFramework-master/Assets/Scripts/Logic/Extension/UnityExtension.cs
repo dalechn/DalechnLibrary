@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// UnityÍØÕ¹
+/// Unityï¿½ï¿½Õ¹
 /// </summary>
 static public class UnityExtension
 {

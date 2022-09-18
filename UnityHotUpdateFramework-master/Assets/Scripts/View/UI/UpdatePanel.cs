@@ -16,16 +16,14 @@ public class UpdatePanel : BasePanel
     private Text m_errorText;
     private Button m_retryBtn;
 
-
-
     private HotUpdater m_hotUpdater;
-    private Action m_cb;
+    //public Action m_cb;
 
-    public static void Create(Action cb)
-    {
-        var panel = PanelMgr.instance.ShowPanel<UpdatePanel>("UpdatePanel", "BaseRes/UpdatePanel.prefab");
-        panel.m_cb = cb;
-    }
+    //public static void Create(Action cb)
+    //{
+    //    var panel = PanelMgr.instance.ShowPanel<UpdatePanel>("UpdatePanel", "BaseRes/UpdatePanel.prefab");
+    //    panel.m_cb = cb;
+    //}
 
     void Awake()
     {
@@ -46,6 +44,21 @@ public class UpdatePanel : BasePanel
         m_retryBtn.onClick.AddListener(OnRetryBtnClick);
     }
 
+    /// <summary>
+    /// 热更新后
+    /// </summary>
+    private void AfterHotUpdate()
+    {
+        Debug.Log("AfterHotUpdate");
+
+        // 预加载Lua的AssetBundle
+        ResourceMgr.instance.PreloadLuaBundles();
+
+        // 启动lua框架
+        AppFacade.Instance.StartUp();
+
+    }
+
     void Start()
     {
         // 请求热更新
@@ -64,6 +77,8 @@ public class UpdatePanel : BasePanel
         m_hotUpdater.actionAllDownloadDone = OnAllDownloadDone;
         m_hotUpdater.Init();
         m_hotUpdater.Start();
+
+        //m_cb = AfterHotUpdate;
     }
 
     private void ShowForceAppUpdateDlg()
@@ -151,7 +166,9 @@ public class UpdatePanel : BasePanel
     private void Finish()
     {
         Destroy(gameObject);
-        m_cb?.Invoke();
+        //m_cb?.Invoke();
+
+        AfterHotUpdate();
     }
 
     private void OnApplicationQuit()

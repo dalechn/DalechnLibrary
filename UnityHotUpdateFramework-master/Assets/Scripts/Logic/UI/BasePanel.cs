@@ -24,6 +24,7 @@ public class BasePanel : MonoBehaviour
             onUpdate = luaMgr.GetFunction(panelName + ".OnUpdate", false);
         }
 
+
     }
 
     public void Show()

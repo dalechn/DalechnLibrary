@@ -23,7 +23,7 @@ public class UnityEngine_Texture2DWrap
 		L.RegFunction("GetPixelBilinear", GetPixelBilinear);
 		L.RegFunction("LoadRawTextureData", LoadRawTextureData);
 		L.RegFunction("Apply", Apply);
-		L.RegFunction("Resize", Resize);
+		L.RegFunction("Reinitialize", Reinitialize);
 		L.RegFunction("ReadPixels", ReadPixels);
 		L.RegFunction("GenerateAtlas", GenerateAtlas);
 		L.RegFunction("SetPixels32", SetPixels32);
@@ -638,7 +638,7 @@ public class UnityEngine_Texture2DWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int Resize(IntPtr L)
+	static int Reinitialize(IntPtr L)
 	{
 		try
 		{
@@ -677,7 +677,7 @@ public class UnityEngine_Texture2DWrap
 			}
 			else
 			{
-				return LuaDLL.luaL_throw(L, "invalid arguments to method: UnityEngine.Texture2D.Resize");
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: UnityEngine.Texture2D.Reinitialize");
 			}
 		}
 		catch (Exception e)

@@ -15,6 +15,7 @@ public class UnityEngine_AssetBundleWrap
 		L.RegFunction("LoadFromMemory", LoadFromMemory);
 		L.RegFunction("LoadFromStreamAsync", LoadFromStreamAsync);
 		L.RegFunction("LoadFromStream", LoadFromStream);
+		L.RegFunction("SetAssetBundleDecryptKey", SetAssetBundleDecryptKey);
 		L.RegFunction("Contains", Contains);
 		L.RegFunction("LoadAsset", LoadAsset);
 		L.RegFunction("LoadAssetAsync", LoadAssetAsync);
@@ -30,6 +31,7 @@ public class UnityEngine_AssetBundleWrap
 		L.RegFunction("__eq", op_Equality);
 		L.RegFunction("__tostring", ToLua.op_ToString);
 		L.RegVar("isStreamedSceneAssetBundle", get_isStreamedSceneAssetBundle, null);
+		L.RegVar("memoryBudgetKB", get_memoryBudgetKB, set_memoryBudgetKB);
 		L.EndClass();
 	}
 
@@ -292,6 +294,22 @@ public class UnityEngine_AssetBundleWrap
 			{
 				return LuaDLL.luaL_throw(L, "invalid arguments to method: UnityEngine.AssetBundle.LoadFromStream");
 			}
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetAssetBundleDecryptKey(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			string arg0 = ToLua.CheckString(L, 1);
+			UnityEngine.AssetBundle.SetAssetBundleDecryptKey(arg0);
+			return 0;
 		}
 		catch (Exception e)
 		{
@@ -674,6 +692,35 @@ public class UnityEngine_AssetBundleWrap
 		catch(Exception e)
 		{
 			return LuaDLL.toluaL_exception(L, e, o, "attempt to index isStreamedSceneAssetBundle on a nil value");
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_memoryBudgetKB(IntPtr L)
+	{
+		try
+		{
+			LuaDLL.lua_pushnumber(L, UnityEngine.AssetBundle.memoryBudgetKB);
+			return 1;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_memoryBudgetKB(IntPtr L)
+	{
+		try
+		{
+			uint arg0 = (uint)LuaDLL.luaL_checknumber(L, 2);
+			UnityEngine.AssetBundle.memoryBudgetKB = arg0;
+			return 0;
+		}
+		catch (Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
 		}
 	}
 }

@@ -5,26 +5,26 @@ using System.Text;
 using System.Security.Cryptography;
 
 /// <summary>
-/// AES¼ÓÃÜ½âÃÜ
+/// AESåŠ å¯†è§£å¯†
 /// </summary>
 public class AESEncrypt 
 {
     /// <summary>
-    /// Ä¬ÈÏÃÜÔ¿-ÃÜÔ¿µÄ³¤¶È±ØĞëÊÇ32
+    /// é»˜è®¤å¯†é’¥-å¯†é’¥çš„é•¿åº¦å¿…é¡»æ˜¯32
     /// </summary>
     private const string PUBLIC_KEY = "Hello_I_am_linxinfa.WelcomeUnity";
 
     /// <summary>
-    /// Ä¬ÈÏÏòÁ¿
+    /// é»˜è®¤å‘é‡
     /// </summary>
     private const string IV = "abcdefghijklmnop";
 
     /// <summary>
-    /// AES¼ÓÃÜ
+    /// AESåŠ å¯†
     /// </summary>
-    /// <param name="str">ĞèÒª¼ÓÃÜµÄ×Ö·û´®</param>
-    /// <param name="key">32Î»ÃÜÔ¿</param>
-    /// <returns>¼ÓÃÜºóµÄ×Ö·û´®</returns>
+    /// <param name="str">éœ€è¦åŠ å¯†çš„å­—ç¬¦ä¸²</param>
+    /// <param name="key">32ä½å¯†é’¥</param>
+    /// <returns>åŠ å¯†åçš„å­—ç¬¦ä¸²</returns>
     public static byte[] Encrypt(byte[] toEncryptArray)
     {
         byte[] keyArray = Encoding.UTF8.GetBytes(PUBLIC_KEY);
@@ -39,11 +39,11 @@ public class AESEncrypt
     }
 
     /// <summary>
-    /// AES½âÃÜ
+    /// AESè§£å¯†
     /// </summary>
-    /// <param name="str">ĞèÒª½âÃÜµÄ×Ö·û´®</param>
-    /// <param name="key">32Î»ÃÜÔ¿</param>
-    /// <returns>½âÃÜºóµÄ×Ö·û´®</returns>
+    /// <param name="str">éœ€è¦è§£å¯†çš„å­—ç¬¦ä¸²</param>
+    /// <param name="key">32ä½å¯†é’¥</param>
+    /// <returns>è§£å¯†åçš„å­—ç¬¦ä¸²</returns>
     public static byte[] Decrypt(byte[] toDecryptArray)
     {
         byte[] keyArray = Encoding.UTF8.GetBytes(PUBLIC_KEY);

@@ -15,25 +15,22 @@ require "Common/functions"
 require "LuaFileList"
 
 --管理器--
-Game = {};
-local this = Game;
+Game = {}
+local this = Game
 
-local game; 
-local transform;
-local gameObject;
-local WWW = UnityEngine.WWW;
-
-
+local game
+local transform
+local gameObject
+local WWW = UnityEngine.WWW
 
 --初始化完成，发送链接服务器信息--
 function Game.OnInitOK()
     -- 创建登录界面
     LoginPanel.Show()
 
-    log('Game.OnInitOK--->>>');
+    log("Game.OnInitOK--->>>")
 end
 
 --销毁--
 function Game.OnDestroy()
-
 end

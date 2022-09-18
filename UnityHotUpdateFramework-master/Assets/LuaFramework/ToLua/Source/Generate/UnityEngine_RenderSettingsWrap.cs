@@ -282,7 +282,7 @@ public class UnityEngine_RenderSettingsWrap
 	{
 		try
 		{
-			ToLua.PushSealed(L, UnityEngine.RenderSettings.customReflection);
+			ToLua.Push(L, UnityEngine.RenderSettings.customReflection);
 			return 1;
 		}
 		catch (Exception e)
@@ -634,7 +634,7 @@ public class UnityEngine_RenderSettingsWrap
 	{
 		try
 		{
-			UnityEngine.Cubemap arg0 = (UnityEngine.Cubemap)ToLua.CheckObject(L, 2, typeof(UnityEngine.Cubemap));
+			UnityEngine.Texture arg0 = (UnityEngine.Texture)ToLua.CheckObject<UnityEngine.Texture>(L, 2);
 			UnityEngine.RenderSettings.customReflection = arg0;
 			return 0;
 		}

@@ -16,30 +16,26 @@ public class PanelMgr
             return m_panels[panelName];
 
         var resCfg = ResourcesCfg.instance.GetResCfg(resId);
-        if(null != resCfg)
+        if (null != resCfg)
         {
-            return ShowPanel<BasePanel>(panelName, resCfg.editor_path);
+            var prefab = ResourceMgr.instance.LoadAsset<GameObject>(resCfg.editor_path);
+            var go = Object.Instantiate(prefab);
+            go.transform.SetParent(m_rootCanvas, false);
+            var panel = go.GetOrAddComponent<BasePanel>();
+            panel.Initialize(panelName, go);
+
+            if (null != panelName)
+                m_panels.Add(panelName, panel);
+            panel.Show();
+
+            return panel;
         }
         else
         {
             Debug.LogError("ShowPanel Error, null == resCfg, resId: " + resId);
+
             return null;
         }
-    }
-
-    public T ShowPanel<T>(string panelName, string resPath) where T :BasePanel
-    {
-        if (null != panelName && m_panels.ContainsKey(panelName))
-            return m_panels[panelName] as T;
-        var prefab = ResourceMgr.instance.LoadAsset<GameObject>(resPath);
-        var go = Object.Instantiate(prefab);
-        go.transform.SetParent(m_rootCanvas, false);
-        var panel = go.GetOrAddComponent<T>();
-        panel.Initialize(panelName, go);
-        if (null != panelName)
-            m_panels.Add(panelName, panel);
-        panel.Show();
-        return panel;
     }
 
     public GameObject InstantiateUI(int resId)
@@ -68,7 +64,7 @@ public class PanelMgr
 
     public void HideAllPanels()
     {
-        foreach(var panel in m_panels.Values)
+        foreach (var panel in m_panels.Values)
         {
             panel.Hide();
         }

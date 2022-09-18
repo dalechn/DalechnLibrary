@@ -188,6 +188,7 @@ public static class CustomSettings
         _GT(typeof(VersionMgr)),
         _GT(typeof(AnimationEventTrigger)),
 
+        _GT(typeof(SwitchCar))
 
     };
 

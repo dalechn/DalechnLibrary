@@ -1,69 +1,68 @@
-
 --输出日志--
 function log(str)
-    GameLogger.Log(str);
+    GameLogger.Log(str)
 end
 
 --错误日志--
-function logError(str) 
-	GameLogger.LogError(str);
+function logError(str)
+    GameLogger.LogError(str)
 end
 
 --警告日志--
-function logWarn(str) 
-	GameLogger.LogWarning(str);
+function logWarn(str)
+    GameLogger.LogWarning(str)
 end
 
 function logGreen(str)
-	GameLogger.LogGreen(str)
+    GameLogger.LogGreen(str)
 end
 
 --查找对象--
 function find(str)
-	return GameObject.Find(str);
+    return GameObject.Find(str)
 end
 
 function destroy(obj)
-	GameObject.Destroy(obj);
+    GameObject.Destroy(obj)
 end
 
 function newObject(prefab)
-	return GameObject.Instantiate(prefab);
+    return GameObject.Instantiate(prefab)
 end
 
 --创建面板--
 function createPanel(name)
-	PanelManager:CreatePanel(name);
+    PanelManager:CreatePanel(name)
 end
 
 function child(str)
-	return transform:FindChild(str);
+    return transform:FindChild(str)
 end
 
-function subGet(childNode, typeName)		
-	return child(childNode):GetComponent(typeName);
+function subGet(childNode, typeName)
+    return child(childNode):GetComponent(typeName)
 end
 
-function findPanel(str) 
-	local obj = find(str);
-	if obj == nil then
-		error(str.." is null");
-		return nil;
-	end
-	return obj:GetComponent("BaseLua");
+function findPanel(str)
+    local obj = find(str)
+    if obj == nil then
+        error(str .. " is null")
+        return nil
+    end
+    return obj:GetComponent("BaseLua")
 end
 
 function isNilOrNull(obj)
-	return nil == obj or null == obj
+    return nil == obj or null == obj
 end
 
-function safeDestroy(obj) 
-	if not isNilOrNull(obj) then
-		GameObject.Destroy(obj)
-		obj = nil
-	end
+function safeDestroy(obj)
+    if not isNilOrNull(obj) then
+        GameObject.Destroy(obj)
+        obj = nil
+    end
 end
 
 function isStringNilOrEmpty(str)
-	return nil == str or null == str or "" == str
+    return nil == str or null == str or "" == str
 end

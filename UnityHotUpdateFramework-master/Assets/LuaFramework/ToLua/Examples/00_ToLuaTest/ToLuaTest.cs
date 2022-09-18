@@ -23,6 +23,7 @@ print('hello world')
         //lua.LogGC = true;
         lua.Start();
 
+        //未知:LuaLooper是干什么的?
         looper = gameObject.AddComponent<LuaLooper>();
         looper.luaState = lua;
 
@@ -41,13 +42,13 @@ print('hello world')
         //3. 从文件加载lua脚本
         string fullPath = Application.dataPath + "\\LuaFramework/ToLua/Examples/00_ToLuaTest";
         lua.AddSearchPath(fullPath);
-        lua.DoFile("ScriptsFromFile.lua");
+        lua.DoFile("BasicTest.lua");
         lua.Require("DatastructTest");      //和dofile有什么区别?
 
         //TableTest();
-        //FuncTest();
+        FuncTest();
         //DelegateTest();
-        DataTest();
+        //DataTest();
 
         //DataStructTest();
     }
@@ -274,15 +275,17 @@ print('hello world')
 
     void FuncTest()
     {
-
         LuaFunction func = lua["TestFunc"] as LuaFunction;
 
-        //1.
-        //func.Call();
+        //0.
+        //func.Call();                              //无参数
+        //func.Call<int>(123456);       //有参数
+
+        //1.                                      //有返回值,参数可选
         func.BeginPCall();
         func.Push(123456);
         func.PCall();
-        int num = (int)func.CheckNumber();
+         int  num = (int)func.CheckNumber();
         func.EndPCall();
         Debugger.Log("expansion call return: {0}", num);
 
