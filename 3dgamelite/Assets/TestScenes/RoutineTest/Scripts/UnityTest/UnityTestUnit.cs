@@ -253,5 +253,31 @@ namespace Dalechn
             //Time.fixedUnscaledDeltaTime
         }
     }
+
+    public class UtiltyTest : MonoBehaviour
+    {
+        void Start()
+        {
+            ActionTest();
+        }
+
+        private void ActionTest()
+        {
+            Vector3 originTop = transform.position;
+            Vector3 destTop = transform.position + new Vector3(0, -400, 0);
+            Dalechn.bl_UpdateManager.RunAction("", 0.3f, (t, r) => {
+
+                transform.position = Vector3.Lerp(transform.position, destTop, t);
+
+            }, () => {
+
+                Dalechn.bl_UpdateManager.RunAction("", 0.3f, (t, r) => {
+
+                    transform.position = Vector3.Lerp(transform.position, originTop, t);
+
+                }, null, Dalechn.EaseType.SineInOut);
+            }, Dalechn.EaseType.SineInOut);
+        }
+    }
 }
 
