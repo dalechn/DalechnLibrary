@@ -16,7 +16,7 @@ namespace Dalechn
     //[ExecuteInEditMode] // 允许在编辑器模式也能运行
     //[ExecuteAlways] // 改进版,支持Prefab Mode下的脚本调用
     [Invector.vClassHeader("TansformTest")]
-    public  class UnityTest : bl_MonoBehaviour
+    public class UnityTest : bl_MonoBehaviour
     {
         //[Tooltip("Functest")]  //鼠标悬停显示提示信息
         //[Header("Funtest")] //添加标题
@@ -50,36 +50,7 @@ namespace Dalechn
         public LayerMask finalLayer;
         public LayerMask testLayer;
 
-        [ContextMenuItem("TestFuncName", "TestFunc")] //和ContextMenu一样,用于成员变量
         public RotDebug prefab;
-
-        //这玩意东西有点多??
-        //返回值决定了TestFuncStatic是否可点击(必须static) 
-        [UnityEditor.MenuItem("Test/TestFuncStatic", true, 1001)]
-        public static bool ValidateTest()
-        {
-            return UnityEditor.Selection.activeTransform != null;
-        }
-
-        //  快捷键与字符串用空格分割，_w: 单一的快捷键     #w shift+w     %w: ctrl+w     &w: Alt+w
-        //将方法添加到最上方的菜单栏中(必须static) 
-        [UnityEditor.MenuItem("Test/TestFuncStatic #w", false, -1000)] 
-        public static void TestFuncStatic() { }
-
-        //将方法添加到GameObject中(必须static) //优先级默认1000,GameObject需要<49
-        [UnityEditor.MenuItem("GameObject/TestGameObject", false,-1000)] 
-        public static void TestGameObject() { }
-
-        //将方法添加到Asset中(必须static) 
-        [UnityEditor.MenuItem("Assets/TestAsset", false, -1000)] 
-        public static void TestAsset() { }
-
-        //和ContextMenu一样,CONTEXT/类名/方法名 是固定格式(必须static)
-        [UnityEditor.MenuItem("CONTEXT/UnityTest/TestFuncStatic", false, 22)]
-        static void TestFuncInspector(){}
-
-        [ContextMenu("TestFunc")]  //右键组件时的菜单栏(不可以是static)
-        public  void TestFunc() { }
 
         private void ObjTest([DefaultValue("0")] int i = 0) // defaultvalue好像只是起到提示作用
         {
@@ -159,6 +130,7 @@ namespace Dalechn
             {
                 Debug.Log(true);
             }
+
         }
 
         //未知 :具体执行顺序还需要参考官方文档?
@@ -190,6 +162,27 @@ namespace Dalechn
             //gameObject.AddComponent<FloatTest>();
             //gameObject.AddComponent<UnityCoroutineTest>();
             //gameObject.AddComponent<RandomTest>();
+
+
+#if UNITY_IOS
+#endif
+
+#if UNITY_ANDROID
+#endif
+
+#if UNITY_WEBGL
+#endif
+
+            //UNITY_EDITOR
+            //UNITY_EDITOR_WIN
+            //UNITY_EDITOR_OSX
+            //UNITY_EDITOR_LINUX
+
+            //UNITY_STANDALONE_OSX
+            //UNITY_STANDALONE_WIN
+            //UNITY_STANDALONE_LINUX
+            //UNITY_STANDALONE
+            //file:///D:/program/UnityDocumentation/Documentation/en/Manual/PlatformDependentCompilation.html
         }
 
         //private void FixedUpdate()
@@ -330,35 +323,9 @@ namespace Dalechn
 
         private void OnGUI()
         {
-
+        
         }
 
     }
-
-
-    //帧率
-    //case CustomFixedTimeStep.FPS30:
-    //    Time.fixedDeltaTime = 0.03333334f;
-    //    break;
-    //case CustomFixedTimeStep.FPS60:
-    //    Time.fixedDeltaTime = 0.01666667f;
-    //    break;
-    //case CustomFixedTimeStep.FPS75:
-    //    Time.fixedDeltaTime = 0.01333333f;
-    //    break;
-    //case CustomFixedTimeStep.FPS90:
-    //    Time.fixedDeltaTime = 0.01111111f;
-    //    break;
-    //case CustomFixedTimeStep.FPS120:
-    //    Time.fixedDeltaTime = 0.008333334f;
-    //    break;
-    //case CustomFixedTimeStep.FPS144:
-    //    Time.fixedDeltaTime = 0.006944444f;
-    //    break;
-
-
-    //          Application.dataPath;  //resource只读目录
-    //        Application.persistentDataPath; // 数据文件存储目录
-    //        Application.streamingAssetsPath; //streamingAssets只读目录
 
 }

@@ -6,8 +6,12 @@ using UnityEngine;
 //设计模式(Design Pattern)
 //单例,工厂,发布订阅/观察者,mvc,状态机,模板/迭代器
 
+//数据结构与算法(data structure and algorithm),编译原理(principle of compiling),汇编语言(Assembly Language)
+//计算机组成原理(principles of computer composition)
+//操作系统(operating system),计算机网络(CNT, computer networking technology)
+
 //array
-//线性表(linelist) :增加/删除(back)/修改 √ ,  删除/增加(insert)/搜索 ×
+//线性表(linelist) :增加/删除(Last)/修改 √ ,  删除/增加(insert)/搜索 ×
 //vector(c++)/List(c#)/ArrayList(java)
 
 //增删改查:crud (增加(Create),检索(Retrieve),更新(Update),删除(Delete))
@@ -28,7 +32,7 @@ using UnityEngine;
 //          快速排序(Quick Sort)    --数组
 // 计数排序(Counting Sort)
 // ->桶排序(Bucket Sort)
-// ->基数排序(Radix Sort)
+//      ->基数排序(Radix Sort)
 // 堆排序(Heap Sort)               --堆
 
 //stack(栈),queue(队列)
@@ -95,11 +99,11 @@ using UnityEngine;
 //array2d
 //图(graph):邻接表(adjacency list),邻接矩阵(adjacency matrix)
 //最小生成树(Minimum Spanning Trees)
-    //Kruskal,Prim
+//Kruskal,Prim
 //最短路径(shortest path)
-    //dijkstra,floyd,astar
+//dijkstra,floyd,astar
 //拓扑排序(topological-sort)
-    //indegree,dfs
+//indegree,dfs
 
 
 namespace Dalechn

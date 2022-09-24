@@ -111,12 +111,12 @@ namespace Dalechn
 
             int[,] arr2d1 = new int[5, 3];
             int[,] arr2d2 = new int[,] { { 1, 2 }, { 3, 4 }, { 5, 6 }, { 7, 8 } };
-            int[][] arr2d3 = new int[4][];
+            int[][] arr2d3 = new int[4][]; //这样写只能手动创建
             for (int i = 0; i < arr2d3.Length; i++)
             {
                 arr2d3[i] = new int[5];
             }
-            //int[][] arr2d4= new int[4][5];//这样还报错cnm
+            //int[][] arr2d4= new int[4][5];//报错
 
             arr2d1[1, 2] = 10;
             arr2d3[2][2] = 10;
@@ -475,15 +475,16 @@ namespace Dalechn
                 this.peopleList = peopleList;
             }
 
-            ~PeopleEnumerator()
+            ~PeopleEnumerator() //会被编译成finalize()函数
             {
                 Dispose(disposing: false);
             }
 
+            //实现这个接口是为了释放资源时不全部释放此对象函数的引用
             public void Dispose()
             {
                 Dispose(disposing: true);
-                GC.SuppressFinalize(this); // 请求公共语言运行时不要调用该对象上的终结器（在C#中就是指不要调用析构函数）
+                GC.SuppressFinalize(this); // 告诉gc不在执行析构函数
             }
 
             private bool disposedValue = false;
@@ -539,7 +540,12 @@ namespace Dalechn
 
     }
 
-    //部分类
+    public partial class Person{ }
+
+    // 部分类
+    //所有部分都必须使用partial 关键字
+    //各个部分必须具有相同的可访问性
+    //可在不同文件写
     public partial class Person 
     {
         public string pName { get; protected set; }
@@ -755,36 +761,58 @@ namespace Dalechn
         public void Init(int para)
         {}
 
-        // override(重写,覆盖),父类需要virtual
+        // override(覆盖,隐藏,重写)
         public override void VirtualInit(int a) { Debug.Log(" VirtualInit"); }
 
-        // overwrite(重写,覆盖,隐藏), 使用new 关键字或者不写,父类不一定需要virtual
-        // 当父类引用调用此方法时还是调用的父类
+        // 不override,当父类引用调用此方法时还是调用的父类
+        // c++/c# override: 1.父类需要写virtual,2.子类需要写override, 两者缺一不可
+        // c#可以写new来标记无法override(非必须)
         public new void NewInit(int a) { Debug.Log(" NewInit"); }
 
         public static void staticFunc() { }
     }
 
     //单例
-    public class Singleton<T> : MonoBehaviour
-        where T : Singleton<T>
-    {
-        public static T Instance { get; private set; }
+    //public class Singleton : MonoBehaviour
+    //{
+    //    public static Singleton Instance { get; private set; }
+    //    protected virtual void Awake()
+    //    {
+    //        Instance = this;
+    //    }
+    //}
+ 
+    //-------------------------------------建立新语言模板--------------------------------------------
+    // 1.环境搭建,注释,语言基本属性,语言基本组成
+    // 2.核心类库(控制台调试, 鼠标键盘, io,日期, 数学, 随机)
+    // 3.工作需要的框架
 
-        protected virtual void Awake()
-        {
-            Instance = (T)this;
+    //-------------------------------------语言基本属性-------------------------------------------
+    // 编译型语言(compiled language) :c/c++
+    // 解释型语言(interpreted languages) :c#,java
+    // 脚本语言(script language):js/ts,lua,python
 
-            //if (Instance == null)
-            //{
-            //    Instance = (T)this;
-            //}
-            //else
-            //{
-            //    Destroy(gameObject);
-            //}
-        }
-    }
+    //1.数据类型:值类型(value type):string,number
+    //                 引用类型(ref type):array,object
+    //2.数据传递方式: 值传递(pass by value),引用传递(pass by reference)
+    //3.定义(define),声明(declare)                  //未知:这玩意还是很疑惑?
 
+
+    //-------------------------------------语言基本组成/命名方式-----------------------------------------------
+    //文件/其他: FileTest,file_test
+    //包：com.deamerstudio.xxxtest
+
+    // 类/结构体,接口,枚举：CSharpTest/dSharpTest/d_SharpTest, IInterfaceTest,EEnumTest(ENUM_VALUE)
+    // 函数(function/method) : DataTest,dataTest
+    //          形参(parameter,函数定义),实参(argument,函数调用)
+    //          
+    // 回调函数(callback function): 函数指针(function pointer),箭头函数(arrow function)/lambda,delegate
+
+    //变量(variable)：
+    //  * 成员变量(member Variable) :属性(property) :MemberTest
+    //                                            字段(field):memberTest,m_MemberTest
+    //  * 局部变量(local variable):memberTest
+    //  * 常量(constant)：CONST_TEST,k_ConstTest
+    //  * 静态/全局变量(static): s_Instance,g_Instance
 
 }

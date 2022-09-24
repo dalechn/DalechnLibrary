@@ -210,5 +210,48 @@ namespace Dalechn
         }
 
     }
+
+    public class TimeTest:MonoBehaviour
+    {
+        public void Start()
+        {
+            //帧率
+            //case CustomFixedTimeStep.FPS30:
+            //    Time.fixedDeltaTime = 0.03333334f;
+            //    break;
+            //case CustomFixedTimeStep.FPS60:
+            //    Time.fixedDeltaTime = 0.01666667f;
+            //    break;
+            //case CustomFixedTimeStep.FPS75:
+            //    Time.fixedDeltaTime = 0.01333333f;
+            //    break;
+            //case CustomFixedTimeStep.FPS90:
+            //    Time.fixedDeltaTime = 0.01111111f;
+            //    break;
+            //case CustomFixedTimeStep.FPS120:
+            //    Time.fixedDeltaTime = 0.008333334f;
+            //    break;
+            //case CustomFixedTimeStep.FPS144:
+            //    Time.fixedDeltaTime = 0.006944444f;
+            //    break;
+
+            //* 受timescale影响
+            //Time.time 
+            //Time.timeSinceLevelLoad
+
+            //Time.deltaTime
+            //Time.fixedTime
+            //Time.fixedDeltaTime
+
+
+            //* 不受timescale影响
+            //Time.unscaledTime //与 Time.realtimeSnceStartup 不同，如果在单个帧中多次调用并且当编辑器暂停时，这将返回相同的值
+            //Time.realtimeSinceStartup
+
+            //Time.unscaledDeltaTime
+            //Time.fixedUnscaledTime
+            //Time.fixedUnscaledDeltaTime
+        }
+    }
 }
 
