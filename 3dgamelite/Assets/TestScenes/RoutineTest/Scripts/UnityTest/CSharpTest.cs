@@ -79,11 +79,15 @@ namespace Dalechn
             object obj = 0;//装箱                         //Object
             object obj3 = aInt; //隐式装箱              
             int int1 = (int)obj; //拆箱
+
             object obj4 = 1;
-            object obj2 = obj4 ?? obj; // 未知:左边的变量好像不能是自身?
-            //COALESCE 表达式相当于
-            //obj2 = obj4 != null ? obj4 : obj;
-            //  空合并运算符为右结合运算符，即操作时从右向左进行组合的。如，“a ?? b ?? c”的形式按“a ?? (b ?? c)”
+            object obj2 = obj4 ?? obj;
+            // - 未知:左边的变量好像不能是自身?,,不是,是因为没声明,这样写就行:
+            //object obj2 = null;
+            //obj2 = obj2 ?? obj4;
+
+            // - 空合并运算符为右结合运算符: a ?? b ?? c”=“a ?? (b ?? c)
+            // - COALESCE 表达式相当于:   obj2 = obj4 != null ? obj4 : obj;
             Debug.Log(obj3 + " " + obj2);
 
             //会查询暂存池(托管堆中)

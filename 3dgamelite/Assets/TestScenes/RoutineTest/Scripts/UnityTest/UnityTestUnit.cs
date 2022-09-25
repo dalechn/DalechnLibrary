@@ -267,13 +267,13 @@ namespace Dalechn
             Vector3 destTop = transform.position + new Vector3(0, -400, 0);
             Dalechn.bl_UpdateManager.RunAction("", 0.3f, (t, r) => {
 
-                transform.position = Vector3.Lerp(transform.position, destTop, t);
+                transform.position = Vector3.Lerp(originTop, destTop, t);
 
             }, () => {
 
                 Dalechn.bl_UpdateManager.RunAction("", 0.3f, (t, r) => {
 
-                    transform.position = Vector3.Lerp(transform.position, originTop, t);
+                    transform.position = Vector3.Lerp(destTop, originTop, t);
 
                 }, null, Dalechn.EaseType.SineInOut);
             }, Dalechn.EaseType.SineInOut);
