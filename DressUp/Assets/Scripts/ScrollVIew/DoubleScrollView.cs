@@ -4,45 +4,40 @@ using UnityEngine;
 using UnityEngine.UI;
 using frame8.ScrollRectItemsAdapter.Classic;
 
-public class DoubleScrollView : ClassicSRIA<CellViewsHolder>
+public class DoubleScrollView : ScrollViewBase<DoubleScrollViewTem>
 {
     public SingleScrollView firstScrollView;
 
-    public RectTransform itemPrefab;
-    public string currentListName = "Dress";
-
-    protected List<DoubleScrollViewTem> kartList;
-    protected int currentIndex = 0;
+    protected int currentPartIndex = 0;
 
     protected override void Awake()
     {
         base.Awake();
 
-        kartList = DoubleScrollViewTem.Lis(currentListName);
+        temList = DoubleScrollViewTem.Lis(currentListName);
 
         // 需要在子滚动条之前初始化
-        foreach (var val in kartList)
+        foreach (var val in temList)
         {
             firstScrollView.Init(val.Name);
         }
-    }
 
+        //int currentIndex = temList.FindIndex((e) => { return e.Name == currentListName; });
+    }
 
     protected override void Start()
     {
         base.Start();
 
-        ResetItems(kartList.Count);
+        string lastSelectedPart = PlayerPrefs.GetString(AppConst.LAST_SELECTED_PART);
+        currentPartIndex = temList.FindIndex((e) => { return e.Name == lastSelectedPart; });
+        //默认为第一个
+        if(currentPartIndex < 0)
+            currentPartIndex = 0;
+        //Debug.Log(lastSelectedPart);
 
+        ResetItems(temList.Count);
         LightBackground();
-    }
-
-    protected override CellViewsHolder CreateViewsHolder(int itemIndex)
-    {
-        var instance = new CellViewsHolder();
-        instance.Init(itemPrefab, itemIndex);
-
-        return instance;
     }
 
     private void LightBackground()
@@ -51,29 +46,34 @@ public class DoubleScrollView : ClassicSRIA<CellViewsHolder>
         {
             val.backGround.enabled = false;
         }
-
-        viewsHolders[currentIndex].backGround.enabled = true;
+        if(currentPartIndex>=0)
+        {
+            viewsHolders[currentPartIndex].backGround.enabled = true;
+        }
+        else
+        {
+            Debug.LogWarning("index 超了");
+        }
     }
 
     protected override void UpdateViewsHolder(CellViewsHolder vh)
     {
-        DoubleScrollViewTem template = kartList[vh.ItemIndex];
+        DoubleScrollViewTem template = temList[vh.ItemIndex];
 
         vh.titleText.text = template.Name;
         //vh.image.sprite = Resources.Load<Sprite>(template.Location + vh.ItemIndex);
         vh.btn.onClick.AddListener(() =>
         {
-            if(currentIndex !=vh.ItemIndex)
+            if(currentPartIndex !=vh.ItemIndex)
             {
                 //Debug.Log("click");
 
                 firstScrollView.ChangeList(template.Name);
 
-                currentIndex = vh.ItemIndex;
+                currentPartIndex = vh.ItemIndex;
 
                 LightBackground();
             }
-         
         });
     }
 

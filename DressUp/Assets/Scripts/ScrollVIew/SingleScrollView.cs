@@ -3,47 +3,115 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using frame8.ScrollRectItemsAdapter.Classic;
-using MagicaCloth;
 
-public struct ScrollState
+public class SingleScrollView : ScrollViewBase<ScrollViewTem>
 {
-    public int groupHandle;
-    public int currentIndex;
-
-    public ScrollState(int groupHandle, int currentIndex)
-    {
-        this.groupHandle = groupHandle;
-        this.currentIndex = currentIndex;
-    }
-}
-
-public class SingleScrollView : ClassicSRIA<CellViewsHolder>
-{
-    public RectTransform itemPrefab;
-    public string currentListName = "Face";
-
-    public MagicaAvatar avatar;
-
-    protected List<ScrollViewTem> kartList;
-
-    //[HideInInspector]
-    public Dictionary<string, ScrollState> avatarStatesList = new Dictionary<string, ScrollState>();
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-    }
+    public CharacterModel model;
 
     protected override void Start()
     {
         base.Start();
 
-        kartList = ScrollViewTem.Lis(currentListName);
-        ResetItems(kartList.Count);
+        currentListName =  PlayerPrefs.GetString(AppConst.LAST_SELECTED_PART, currentListName);
+        //Debug.Log(currentListName);
+
+        ResetItem(currentListName);
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        PlayerPrefs.SetString(AppConst.LAST_SELECTED_PART, currentListName);
+    }
+
+    protected override void UpdateViewsHolder(CellViewsHolder vh)
+    {
+        ScrollViewTem template = temList[vh.ItemIndex];
+
+        //vh.titleText.text = template.Name;
+        vh.image.sprite = Resources.Load<Sprite>(template.Location); //todo:改用assetbundle?
+        vh.btn.onClick.AddListener(() =>
+        {
+            if (model.GetCurrentIndex(currentListName) != vh.ItemIndex)
+            {
+                model.AddAvatarParts(template, vh.ItemIndex);
+            }
+            else if (template.CanNull)
+            {
+                model.AddAvatarParts(template, -1, true);
+            }
+            LightBackground();
+        });
+    }
+
+    protected void LightBackground()
+    {
+        foreach (var val in viewsHolders)
+        {
+            val.backGround.enabled = false;
+        }
+
+        int currentIndex = model.GetCurrentIndex(currentListName);
+        if (currentIndex >= 0)
+        {
+            viewsHolders[currentIndex].backGround.enabled = true;
+        }
+        else
+        {
+            Debug.LogWarning("index 超了");
+        }
+    }
+
+    public void Init(string partName)
+    {
+        model.Init(partName);
+
+        int index = model.GetCurrentIndex(partName);
+        temList = ScrollViewTem.Lis(partName);
+        model.AddAvatarParts(temList[index], index);
+    }
+
+    public void ChangeList(string partName)
+    {
+        const int dis = -500;
+
+        Dalechn.bl_UpdateManager.RunAction("", 0.3f, (t, r) =>
+        {
+            viewport.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, Mathf.Lerp(0, dis, t), ViewportSize);
+            ScrollRectComponent.enabled = false;
+
+        }, () =>
+        {
+            currentListName = partName;
+            ResetItem(partName);
+
+            SmoothScrollTo(model.GetCurrentIndex(currentListName), 0);
+
+            Dalechn.bl_UpdateManager.RunAction("", 0.3f, (t, r) =>
+            {
+                viewport.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, Mathf.Lerp(dis, 0, t), ViewportSize);
+                ScrollRectComponent.enabled = true;
+
+            }, null, Dalechn.EaseType.SineInOut);
+        }, Dalechn.EaseType.SineInOut);
+    }
+     
+    public void ResetItem(string partName)
+    {
+        temList = ScrollViewTem.Lis(partName);
+        ResetItems(temList.Count);
 
         LightBackground();
     }
+}
+
+public abstract class ScrollViewBase<Tem>: ClassicSRIA<CellViewsHolder>
+{
+    public RectTransform itemPrefab;
+    public string currentListName = "Dress";
+
+    protected List<Tem> temList;
 
     protected override CellViewsHolder CreateViewsHolder(int itemIndex)
     {
@@ -53,129 +121,8 @@ public class SingleScrollView : ClassicSRIA<CellViewsHolder>
         return instance;
     }
 
-    protected override void UpdateViewsHolder(CellViewsHolder vh)
-    {
-        ScrollViewTem template = kartList[vh.ItemIndex];
-
-        //vh.titleText.text = template.Name;
-        vh.image.sprite = Resources.Load<Sprite>(template.Location );
-        vh.btn.onClick.AddListener(() =>
-        {
-            //Debug.Log(avatarStatesList[currentListName].currentIndex);
-            if(avatarStatesList[currentListName].currentIndex !=vh.ItemIndex)
-            {
-                AddAvatarParts(template, vh.ItemIndex);
-
-                LightBackground();
-            }
-            else if(template.CanNull)
-            {
-                AddAvatarParts(template, -1,true);
-
-                LightBackground();
-            }
-        });
-    }
-
-    private void LightBackground()
-    {
-        ScrollState state = avatarStatesList[currentListName];
-        foreach (var val in viewsHolders)
-        {
-            val.backGround.enabled = false;
-        }
-        if(state.currentIndex>=0)
-        {
-            viewsHolders[state.currentIndex].backGround.enabled = true;
-        }
-    }
-
-    public void Init(string valName)
-    {
-        ScrollState state = new ScrollState();
-        state.groupHandle = 0;
-        state.currentIndex = 0;
-
-        avatarStatesList.Add(valName, state);
-
-        kartList = ScrollViewTem.Lis(valName);
-
-        AddAvatarParts(kartList[state.currentIndex], state.currentIndex);
-    }
-
-    public void AddAvatarParts(ScrollViewTem template,int index,bool remove = false)
-    {
-        string[] splitdirs = template.key.Split(':');
-        string middir = splitdirs[0];
-
-        var group = avatarStatesList[middir];
-
-        ScrollState state = new ScrollState();
-        state.currentIndex = index;
-
-        if (group.groupHandle != 0)
-        {
-            avatar.DetachAvatarParts(group.groupHandle);
-            state.groupHandle = 0;
-
-            //if (template.ClearOther!=null)
-            //{
-            //    string[] splitOther = template.ClearOther.Split(':');
-
-            //    foreach (var val in splitOther)
-            //    {
-            //        var groupOther = avatarStatesList[val];
-            //        avatar.DetachAvatarParts(groupOther.groupHandle);
-            //    }
-            //}
-        }
-
-        if(!remove)
-        {
-            GameObject Prefab = (GameObject)Resources.Load(template.PrefabLocation);
-            var avatarPartsObject = Instantiate(Prefab);
-
-            state.groupHandle = avatar.Runtime.AddAvatarParts(avatarPartsObject.GetComponent<MagicaAvatarParts>());
-        }
-        avatarStatesList[middir] = state;
-
-        //Debug.Log(middir);
-        //Debug.Log(avatarStatesList[middir]);
-    }
-
-    public void ChangeList(string valName)
-    {
-    
-        Vector3 originTop = viewport.position ;
-        Vector3 destTop = viewport.position + new Vector3(0, -400, 0);
-        Dalechn.bl_UpdateManager.RunAction("", 0.3f, (t,r) => {
-
-            viewport.position= Vector3.Lerp(originTop, destTop, t);
-
-            //viewport.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, 100, ViewportSize);
-
-            ScrollRectComponent.enabled = false;
-        }, () => {
-
-            currentListName = valName;
-            kartList = ScrollViewTem.Lis(valName);
-            ResetItems(kartList.Count);
-
-            //Refresh();
-
-            LightBackground();
-
-            Dalechn.bl_UpdateManager.RunAction("", 0.3f, (t, r) => {
-
-                viewport.position= Vector3.Lerp(destTop, originTop, t);
-
-                ScrollRectComponent.enabled = true;
-            },null, Dalechn.EaseType.SineInOut);
-        }, Dalechn.EaseType.SineInOut);
-    }
-
+    //protected virtual void LightBackground() { }
 }
-
 
 public class CellViewsHolder : CAbstractViewsHolder
 {
