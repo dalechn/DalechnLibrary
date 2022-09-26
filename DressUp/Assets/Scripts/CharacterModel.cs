@@ -75,7 +75,7 @@ public class CharacterModel : MonoBehaviour
         string[] splitParts = template.key.Split(':');
         string partName = splitParts[0];
 
-        //套装清理其他部位的逻辑2. 这部分要先执行
+        //套装清理其他部位的逻辑2. 这部分要先执行,防止套装也自动穿衣服
         Dictionary<string, avatarState> tempDict = new Dictionary<string, avatarState>();
         foreach (var val in avatarStatesDict)
         {
