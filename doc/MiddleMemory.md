@@ -159,7 +159,7 @@
 --------------------------------------------------------
 
 ## vs颜色:
-  * 函数颜色,变量/常量/enum颜色
+  * 命名空间,函数,变量/常量/enum颜色
 ## vscode插件:
   * web:express, auto-complate-path, auto-close-tag, eslint,Vetur(vue语法高亮), Prettier Formatter(代码格式化)
 

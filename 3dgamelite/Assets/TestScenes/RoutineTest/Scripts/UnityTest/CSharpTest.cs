@@ -544,13 +544,13 @@ namespace Dalechn
 
     }
 
-    public partial class Person{ }
+    public partial class Person { }
 
     // 部分类
     //所有部分都必须使用partial 关键字
     //各个部分必须具有相同的可访问性
     //可在不同文件写
-    public partial class Person 
+    public partial class Person
     {
         public string pName { get; protected set; }
         public string sex { get; set; }
@@ -558,8 +558,8 @@ namespace Dalechn
         public int age { get; set; }
         public int ID;
 
-        public Person()  { }
-        public Person(string name, int age, string sex) 
+        public Person() { }
+        public Person(string name, int age, string sex)
         {
             this.pName = name;
             this.age = age;
@@ -653,8 +653,8 @@ namespace Dalechn
         public AbstractClassBase(int ID, int a) { this.ID = ID; }
 
         public virtual void NewInit(int a) { Debug.Log("Base NewInit"); }
-        public virtual void VirtualInit(int a) { Debug.Log("Base VirtualInit"); }
-        abstract public void Init();
+        virtual public void VirtualInit(int a) { Debug.Log("Base VirtualInit"); }
+        public abstract void Init();
     }
 
     public enum EEnumTest { ENUMTEST }
@@ -677,7 +677,7 @@ namespace Dalechn
     }
 
     //泛型接口
-   // 泛型约束
+    // 泛型约束
     //E - 元素，主要由Java集合(Collections)框架使用
     //K - 键，主要用于表示映射中的键的参数类型
     //V - 值，主要用于表示映射中的值的参数类型
@@ -699,7 +699,7 @@ namespace Dalechn
     // 类是(class)引用型
     // sealed密封类/方法
     //面向对象3大特征:封装(encapsulation),继承(extend),多态(Polymorphism)
-    public class GenericClass<T> : AbstractClassBase,  IInterfaceTest/*, Person*/ //不能有多个基类,可以有多个接口
+    public class GenericClass<T> : AbstractClassBase, IInterfaceTest/*, Person*/ //不能有多个基类,可以有多个接口
     {
         //泛型方法,<T>可不写
         public void GenericFunctionTest<T>(T parameter) { }
@@ -735,7 +735,7 @@ namespace Dalechn
 
         //成员函数没有virtual
         //不管加不加new,当父类引用调用此方法时还是调用的父类
-        public new  string ID => "man";
+        public new string ID => "man";
         //public string ID { get; } = "man";         // 和上面写法都相当于只读属性
 
         public int Age   // 属性:property (带get或set的field)
@@ -763,7 +763,7 @@ namespace Dalechn
 
         // overload(重载)是不同参数的同名func
         public void Init(int para)
-        {}
+        { }
 
         // override(覆盖,隐藏,重写)
         public override void VirtualInit(int a) { Debug.Log(" VirtualInit"); }
@@ -785,7 +785,7 @@ namespace Dalechn
     //        Instance = this;
     //    }
     //}
- 
+
     //-------------------------------------建立新语言模板--------------------------------------------
     // 1.环境搭建,注释,语言基本属性,语言基本组成
     // 2.核心类库(控制台调试, 鼠标键盘, io,日期, 数学, 随机)
