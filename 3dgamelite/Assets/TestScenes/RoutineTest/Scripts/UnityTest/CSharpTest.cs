@@ -92,6 +92,7 @@ namespace Dalechn
 
             //会查询暂存池(托管堆中)
             //1.利用字面量值创建string对象:
+            //@代表不解释转义字符
             string str1 = @"999";                        //String
             string str2 = str1 + str1;
 
@@ -102,10 +103,6 @@ namespace Dalechn
 
             //猜测:只要是使用了toString()就不会查询暂存池
             string str5 = "888" + str3.ToString();
-
-            //@代表不解释转义字符
-            //  \' 单引号 \f 换页 \" 双引号 \n 新行 \\ 反斜杠 \r 回车 \0 空字符 
-            //  \t 水平制表符 \a 警告(产生蜂鸣) \v垂直制表符 \b退格
 
             //猜测:数组为Array类型?
             int[] arr1 = new int[4];
