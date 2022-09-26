@@ -6,13 +6,21 @@ using Newtonsoft.Json;
 
 public class CharacterModel : MonoBehaviour
 {
-    public struct ScrollState
+    public struct avatarState
     {
         public int groupHandle;     //不穿的时候为0
         public int currentIndex;    //不穿的时候为-1
         public bool canNull;
 
-        public ScrollState(int groupHandle, int currentIndex, bool canNull = false)
+        public avatarState(avatarState state)
+        {
+            this.groupHandle = state.groupHandle;
+            this.currentIndex = state.currentIndex;
+
+            this.canNull = state.canNull;
+        }
+
+        public avatarState(int groupHandle, int currentIndex, bool canNull = false)
         {
             this.groupHandle = groupHandle;
             this.currentIndex = currentIndex;
@@ -30,27 +38,36 @@ public class CharacterModel : MonoBehaviour
     public MagicaAvatar avatar;
 
     //[HideInInspector]
-    public Dictionary<string, ScrollState> avatarStatesList = new Dictionary<string, ScrollState>();
+    public Dictionary<string, avatarState> avatarStatesDict = new Dictionary<string, avatarState>();
 
-    public void Init(string  partName)
+    public void Init(string partName)
     {
         int storedIndex = 0;    //需要用json加载,不然默认0
-        ScrollViewTem tem = ScrollViewTem.Tem(partName+":"+ storedIndex);
+        ScrollViewTem tem = ScrollViewTem.Tem(partName + ":" + storedIndex);
 
-        avatarStatesList.Add(partName, new ScrollState(0, -1, tem.CanNull));
+        avatarStatesDict.Add(partName, new avatarState(0, -1, tem.CanNull));
 
-        AddAvatarParts(tem, tem.CanNull?-1:storedIndex, tem.CanNull);
+        AddAvatarParts(tem, tem.CanNull ? -1 : storedIndex, tem.CanNull);
     }
 
     public int GetCurrentIndex(string partName)
     {
-        return avatarStatesList[partName].currentIndex;
+        return avatarStatesDict[partName].currentIndex;
     }
 
+    //public void AddPart(string name, ScrollState state)
+    //{
+
+    //}
+
+    //public void DetachPart(string name)
+    //{
+
+    //}
 
     public void AddAvatarParts(ScrollViewTem template, int index, bool canNull = false)
     {
-        if(template == null)
+        if (template == null)
         {
             return;
         }
@@ -58,16 +75,32 @@ public class CharacterModel : MonoBehaviour
         string[] splitParts = template.key.Split(':');
         string partName = splitParts[0];
 
-        var group = avatarStatesList[partName];
+        //套装清理其他部位的逻辑2. 这部分要先执行
+        Dictionary<string, avatarState> tempDict = new Dictionary<string, avatarState>();
+        foreach (var val in avatarStatesDict)
+        {
+            ScrollViewTem item = ScrollViewTem.Tem(val.Key + ":0"); //判断第一组数据是否有默认位置
 
-        ScrollState state = new ScrollState();
-        state.currentIndex = index;
-        state.canNull = template.CanNull;
+            if (!item.CanNull && val.Value.currentIndex == -1 && item.ClearOther != "")
+            {
+                int handle = LoadAsset(item.PrefabLocation);
 
-        if (group.groupHandle != 0)
+                tempDict.Add(val.Key, new avatarState(handle, 0, item.CanNull));
+                //avatarStatesDict[val.Key] = new avatarState(handle, 0, item.CanNull);
+            }
+        }
+        foreach (var val in tempDict)
+        {
+            avatarStatesDict[val.Key] = val.Value;
+        }
+
+        //清理当前部位
+        avatarState group = new avatarState();
+        if (avatarStatesDict.TryGetValue(partName, out group) && group.groupHandle != 0)
         {
             avatar.DetachAvatarParts(group.groupHandle);
-            state.groupHandle = 0;
+            group.Reset();
+            avatarStatesDict[partName] = group;
         }
 
         if (!canNull)
@@ -77,30 +110,28 @@ public class CharacterModel : MonoBehaviour
             {
                 string[] splitOther = template.ClearOther.Split(';');
 
+                avatarState groupOther = new avatarState();
+                List<string> deleteList = new List<string>();
                 foreach (var val in splitOther)
                 {
-                    var groupOther = avatarStatesList[val];
-                    avatar.DetachAvatarParts(groupOther.groupHandle);
-                    groupOther.Reset();
+                    if (avatarStatesDict.TryGetValue(val, out groupOther) && groupOther.groupHandle != 0)
+                    {
+                        avatar.DetachAvatarParts(groupOther.groupHandle);
+                        deleteList.Add(val);
+                    }
+                }
+
+                groupOther.Reset();
+                foreach (var val in deleteList)
+                {
+                    avatarStatesDict[val] = groupOther;
                 }
             }
 
+            //穿上当前部位
+            avatarState state = new avatarState(0, index, template.CanNull);
             state.groupHandle = LoadAsset(template.PrefabLocation);
-        }
-
-        avatarStatesList[partName] = state;
-
-        //套装清理其他部位的逻辑2.
-        foreach (var val in avatarStatesList)
-        {
-            ScrollViewTem item = ScrollViewTem.Tem(val.Key + ":0"); //判断第一组数据是否有默认位置
-
-            if (!item.CanNull  && val.Value.currentIndex == -1)
-            {
-                int handle = LoadAsset(item.PrefabLocation);
-
-                avatarStatesList[val.Key] = new ScrollState(handle, 0, item.CanNull);
-            }
+            avatarStatesDict[partName] = state;
         }
 
     }
