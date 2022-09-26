@@ -11,8 +11,9 @@ public class GenPart : EditorWindow
     public const string HAIR_PATH = "Assets/Resources/AvatarParts/Hair/";
     public const string PANTS_PATH = "Assets/Resources/AvatarParts/Pants/";
     public const string SHOES_PATH = "Assets/Resources/AvatarParts/Shoes/";
-    public const string SKIRT_PATH = "Assets/Resources/AvatarParts/Skirt/";
-    public const string SKIRT2_PATH = "Assets/Resources/AvatarParts/Skirt2/";
+    public const string TOP_PATH = "Assets/Resources/AvatarParts/Skirt/";
+    public const string COAT_PATH = "Assets/Resources/AvatarParts/Skirt2/";
+    public const string SUIT_PATH = "Assets/Resources/AvatarParts/Suit/";
     public const string AVATARROOT_PATH = "Assets/Resources/AvatarParts/";
 
     private const string FBX_SUFFIX = ".fbx";
@@ -24,16 +25,18 @@ public class GenPart : EditorWindow
     private string hairSuffix = "1";
     private string pantsSuffix = "1";
     private string shoesSuffix = "1";
-    private string skirtSuffix = "1";
-    private string skirt2Suffix = "1";
+    private string topSuffix = "1";
+    private string coatSuffix = "1";
+    private string suitSuffix = "1";
 
     private const string decoratesPrefix = "Deco_";
     private const string facePrefix = "Face_";
     private const string hairPrefix = "Hair_";
     private const string pantsPrefix = "Pants_";
     private const string shoesPrefix = "Shoes_";
-    private const string skirtPrefix = "Skirt_";
-    private const string skirt2Prefix = "Skirt2_";
+    private const string topPrefix = "Skirt_";
+    private const string coatPrefix = "Skirt2_";
+    private const string suitPrefix = "Suit_";
     private const string rootName = "root";
 
     [MenuItem("CustomTools/GenPart")]
@@ -51,39 +54,44 @@ public class GenPart : EditorWindow
         hairSuffix = EditorGUILayout.TextField("hairSuffix", hairSuffix);
         pantsSuffix = EditorGUILayout.TextField("pantsSuffix", pantsSuffix);
         shoesSuffix = EditorGUILayout.TextField("shoesSuffix", shoesSuffix);
-        skirtSuffix = EditorGUILayout.TextField("skirtSuffix", skirtSuffix);
-        skirt2Suffix = EditorGUILayout.TextField("skirt2Suffix", skirt2Suffix);
+        topSuffix = EditorGUILayout.TextField("topSuffix", topSuffix);
+        coatSuffix = EditorGUILayout.TextField("coatSuffix", coatSuffix);
+        suitSuffix = EditorGUILayout.TextField("suitSuffix", suitSuffix);
 
-        if (GUILayout.Button("Decorates"))
+        if (GUILayout.Button(decoratesPrefix))
         {
             Generate<MagicaAvatarParts, BaseCloth>(DECORATE_PATH + decoratesPrefix + decoratesSuffix);
         }
-        else if (GUILayout.Button("Face"))
+        else if (GUILayout.Button(decoratesPrefix))
         {
             Generate<MagicaAvatarParts, BaseCloth>(FACE_PATH + facePrefix + faceSuffix);
         }
-        else if (GUILayout.Button("Hair"))
+        else if (GUILayout.Button(hairPrefix))
         {
             // 没处理好 还需要手动清理 MagicaVirtualDeformer
             Generate<MagicaAvatarParts, MagicaMeshCloth>(HAIR_PATH + hairPrefix + hairSuffix);
         }
-        else if (GUILayout.Button("Pants"))
+        else if (GUILayout.Button(pantsPrefix))
         {
             Generate<MagicaAvatarParts, MagicaBoneCloth>(PANTS_PATH + pantsPrefix + pantsSuffix);
         }
-        else if (GUILayout.Button("Shoes"))
+        else if (GUILayout.Button(shoesPrefix))
         {
             Generate<MagicaAvatarParts, BaseCloth>(SHOES_PATH + shoesPrefix + shoesSuffix);
         }
-        else if (GUILayout.Button("Skirt"))
+        else if (GUILayout.Button(topPrefix))
         {
-            Generate<MagicaAvatarParts, BaseCloth>(SKIRT_PATH + skirtPrefix + skirtSuffix);
+            Generate<MagicaAvatarParts, MagicaBoneCloth>(TOP_PATH + topPrefix + topSuffix);
         }
-        else if (GUILayout.Button("Skirt2"))
+        else if (GUILayout.Button(coatPrefix))
         {
-            Generate<MagicaAvatarParts, BaseCloth>(SKIRT2_PATH + skirt2Prefix + skirt2Suffix);
+            Generate<MagicaAvatarParts, MagicaBoneCloth>(COAT_PATH + coatPrefix + coatSuffix);
         }
-        else if (GUILayout.Button("Root"))
+        else if (GUILayout.Button(suitPrefix))
+        {
+            Generate<MagicaAvatarParts, MagicaBoneCloth>(SUIT_PATH + suitPrefix + suitSuffix);
+        }
+        else if (GUILayout.Button(rootName))
         {
             Generate<MagicaAvatar,BaseCloth>(AVATARROOT_PATH + rootName, false);
         }

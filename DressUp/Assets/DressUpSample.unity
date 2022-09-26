@@ -313,7 +313,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 180302166}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: -0.00000016292068}
-  m_LocalPosition: {x: 0, y: 0.8, z: 2.5925958}
+  m_LocalPosition: {x: 0, y: 0.8, z: 4.14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1513941762}
@@ -881,9 +881,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewport: {fileID: 180622567}
-  firstScrollView: {fileID: 8604032625215873808}
   itemPrefab: {fileID: 1356548643}
   currentListName: Dress
+  firstScrollView: {fileID: 8604032625215873808}
 --- !u!114 &744041351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1239,6 +1239,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1106287317}
   - component: {fileID: 1106287316}
+  - component: {fileID: 1106287318}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -1276,6 +1277,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1106287318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1106287315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59dfbc0f4f3a98b4ebf4ad40fc3f43aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolName: PartPool
+  matchPoolScale: 0
+  matchPoolLayer: 0
+  dontReparent: 0
+  _dontDestroyOnLoad: 0
+  logMessages: 0
+  _perPrefabPoolOptions: []
+  maxParticleDespawnTime: 300
 --- !u!1 &1219431012
 GameObject:
   m_ObjectHideFlags: 0
@@ -1401,8 +1422,8 @@ MonoBehaviour:
   cameraTarget: {fileID: 192609090}
   cameraTargetPos: {x: 0, y: 0.851, z: 0}
   cameraTargetOffset: {x: 0, y: -0.26170337, z: 0}
-  cameraDist: 1.8063093
-  cameraPitch: 8.544321
+  cameraDist: 5
+  cameraPitch: 20
   cameraYaw: 180
   cameraDistHokanTime: 0.1
   cameraAngleHokanTime: 0.1

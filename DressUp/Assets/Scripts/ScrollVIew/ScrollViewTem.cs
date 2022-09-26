@@ -177,7 +177,7 @@ template.PrefabLocation = "AvatarParts/Pants/Pants_5";
 template.Location = "Textures/KartUI/Kart4";
 template.Owned = true;
 template.CanNull = false;
-template.ClearOther = "Skirt:Skirt2";
+template.ClearOther = "";
 msData.Add(template.key,template);
 //.......................................
 template = new ScrollViewTem();
@@ -226,7 +226,7 @@ template.ClearOther = "";
 msData.Add(template.key,template);
 //.......................................
 template = new ScrollViewTem();
-template.key = "Skirt:0";
+template.key = "Top:0";
 template.PrefabLocation = "AvatarParts/Skirt/Skirt_1";
 template.Location = "Textures/KartUI/Kart0";
 template.Owned = true;
@@ -235,7 +235,7 @@ template.ClearOther = "";
 msData.Add(template.key,template);
 //.......................................
 template = new ScrollViewTem();
-template.key = "Skirt:1";
+template.key = "Top:1";
 template.PrefabLocation = "AvatarParts/Skirt/Skirt_2";
 template.Location = "Textures/KartUI/Kart1";
 template.Owned = true;
@@ -244,7 +244,7 @@ template.ClearOther = "";
 msData.Add(template.key,template);
 //.......................................
 template = new ScrollViewTem();
-template.key = "Skirt:2";
+template.key = "Top:2";
 template.PrefabLocation = "AvatarParts/Skirt/Skirt_3";
 template.Location = "Textures/KartUI/Kart2";
 template.Owned = true;
@@ -253,7 +253,7 @@ template.ClearOther = "";
 msData.Add(template.key,template);
 //.......................................
 template = new ScrollViewTem();
-template.key = "Skirt:3";
+template.key = "Top:3";
 template.PrefabLocation = "AvatarParts/Skirt/Skirt_4";
 template.Location = "Textures/KartUI/Kart3";
 template.Owned = true;
@@ -262,7 +262,7 @@ template.ClearOther = "";
 msData.Add(template.key,template);
 //.......................................
 template = new ScrollViewTem();
-template.key = "Skirt:4";
+template.key = "Top:4";
 template.PrefabLocation = "AvatarParts/Skirt/Skirt_5";
 template.Location = "Textures/KartUI/Kart4";
 template.Owned = true;
@@ -271,12 +271,21 @@ template.ClearOther = "";
 msData.Add(template.key,template);
 //.......................................
 template = new ScrollViewTem();
-template.key = "Skirt2:0";
+template.key = "Coat:0";
 template.PrefabLocation = "AvatarParts/Skirt2/Skirt2_1";
 template.Location = "Textures/KartUI/Kart0";
 template.Owned = true;
 template.CanNull = true;
 template.ClearOther = "";
+msData.Add(template.key,template);
+//.......................................
+template = new ScrollViewTem();
+template.key = "Suit:0";
+template.PrefabLocation = "AvatarParts/Suit/Suit_1";
+template.Location = "Textures/KartUI/Kart0";
+template.Owned = true;
+template.CanNull = true;
+template.ClearOther = "Pants;Top";
 msData.Add(template.key,template);
             
             #endregion

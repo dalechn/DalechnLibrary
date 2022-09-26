@@ -68,21 +68,28 @@ msData.Add(template.key,template);
 //.......................................
 template = new DoubleScrollViewTem();
 template.key = "Dress:3";
-template.Name = "Skirt";
+template.Name = "Top";
 template.Location = "Textures/KartUI/Kart3";
+template.Owned = true;
+msData.Add(template.key,template);
+//.......................................
+template = new DoubleScrollViewTem();
+template.key = "Dress:5";
+template.Name = "Coat";
+template.Location = "Textures/KartUI/Kart4";
+template.Owned = true;
+msData.Add(template.key,template);
+//.......................................
+template = new DoubleScrollViewTem();
+template.key = "Dress:6";
+template.Name = "Suit";
+template.Location = "Textures/KartUI/Kart4";
 template.Owned = true;
 msData.Add(template.key,template);
 //.......................................
 template = new DoubleScrollViewTem();
 template.key = "Dress:4";
 template.Name = "Shoes";
-template.Location = "Textures/KartUI/Kart4";
-template.Owned = true;
-msData.Add(template.key,template);
-//.......................................
-template = new DoubleScrollViewTem();
-template.key = "Dress:5";
-template.Name = "Skirt2";
 template.Location = "Textures/KartUI/Kart4";
 template.Owned = true;
 msData.Add(template.key,template);

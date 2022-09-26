@@ -21,32 +21,37 @@ public class DoubleScrollView : ScrollViewBase<DoubleScrollViewTem>
         {
             firstScrollView.Init(val.Name);
         }
-
-        //int currentIndex = temList.FindIndex((e) => { return e.Name == currentListName; });
     }
 
     protected override void Start()
     {
         base.Start();
 
-        string lastSelectedPart = PlayerPrefs.GetString(AppConst.LAST_SELECTED_PART);
-        currentPartIndex = temList.FindIndex((e) => { return e.Name == lastSelectedPart; });
-        //默认为第一个
-        if(currentPartIndex < 0)
-            currentPartIndex = 0;
-        //Debug.Log(lastSelectedPart);
+        InitScrollView();
 
         ResetItems(temList.Count);
         LightBackground();
     }
 
-    private void LightBackground()
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        firstScrollView.CheckLastSelected(false);
+    }
+
+    public override void RunAnimation()
+    {
+        SmoothScrollTo(currentPartIndex, 0.5f);
+    }
+
+    public override void LightBackground()
     {
         foreach (var val in viewsHolders)
         {
             val.backGround.enabled = false;
         }
-        if(currentPartIndex>=0)
+        if (currentPartIndex >= 0)
         {
             viewsHolders[currentPartIndex].backGround.enabled = true;
         }
@@ -64,7 +69,7 @@ public class DoubleScrollView : ScrollViewBase<DoubleScrollViewTem>
         //vh.image.sprite = Resources.Load<Sprite>(template.Location + vh.ItemIndex);
         vh.btn.onClick.AddListener(() =>
         {
-            if(currentPartIndex !=vh.ItemIndex)
+            if (currentPartIndex != vh.ItemIndex)
             {
                 //Debug.Log("click");
 
@@ -74,6 +79,21 @@ public class DoubleScrollView : ScrollViewBase<DoubleScrollViewTem>
 
                 LightBackground();
             }
+        });
+    }
+
+    private void InitScrollView()
+    {
+        string lastSelectedPart = firstScrollView.CheckLastSelected(true);
+        currentPartIndex = temList.FindIndex((e) => { return e.Name == lastSelectedPart; });
+        if (currentPartIndex < 0)
+            currentPartIndex = 0;           //默认为第一个
+                                            //Debug.Log(currentPartIndex);
+
+        Dalechn.bl_UpdateManager.RunActionOnce("", Time.deltaTime, () =>
+        {
+            RunAnimation();
+            firstScrollView.RunAnimation();
         });
     }
 

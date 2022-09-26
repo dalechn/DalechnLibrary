@@ -8,21 +8,29 @@ public class SingleScrollView : ScrollViewBase<ScrollViewTem>
 {
     public CharacterModel model;
 
+    public string CheckLastSelected(bool load)
+    {
+        if (load)
+        {
+            string lastSelectedPart = PlayerPrefs.GetString(AppConst.LAST_SELECTED_PART, currentListName);
+            currentListName = lastSelectedPart;
+
+            return lastSelectedPart;
+        }
+        else
+        {
+            PlayerPrefs.SetString(AppConst.LAST_SELECTED_PART, currentListName);
+        }
+        return null;
+    }
+
     protected override void Start()
     {
         base.Start();
 
-        currentListName =  PlayerPrefs.GetString(AppConst.LAST_SELECTED_PART, currentListName);
         //Debug.Log(currentListName);
 
         ResetItem(currentListName);
-    }
-
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-
-        PlayerPrefs.SetString(AppConst.LAST_SELECTED_PART, currentListName);
     }
 
     protected override void UpdateViewsHolder(CellViewsHolder vh)
@@ -41,35 +49,14 @@ public class SingleScrollView : ScrollViewBase<ScrollViewTem>
             {
                 model.AddAvatarParts(template, -1, true);
             }
+
             LightBackground();
         });
-    }
-
-    protected void LightBackground()
-    {
-        foreach (var val in viewsHolders)
-        {
-            val.backGround.enabled = false;
-        }
-
-        int currentIndex = model.GetCurrentIndex(currentListName);
-        if (currentIndex >= 0)
-        {
-            viewsHolders[currentIndex].backGround.enabled = true;
-        }
-        else
-        {
-            Debug.LogWarning("index 超了");
-        }
     }
 
     public void Init(string partName)
     {
         model.Init(partName);
-
-        int index = model.GetCurrentIndex(partName);
-        temList = ScrollViewTem.Lis(partName);
-        model.AddAvatarParts(temList[index], index);
     }
 
     public void ChangeList(string partName)
@@ -86,7 +73,10 @@ public class SingleScrollView : ScrollViewBase<ScrollViewTem>
             currentListName = partName;
             ResetItem(partName);
 
-            SmoothScrollTo(model.GetCurrentIndex(currentListName), 0);
+            int index = model.GetCurrentIndex(currentListName);
+            if (index < 0)
+                index = 0;      //没有装扮的时候的处理
+            SmoothScrollTo(index, 0);
 
             Dalechn.bl_UpdateManager.RunAction("", 0.3f, (t, r) =>
             {
@@ -96,8 +86,33 @@ public class SingleScrollView : ScrollViewBase<ScrollViewTem>
             }, null, Dalechn.EaseType.SineInOut);
         }, Dalechn.EaseType.SineInOut);
     }
-     
-    public void ResetItem(string partName)
+
+
+    public override void LightBackground()
+    {
+        foreach (var val in viewsHolders)
+        {
+            val.backGround.enabled = false;
+        }
+
+        int currentIndex = model.GetCurrentIndex(currentListName);
+        if (currentIndex >= 0)
+        {
+            viewsHolders[currentIndex].backGround.enabled = true;
+        }
+        else
+        {
+            Debug.Log("没有装扮 index :" + currentListName);
+        }
+    }
+
+
+    public override void RunAnimation()
+    {
+        SmoothScrollTo(model.GetCurrentIndex(currentListName), 0.5f);
+    }
+
+    protected void ResetItem(string partName)
     {
         temList = ScrollViewTem.Lis(partName);
         ResetItems(temList.Count);
@@ -106,7 +121,7 @@ public class SingleScrollView : ScrollViewBase<ScrollViewTem>
     }
 }
 
-public abstract class ScrollViewBase<Tem>: ClassicSRIA<CellViewsHolder>
+public abstract class ScrollViewBase<Tem> : ClassicSRIA<CellViewsHolder>
 {
     public RectTransform itemPrefab;
     public string currentListName = "Dress";
@@ -121,6 +136,8 @@ public abstract class ScrollViewBase<Tem>: ClassicSRIA<CellViewsHolder>
         return instance;
     }
 
+    public virtual void RunAnimation() { }
+    public virtual void LightBackground() { }
     //protected virtual void LightBackground() { }
 }
 
