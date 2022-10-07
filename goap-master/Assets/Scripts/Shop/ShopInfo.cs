@@ -6,17 +6,28 @@ using UnityEngine;
 [System.Serializable]
 public struct Score
 {
-    public int environmentScore;
-    public int cookingScore;
-    public int thumbsNumber;
+    public int environmentScore;    //环境分
+    public int cookingScore;            //厨艺分,所有工作中的员工相加
+    public int thumbsNumber;        //点赞数
+
+    public float genRate;          //来客速度
+    public float goodRate;      //好评率
+    public float enthusiasm;    //客人热情
 }
 
 public struct OrderState
 {
-    public int totalOrder;
+    public int totalOrder;          //所有产生的订单
     public int canceledOrder; //强行取消的订单
-    public int leavedCustomer;
+    public int hateOrder;   //评价不喜欢的客人
+    public int leavedCustomer;  //没有进来的客人(已经在等待)
 }
+
+public enum FoodType
+{
+    hotdog, burger, popcorn, taco, cola, beer, wine
+}
+
 
 public class ShopInfo : MonoBehaviour
 {
@@ -30,17 +41,18 @@ public class ShopInfo : MonoBehaviour
     public List<Slot> gameList = new List<Slot>();
 
     private List<GameObject> gameSlotList = new List<GameObject>();
-    private Dictionary< GameObject, Slot> tableSlotDict = new Dictionary<GameObject, Slot>();
+    private Dictionary<GameObject, Slot> tableSlotDict = new Dictionary<GameObject, Slot>();
     private Dictionary<string, GameObject> furnitureSlotDict = new Dictionary<string, GameObject>();
 
-
-    public Queue<Order> orderQueue = new Queue<Order>();
-
+    public CustomerManager customerManager;
     public StaffManager staffManager;
     //public OrderManager orderManager;
-    public MessageCenter messageCenter;
+    //public MessageCenter messageCenter;
     public Score currentScore;
+
+
     public OrderState orderState;
+    public Queue<Order> orderQueue = new Queue<Order>();
 
     public static ShopInfo Instance { get; private set; }
     protected virtual void Awake()
@@ -52,11 +64,16 @@ public class ShopInfo : MonoBehaviour
     {
         staffManager.idleEvent += (Staff staff) =>
         {
-            if(orderQueue.TryDequeue(out Order order))
+            if (orderQueue.TryDequeue(out Order order))
             {
-                staffManager.StaffGetOrder(staff,order);
+                staffManager.StaffGetOrder(staff, order);
             }
         };
+
+        if(currentScore.genRate>0)
+        {
+            customerManager.StartGen(currentScore.genRate);
+        }
 
         //GenOrder("burger");
         //GenOrder("burger");
@@ -71,14 +88,14 @@ public class ShopInfo : MonoBehaviour
         //orderState.canceledOrder++;
     }
 
-    public void SendMessageCenter()
-    {
-        messageCenter.SendMessageCenter();
-    }
+    //public void SendMessageCenter()
+    //{
+    //    messageCenter.SendMessageCenter();
+    //}
 
-    public void RegistFloor(string areaName,RandomArea area)
+    public void RegistFloor(string areaName, RandomArea area)
     {
-        areaDict.Add(areaName,area);
+        areaDict.Add(areaName, area);
     }
 
     public void RegistSlot(string objName, Slot table, RegistName registName)
@@ -124,39 +141,27 @@ public class ShopInfo : MonoBehaviour
         staffManager.staffList.Add(staff);
     }
 
-    public Order GenOrder(string orderName, GameObject table,Customer customer)
+    public void GenOrder(GameObject table,ref  Order order)
     {
-        if (table)
+        FoodTem tem = FoodTem.Tem(order.orderFoodName);
+        string[] splitParts = tem.Need.Split(';');
+        foreach (var val in splitParts)
         {
-            Order order = new Order();
-
-            FoodTem tem = FoodTem.Tem(orderName);
-            string[] splitParts = tem.Need.Split(';');
-            foreach (var val in splitParts)
+            if (furnitureSlotDict.TryGetValue(val, out GameObject furniture))
             {
-                if (furnitureSlotDict.TryGetValue(val, out GameObject furniture))
-                {
-                    order.foodPositionList.Enqueue(furniture.transform.position);
-                }
+                order.foodPositionList.Enqueue(furniture.transform.position);
             }
-
-            order.customer = customer;
-
-            Slot slot = tableSlotDict[table];
-            Vector3 pos = slot.GetUsableStaffPosition().transform.position;
-            order.staffPosition = pos;
-
-            order.customerPosition = table.transform.position;
-            order.foodSprite = Resources.Load<Sprite>(tem.Location);
-
-            orderQueue.Enqueue(order);
-            //Debug.Log(orderQueue.Count);
-            //Debug.Log(task.foodSprite);
-
-            return order;
         }
 
-        return null;
+        Slot slot = tableSlotDict[table];
+        Vector3 pos = slot.GetUsableStaffPosition().transform.position;
+        order.staffPosition = pos;
+
+        order.foodSpriteLocation = tem.Location;
+
+        orderQueue.Enqueue(order);
+        //Debug.Log(orderQueue.Count);
+        //Debug.Log(task.foodSprite);
     }
 
     public GameObject GetUeableGame()
@@ -184,7 +189,7 @@ public class ShopInfo : MonoBehaviour
 
         foreach (var val in tableSlotDict)
         {
-            if(val.Key.activeInHierarchy)
+            if (val.Key.activeInHierarchy)
             {
                 usableList.Add(val.Key);
             }

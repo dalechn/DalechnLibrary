@@ -251,7 +251,7 @@ namespace Invector
                     if (headerAttribute.useHelpBox)
                     {
                         EditorStyles.helpBox.richText = true;
-                        EditorGUILayout.HelpBox(headerAttribute.helpBoxText, MessageType.Info);
+                        EditorGUILayout.HelpBox(headerAttribute.helpBoxText, UnityEditor.MessageType.Info);
                     }
                        
                     GUILayout.Space(10);
@@ -289,8 +289,8 @@ namespace Invector
                     {
                         if (headerAttribute.useHelpBox)
                         {
-                            EditorStyles.helpBox.richText = true;                           
-                            EditorGUILayout.HelpBox(headerAttribute.helpBoxText, MessageType.Info);
+                            EditorStyles.helpBox.richText = true;
+                            EditorGUILayout.HelpBox(headerAttribute.helpBoxText, UnityEditor.MessageType.Info);
                         }                           
 
                         if (ignoreEvents != null && ignoreEvents.Length > 0)

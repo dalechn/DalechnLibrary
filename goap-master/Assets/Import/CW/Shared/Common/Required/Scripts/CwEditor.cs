@@ -121,17 +121,17 @@ namespace CW.Common
 
 		public static void Info(string message)
 		{
-			EditorGUILayout.HelpBox(StripRichText(message), MessageType.Info); // Help boxes can't display rich text for some reason, so strip it
+            EditorGUILayout.HelpBox(StripRichText(message), UnityEditor.MessageType.Info); // Help boxes can't display rich text for some reason, so strip it
 		}
 
 		public static void Warning(string message)
 		{
-			EditorGUILayout.HelpBox(StripRichText(message), MessageType.Warning); // Help boxes can't display rich text for some reason, so strip it
+            EditorGUILayout.HelpBox(StripRichText(message), UnityEditor.MessageType.Warning); // Help boxes can't display rich text for some reason, so strip it
 		}
 
 		public static void Error(string message)
 		{
-			EditorGUILayout.HelpBox(StripRichText(message), MessageType.Error); // Help boxes can't display rich text for some reason, so strip it
+            EditorGUILayout.HelpBox(StripRichText(message), UnityEditor.MessageType.Error); // Help boxes can't display rich text for some reason, so strip it
 		}
 
 		public static void Separator()

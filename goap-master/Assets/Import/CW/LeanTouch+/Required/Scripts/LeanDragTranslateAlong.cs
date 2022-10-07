@@ -1,5 +1,6 @@
 using UnityEngine;
 using CW.Common;
+using System.Collections.Generic;
 
 namespace Lean.Touch
 {
@@ -77,8 +78,12 @@ namespace Lean.Touch
 			// Store old position
 			var oldPosition = finalTransform.localPosition;
 
+			// *新增
+			// Get the fingers we want to use
+			var fingers = Use.UpdateAndGetFingers();
+
 			// Update to new position
-			UpdateTranslation();
+			UpdateTranslation(finalTransform,fingers);
 
 			// Shift delta by old new delta
 			remainingDelta += finalTransform.localPosition - oldPosition;
@@ -92,17 +97,18 @@ namespace Lean.Touch
 			// Shift this position by the change in delta
 			finalTransform.localPosition = smoothPosition + remainingDelta - newDelta;
 
+			//* 新增
+			if (fingers.Count == 0 && inertia > 0.0f && damping > 0.0f)
+			{
+				newDelta = Vector3.Lerp(newDelta, remainingDelta, inertia);
+			}
+
 			// Update remainingDelta with the dampened value
 			remainingDelta = newDelta;
 		}
 
-		private void UpdateTranslation()
+		private void UpdateTranslation(Transform finalTransform,List<LeanFinger> fingers)
 		{
-			var finalTransform = target != null ? target : transform;
-
-			// Get the fingers we want to use
-			var fingers = Use.UpdateAndGetFingers();
-
 			// Calculate the screenDelta value based on these fingers and make sure there is movement
 			var screenDelta = LeanGesture.GetScreenDelta(fingers);
 
@@ -116,12 +122,19 @@ namespace Lean.Touch
 					var worldPosition  = finalTransform.position;
 					var oldScreenPoint = camera.WorldToScreenPoint(worldPosition);
 
+					LeanScreenDepth.ConversionType originType = ScreenDepth.Conversion;
+
 					if (trackScreenPosition == true)
 					{
-						if (ScreenDepth.TryConvert(ref worldPosition, oldScreenPoint + (Vector3)(screenDelta + deltaDifference), gameObject) == true)
+						// *修改
+						if (!ScreenDepth.TryConvert(ref worldPosition, oldScreenPoint + (Vector3)(screenDelta + deltaDifference) * sensitivity, gameObject) == true)
 						{
-							finalTransform.position = worldPosition;
+							ScreenDepth.Conversion = LeanScreenDepth.ConversionType.AutoDistance;
+							ScreenDepth.TryConvert(ref worldPosition, oldScreenPoint + (Vector3)(screenDelta + deltaDifference) * sensitivity, gameObject);
+
+							ScreenDepth.Conversion = originType;
 						}
+						finalTransform.position = worldPosition;
 
 						var newScreenPoint = camera.WorldToScreenPoint(worldPosition);
 						var oldNewDelta    = (Vector2)(newScreenPoint - oldScreenPoint);
@@ -130,10 +143,15 @@ namespace Lean.Touch
 					}
 					else
 					{
-						if (ScreenDepth.TryConvert(ref worldPosition, oldScreenPoint + (Vector3)screenDelta, gameObject) == true)
+						// *修改
+						if (!ScreenDepth.TryConvert(ref worldPosition, oldScreenPoint + (Vector3)screenDelta * sensitivity, gameObject) == true)
 						{
-							finalTransform.position = worldPosition;
+							ScreenDepth.Conversion = LeanScreenDepth.ConversionType.AutoDistance;
+							ScreenDepth.TryConvert(ref worldPosition, oldScreenPoint + (Vector3)screenDelta * sensitivity, gameObject);
+
+							ScreenDepth.Conversion = originType;
 						}
+						finalTransform.position = worldPosition;
 					}
 				}
 				else
@@ -142,6 +160,14 @@ namespace Lean.Touch
 				}
 			}
 		}
+
+		// *新增
+		public float Sensitivity { set { sensitivity = value; } get { return sensitivity; } }
+		[SerializeField] private float sensitivity = 1.0f;
+
+		public float Inertia { set { inertia = value; } get { return inertia; } }
+		[SerializeField][Range(0.0f, 1.0f)] private float inertia;
+
 	}
 }
 
@@ -164,6 +190,10 @@ namespace Lean.Touch.Editor
 			Draw("ScreenDepth");
 			Draw("trackScreenPosition", "If your ScreenDepth settings cause the position values to clamp, there will be a difference between where the finger is and where the object is. Should this difference be tracked?");
 			Draw("damping", "If you want this component to change smoothly over time, then this allows you to control how quick the changes reach their target value.\n\n-1 = Instantly change.\n\n1 = Slowly change.\n\n10 = Quickly change.");
+
+			// *新增
+			Draw("sensitivity");
+			Draw("inertia", "This allows you to control how much momentum is retained when the dragging fingers are all released.\n\nNOTE: This requires <b>Damping</b> to be above 0.");
 		}
 	}
 }

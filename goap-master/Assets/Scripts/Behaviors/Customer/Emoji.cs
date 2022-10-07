@@ -11,15 +11,23 @@ using BehaviorDesigner.Runtime;
 public class Emoji : Wait
 {
     public Customer customer;
-    public EmojiType startEmoji;
-    public EmojiType overTimeEmoji;
+    public MessageType startEmoji;
+    public MessageType overTimeEmoji;
+
+    private bool emoed;
 
     public override TaskStatus OnUpdate()
     {
         if (startTime + waitDuration < Time.time)
         {
-            customer.Emoji(overTimeEmoji);
             return TaskStatus.Success;
+        }
+
+        //除以2是设置patience time的一半
+        if (startTime + waitDuration/2 < Time.time&&!emoed)
+        {
+            emoed = true;
+            customer.Emoji(overTimeEmoji);
         }
 
         return TaskStatus.Running;

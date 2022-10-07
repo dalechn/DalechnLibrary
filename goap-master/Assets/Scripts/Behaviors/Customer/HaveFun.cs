@@ -8,30 +8,29 @@ using BehaviorDesigner.Runtime.Tasks.Movement;
 public class HaveFun : NavMeshMovement
 {
     public Customer customer;
+    public MessageType emojiType;
 
     public override TaskStatus OnUpdate()
     {
         GameObject pos = customer.GetUsableGame();
 
-        if (pos)
-        {
-            SetDestination(pos.transform.position);
-
-            if (HasArrived())
-            {
-                // todu: 播放动画
-                //customer.GenOrder();
-                customer.HaveFun();
-
-                return TaskStatus.Success;
-            }
-
-            return TaskStatus.Running;
-        }
-        else
+        if (customer.Debuff()|| pos== null)
         {
             return TaskStatus.Failure;
         }
+
+        SetDestination(pos.transform.position);
+
+        if (HasArrived())
+        {
+            // todu: 播放动画
+            //customer.GenOrder();
+            customer.HaveFun();
+
+            return TaskStatus.Success;
+        }
+
+        return TaskStatus.Running;
     }
 
     public override void OnStart()
@@ -39,6 +38,6 @@ public class HaveFun : NavMeshMovement
         base.OnStart();
         customer = GetComponent<Customer>();
 
-        customer.LeaveShop();
+        customer.LeaveShop(emojiType);
     }
 }

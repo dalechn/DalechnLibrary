@@ -42,14 +42,13 @@ public class ServeTheDishes : NavMeshMovement
                 startTime = Time.time;
                 firstArrive = false;
             }
+            staff.OrderFinish();    //如果是放在waitDuration之后还需要改一些staff的东西?
 
             if (startTime + waitDuration < Time.time)
             {
-                staff.OrderFinish();
-
                 return TaskStatus.Success;
             }
-            return TaskStatus.Running;
+            //return TaskStatus.Running;
         }
 
         return TaskStatus.Running;

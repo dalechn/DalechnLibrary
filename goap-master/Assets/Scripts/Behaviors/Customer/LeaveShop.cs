@@ -8,6 +8,7 @@ using BehaviorDesigner.Runtime.Tasks.Movement;
 public class LeaveShop: Seek
 {
     public Customer customer;
+    public MessageType emojiType;
 
     public override TaskStatus OnUpdate()
     {
@@ -26,6 +27,6 @@ public class LeaveShop: Seek
         base.OnStart();
         customer = GetComponent<Customer>();
 
-        customer.LeaveShop();
+        customer.LeaveShop(emojiType);
     }
 }

@@ -5,4 +5,5 @@ using UnityEngine;
 public class GlobalConfig 
 {
     public const string CustomerPool = "CustomerPool";
+    public const string EmojiPool = "EmojiPool";
 }

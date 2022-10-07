@@ -13,7 +13,7 @@ public class CompactMatrix4x4Drawer : PropertyDrawer
             position.height -= EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             EditorGUI.PropertyField(position, property, label, true);
             position.y += EditorGUIUtility.singleLineHeight;
-            EditorGUI.HelpBox(position, "Attribute mismatches.", MessageType.Warning);
+            EditorGUI.HelpBox(position, "Attribute mismatches.", UnityEditor.MessageType.Warning);
             return;
         }
 

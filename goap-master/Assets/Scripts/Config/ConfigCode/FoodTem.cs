@@ -47,49 +47,49 @@ public class FoodTem
 //.......................................
 template = new FoodTem();
 template.key = "hotdog";
-template.Location = "FoodIcon/512/hotdog";
+template.Location = "Textures/FoodIcon/hotdog";
 template.Owned = true;
 template.Need = "Furniture1";
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
 template.key = "burger";
-template.Location = "FoodIcon/512/burger";
+template.Location = "Textures/FoodIcon/burger";
 template.Owned = true;
 template.Need = "Furniture1;Furniture2";
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
 template.key = "popcorn";
-template.Location = "FoodIcon/512/popcorn";
+template.Location = "Textures/FoodIcon/popcorn";
 template.Owned = true;
 template.Need = "Furniture1;Furniture2;Furniture3";
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
 template.key = "taco";
-template.Location = "FoodIcon/512/taco";
+template.Location = "Textures/FoodIcon/taco";
 template.Owned = true;
 template.Need = "Furniture1;Furniture4";
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
 template.key = "cola";
-template.Location = "FoodIcon/512/cola";
+template.Location = "Textures/FoodIcon/cola";
 template.Owned = true;
 template.Need = "Furniture2;Furniture5";
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
 template.key = "beer";
-template.Location = "FoodIcon/512/beer";
+template.Location = "Textures/FoodIcon/beer";
 template.Owned = true;
 template.Need = "Furniture3;Furniture6";
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
 template.key = "wine";
-template.Location = "FoodIcon/512/wine";
+template.Location = "Textures/FoodIcon/wine";
 template.Owned = true;
 template.Need = "Furniture4;Furniture7";
 msData.Add(template.key,template);

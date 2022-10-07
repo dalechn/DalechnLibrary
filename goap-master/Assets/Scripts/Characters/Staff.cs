@@ -7,9 +7,10 @@ using UnityEngine.AI;
 [System.Serializable]
 public struct StaffProp
 {
-    public int priority;
+    public int priority;        //暂定星级?
     public float cookingTime;
     public float serveInterval; //服务间隔时间
+    public int cookingScore;
 }
 
 public enum StaffBTVal
@@ -51,6 +52,8 @@ public class Staff : PersonBase
     {
         idleState = false;
         currentOrder = order;
+
+        order.cookingScore = staffProp.cookingScore;
     }
 
     public void OrderFinish(bool served = true)
@@ -58,22 +61,21 @@ public class Staff : PersonBase
         finishEvent?.Invoke(this);
 
         currentOrder.customer.served = served;
-        if (!served)    //强行中断订单的话需要等待一下才能接单
+        //需要等待一下才能接单
+        Dalechn.bl_UpdateManager.RunActionOnce("", staffProp.serveInterval, () => 
         {
-            Dalechn.bl_UpdateManager.RunActionOnce("", staffProp.serveInterval, () =>
-            {
-                idleState = true;
-            });
+            idleState = true;
+            currentOrder = null;
+        });
 
+        if (!served)    
+        {
             ShopInfo.Instance.orderState.canceledOrder++;
         }
         else
         {
-            idleState = true;
-
             ShopInfo.Instance.orderState.totalOrder++;
         }
-        currentOrder = null;
     }
 
     public bool HaveOrder()

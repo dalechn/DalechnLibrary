@@ -5,13 +5,7 @@ using UnityEngine;
 
 public class CustomerManager : MonoBehaviour
 {
-    public static CustomerManager Instance { get; private set; }
-    protected virtual void Awake()
-    {
-        Instance = this;
-    }
-
-    public float genRate = 1.0f;
+    //public float genRate = 1.0f;
     //public List<Transform> customerList;
 
     public List<Transform> genList;
@@ -25,9 +19,16 @@ public class CustomerManager : MonoBehaviour
 
     void Start()
     {
-        InvokeRepeating("GenCustomer", Time.deltaTime, genRate);
 
-        foreach(var val in genList)
+    }
+
+    public void StartGen(float genRate)
+    {
+        // 延迟好像有问题???
+        //InvokeRepeating("GenCustomer", Time.deltaTime, genRate);
+        InvokeRepeating("GenCustomer", 0, genRate);
+
+        foreach (var val in genList)
         {
             destroyList.Add(val);
         }
@@ -43,7 +44,7 @@ public class CustomerManager : MonoBehaviour
         Transform target = GetRandomPosition(targetList, targetRandom);
 
         Transform customerTr = GetRandomObj();
-        if(customerTr)
+        if (customerTr)
         {
             Customer customer = customerTr.GetComponent<Customer>();
 
@@ -100,18 +101,18 @@ public class CustomerManager : MonoBehaviour
     void Update()
     {
         destroyCustomerList.Clear();
-        foreach(var val in destroyList)
+        foreach (var val in destroyList)
         {
-            foreach(var c in customerList)
+            foreach (var c in customerList)
             {
-                if(c.unused&& Vector3.Distance( val.position ,c.tr.position)<1)
+                if (c.unused && Vector3.Distance(val.position, c.tr.position) < 1)
                 {
                     destroyCustomerList.Add(c);
                 }
             }
         }
 
-        foreach(var val in destroyCustomerList)
+        foreach (var val in destroyCustomerList)
         {
             customerList.Remove(val);
             //Destroy(val.gameObject);

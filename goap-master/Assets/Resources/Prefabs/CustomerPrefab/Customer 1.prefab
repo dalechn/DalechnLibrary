@@ -5317,6 +5317,7 @@ MonoBehaviour:
   customerProp:
     foodType: 0
     needEnvironmentScore: 0
+    needFoodScore: 20
     dinnerTime: 10
     patienceTime: 30
   currentSite: {fileID: 0}
@@ -5515,6 +5516,7 @@ GameObject:
   - component: {fileID: 4588204291508224498}
   - component: {fileID: 4588204291508224492}
   - component: {fileID: 4588204291508224499}
+  - component: {fileID: 3363394012131968069}
   m_Layer: 4
   m_Name: Visuals
   m_TagString: Untagged
@@ -5596,6 +5598,20 @@ MonoBehaviour:
   basePitch: 1
   randomPitchOffset: 0.2
   logDebugMessage: 0
+--- !u!114 &3363394012131968069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4588204291508224497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 678b6cfa0de023f43aaca5a7be200284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isBack: 0
+  onlyY: 1
 --- !u!1 &4588204291615916908
 GameObject:
   m_ObjectHideFlags: 0

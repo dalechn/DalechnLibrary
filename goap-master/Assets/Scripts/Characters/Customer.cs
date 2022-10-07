@@ -3,17 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum FoodType
-{
-    hotdog, burger, popcorn, taco, cola, beer, wine
-}
 
-public enum EmojiType
-{
-    None,
-    Happy, Angry, Complain,
-    BaseOnOrder
-}
 
 public enum CustomerBTVal
 {
@@ -25,6 +15,7 @@ public struct CustomerProp
 {
     public FoodType foodType;
     public int needEnvironmentScore;
+    public int needFoodScore;
 
     public float dinnerTime;
     public float patienceTime;
@@ -36,10 +27,11 @@ public class Customer : PersonBase
     internal bool unused = false;   //是否被回收
     internal bool served = false;   //是否被服务了
 
-    public GameObject currentSite;
-    public GameObject currentGame;
+    private GameObject currentSite;
+    private GameObject currentGame;
     private GameObject waitTarget;
 
+    private MessageType currentEmoji;
 
     private Order currentOrder;
     public GameObject LeaveTarget
@@ -71,11 +63,32 @@ public class Customer : PersonBase
         behaviorTree.SetVariableValue(CustomerBTVal.PatienceTime.ToString(), customerProp.patienceTime);
     }
 
-
-    public void Emoji(EmojiType emojiType)
+    private bool judged = false;
+    public void Emoji(MessageType emojiType)
     {
+        if (emojiType==MessageType.None)
+        {
+            return;
+        }
+
+        if (emojiType == MessageType.BaseOnOrder)  
+        {
+            judged = true;
+            if (currentOrder != null && currentOrder.cookingScore < customerProp.needFoodScore)
+            {
+                emojiType = MessageType.Hate;
+
+                ShopInfo.Instance.orderState.hateOrder++;
+            }
+            else
+            {
+                emojiType = MessageType.Happy;
+            }
+        }
+
+        currentEmoji = emojiType;
         //发表情
-        Debug.Log("emoji: " + emojiType);
+        MessageCenter.Instance.SendMessageImage(gameObject, emojiType, currentOrder);
     }
 
     public void HaveFun()
@@ -83,15 +96,20 @@ public class Customer : PersonBase
         Debug.Log("HaveFun");
     }
 
-    public void LeaveShop()
+    public void LeaveShop(MessageType emojiType)
     {
+        if(!judged)//只能判断一次,因为havefun和leaveshop都会判断这个
+        {
+            Emoji(emojiType);
+        }
+
         // 强行中止订单
-        if(currentOrder!=null)
+        if (currentOrder != null)
         {
             ShopInfo.Instance.CancelOrder(currentOrder);
         }
         //统计准备进店 点餐的顾客
-        if(currentSite==null&&currentOrder==null)
+        if (currentSite == null && currentOrder == null)
         {
             ShopInfo.Instance.orderState.leavedCustomer++;
         }
@@ -109,8 +127,15 @@ public class Customer : PersonBase
             currentGame = null;
         }
 
-        currentOrder = null;
+        //currentOrder = null;      //把订单清除放到reset 不然会出现一些奇怪的bug?比如emoji判断需要订单
         unused = true;
+    }
+
+    public bool Debuff()
+    {
+        //Debug.Log(currentEmoji);
+
+        return currentEmoji == MessageType.Angry || currentEmoji == MessageType.Complain || currentEmoji == MessageType.Hate;
     }
 
     public GameObject GetUsableGame()
@@ -150,10 +175,16 @@ public class Customer : PersonBase
         return currentSite;
     }
 
-    public Order GenOrder()
+    public void  GenOrder()
     {
-        currentOrder = ShopInfo.Instance.GenOrder(customerProp.foodType.ToString(), currentSite, this);
-        return currentOrder;
+        currentOrder = new Order();
+        currentOrder.customer = this;
+        currentOrder.orderFoodName = customerProp.foodType.ToString();
+        currentOrder.customerPosition = currentSite.transform.position; //暂时没用了
+
+        ShopInfo.Instance.GenOrder(currentSite,ref currentOrder);
+
+        Emoji(MessageType.OrderName);
     }
 
     public void HavingDinner()

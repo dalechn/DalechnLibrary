@@ -11,25 +11,25 @@ public class OrderManager : MonoBehaviour
 
     }
 
-    public void GenOrder(string orderName, Vector3 orderPosition)
-    {
-        Order task = new Order();
+    //public void GenOrder(string orderName, Vector3 orderPosition)
+    //{
+    //    Order task = new Order();
 
-        FoodTem tem = FoodTem.Tem(orderName);
-        string[] splitParts = tem.Need.Split(';');
-        foreach (var val in splitParts)
-        {
-            if (ShopInfo.Instance.furnitureDict.TryGetValue(val, out Slot furniture))
-            {
-                task.foodPositionList.Enqueue(furniture.transform.position);
-            }
-        }
+    //    FoodTem tem = FoodTem.Tem(orderName);
+    //    string[] splitParts = tem.Need.Split(';');
+    //    foreach (var val in splitParts)
+    //    {
+    //        if (ShopInfo.Instance.furnitureDict.TryGetValue(val, out Slot furniture))
+    //        {
+    //            task.foodPositionList.Enqueue(furniture.transform.position);
+    //        }
+    //    }
 
-        task.customerPosition = orderPosition;
-        task.foodSprite = Resources.Load<Sprite>(tem.Location);
+    //    task.customerPosition = orderPosition;
+    //    task.foodSpriteLocation = tem.Location;
 
-        orderQueue.Enqueue(task);
-    }
+    //    orderQueue.Enqueue(task);
+    //}
 
     void Update()
     {
