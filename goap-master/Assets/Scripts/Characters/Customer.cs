@@ -1,4 +1,5 @@
 using BehaviorDesigner.Runtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,19 +14,19 @@ public enum CustomerBTVal
 [System.Serializable]
 public struct CustomerProp
 {
-    public FoodType foodType;
-    public int needEnvironmentScore;
-    public int needFoodScore;
+    public FoodType foodType;       //要点的食物
+    public int needEnvironmentScore;    //需要的环境分
+    public int needFoodScore;           //需要的厨艺分
 
-    public float dinnerTime;
-    public float patienceTime;
+    public float dinnerTime;            //吃饭的时间
+    public float patienceTime;          //忍耐度
 }
 
 public class Customer : PersonBase
 {
     public CustomerProp customerProp;
-    internal bool unused = false;   //是否被回收
-    internal bool served = false;   //是否被服务了
+    public bool Unused { get; set; }  //是否被回收
+    public bool Served { get; set; }  //是否被服务了
 
     private GameObject currentSite;
     private GameObject currentGame;
@@ -42,13 +43,15 @@ public class Customer : PersonBase
         }
     }
 
-    public void Reset()
+    // 进入对象池的时候会调用
+    public void OnDisable()
     {
+        //Debug.Log("test");
         currentGame = null;
         currentSite = null;
 
         currentOrder = null;
-        unused = false;
+        Unused = false;
     }
 
     protected override void Start()
@@ -61,17 +64,19 @@ public class Customer : PersonBase
         behaviorTree.SetVariableValue(CustomerBTVal.WaitTarget.ToString(), waitTarget);
         behaviorTree.SetVariableValue(CustomerBTVal.DinnerTime.ToString(), customerProp.dinnerTime);
         behaviorTree.SetVariableValue(CustomerBTVal.PatienceTime.ToString(), customerProp.patienceTime);
+
+        customerProp.foodType = Dalechn.GameUtils.RandomEnum<FoodType>();       //暂定随机
     }
 
     private bool judged = false;
-    public void Emoji(MessageType emojiType)
+    public void Emoji(MessageType emojiType,float possibility = 1.0f)
     {
-        if (emojiType==MessageType.None)
+        if (emojiType == MessageType.None)
         {
             return;
         }
 
-        if (emojiType == MessageType.BaseOnOrder)  
+        if (emojiType == MessageType.BaseOnOrder)
         {
             judged = true;
             if (currentOrder != null && currentOrder.cookingScore < customerProp.needFoodScore)
@@ -79,6 +84,7 @@ public class Customer : PersonBase
                 emojiType = MessageType.Hate;
 
                 ShopInfo.Instance.orderState.hateOrder++;
+
             }
             else
             {
@@ -87,8 +93,13 @@ public class Customer : PersonBase
         }
 
         currentEmoji = emojiType;
+
+        float p = UnityEngine.Random.value;
+        if(p<=possibility)
+        {
+            MessageCenter.Instance.SendMessageByCustomer(gameObject, emojiType, currentOrder);
+        }
         //发表情
-        MessageCenter.Instance.SendMessageImage(gameObject, emojiType, currentOrder);
     }
 
     public void HaveFun()
@@ -96,15 +107,15 @@ public class Customer : PersonBase
         Debug.Log("HaveFun");
     }
 
-    public void LeaveShop(MessageType emojiType)
+    public void LeaveShop(MessageType emojiType, bool cancelOrder)
     {
-        if(!judged)//只能判断一次,因为havefun和leaveshop都会判断这个
+        if (!judged)//只能判断一次,因为havefun和leaveshop都会判断这个
         {
             Emoji(emojiType);
         }
 
         // 强行中止订单
-        if (currentOrder != null)
+        if (currentOrder != null && cancelOrder && currentOrder.staff != null)
         {
             ShopInfo.Instance.CancelOrder(currentOrder);
         }
@@ -126,9 +137,12 @@ public class Customer : PersonBase
             currentGame.SetActive(true);
             currentGame = null;
         }
-
-        //currentOrder = null;      //把订单清除放到reset 不然会出现一些奇怪的bug?比如emoji判断需要订单
-        unused = true;
+        if (currentOrder != null)
+        {
+            currentOrder.orderFinished = true;         //需要标记订单已被取消,无法处理!!!
+            currentOrder = null;      //把订单清除放到reset 不然会出现一些奇怪的bug?比如emoji判断需要订单,不行! 会导致强行取消订单的问题!!!
+        }
+        Unused = true;
     }
 
     public bool Debuff()
@@ -156,7 +170,7 @@ public class Customer : PersonBase
     public GameObject GetUeableTable(bool checkDistance = false)
     {
         // 确保不会一出生就预定桌子
-        if (checkDistance && Vector3.Distance(tr.position, waitTarget.transform.position) > 5)
+        if (checkDistance && Vector3.Distance(tr.position, waitTarget.transform.position) > GlobalConfig.DistanceJudgeConst)
         {
             return null;
         }
@@ -167,6 +181,8 @@ public class Customer : PersonBase
             currentSite = ShopInfo.Instance.GetUeableTable();
             if (currentSite)
             {
+                ShopInfo.Instance.orderState.currentWaitNumber--; //减掉当前在等待的人数
+
                 currentSite.SetActive(false);
                 return currentSite;
             }
@@ -175,14 +191,15 @@ public class Customer : PersonBase
         return currentSite;
     }
 
-    public void  GenOrder()
+    public void GenOrder()
     {
         currentOrder = new Order();
         currentOrder.customer = this;
         currentOrder.orderFoodName = customerProp.foodType.ToString();
         currentOrder.customerPosition = currentSite.transform.position; //暂时没用了
+        currentOrder.date = DateTime.Now.TimeOfDay.ToString();        		// 17:16:40.8520884
 
-        ShopInfo.Instance.GenOrder(currentSite,ref currentOrder);
+        ShopInfo.Instance.GenOrder(currentSite, ref currentOrder);
 
         Emoji(MessageType.OrderName);
     }
@@ -192,9 +209,30 @@ public class Customer : PersonBase
         //吃饭动画
     }
 
+
+    public void WaitingTable()
+    {
+        if(!currentSite)
+        {
+            ShopInfo.Instance.orderState.currentWaitNumber++;
+        }
+    }
+
+
     public bool GetInto()
     {
-        return customerProp.needEnvironmentScore <= ShopInfo.Instance.currentScore.environmentScore;
+        return ShopInfo.Instance.WillCustomerInto(customerProp.needEnvironmentScore);
+      
+    }
+
+    //是否被对待,不是被服务
+    public bool GetTreated()
+    {
+        if(currentOrder==null)
+        {
+            return false;
+        }
+        return currentOrder.staff != null || currentOrder.canBeAssigned == false;
     }
 
 }

@@ -8,9 +8,9 @@ using UnityEngine.AI;
 public struct StaffProp
 {
     public int priority;        //暂定星级?
-    public float cookingTime;
-    public float serveInterval; //服务间隔时间
-    public int cookingScore;
+    public float cookingTime;   //只用于减少每个时间的百分比
+    public float serveInterval; //每次服务间隔时间
+    public int cookingScore;    //厨艺分
 }
 
 public enum StaffBTVal
@@ -23,11 +23,8 @@ public class Staff : PersonBase
     public StaffProp staffProp;
     public Order currentOrder;
     public bool idleState = true;
-    //public int switchMask;
 
-    public System.Action<Staff> finishEvent;
-    //private int originMask;
-    //private int switchMask;
+    //public System.Action<Staff> finishEvent;
 
     protected override void Start()
     {
@@ -39,8 +36,6 @@ public class Staff : PersonBase
         behaviorTree.SetVariableValue(StaffBTVal.CookingTime.ToString(), staffProp.cookingTime);
         behaviorTree.SetVariableValue(StaffBTVal.ServeInterval.ToString(), staffProp.serveInterval);
 
-        //originMask = ai.areaMask;
-        //switchMask = ai.areaMask | 8;   //8为第四层"Out", 2^3;
     }
 
     public void Serve()
@@ -54,28 +49,21 @@ public class Staff : PersonBase
         currentOrder = order;
 
         order.cookingScore = staffProp.cookingScore;
+        order.staff = this;
+
+        Emoji(true);
     }
 
     public void OrderFinish(bool served = true)
     {
-        finishEvent?.Invoke(this);
+        //finishEvent?.Invoke(this);  //staff manager 移除引用
 
-        currentOrder.customer.served = served;
-        //需要等待一下才能接单
-        Dalechn.bl_UpdateManager.RunActionOnce("", staffProp.serveInterval, () => 
+        if(currentOrder!=null)  //其实也没必要判断
         {
-            idleState = true;
-            currentOrder = null;
-        });
+            ShopInfo.Instance.FinishOrder(currentOrder, served);
+        }
 
-        if (!served)    
-        {
-            ShopInfo.Instance.orderState.canceledOrder++;
-        }
-        else
-        {
-            ShopInfo.Instance.orderState.totalOrder++;
-        }
+        currentOrder = null;    //这个还是要直接移除,不然会导致订单状态没更新(因为状态机判断是currentOrder==null)
     }
 
     public bool HaveOrder()
@@ -83,17 +71,21 @@ public class Staff : PersonBase
         return currentOrder != null;
     }
 
-    //public bool PeekFoodPosition(out Vector3 pos)
-    //{
-    //    //Debug.Log(currentOrder.foodPositionList.Count);
-    //    return currentOrder.foodPositionList.TryPeek(out pos);
-    //}
+    public void Emoji(bool emoji)
+    {
+        MessageCenter.Instance.SendMessageByStaff(gameObject, emoji, currentOrder);
+    }
 
     public bool DequeFoodPosition(out Vector3 pos)
     {
-        if (currentOrder != null)
+        if (currentOrder != null && currentOrder.GetCurrentFood(out Food food))
         {
-            return currentOrder.foodPositionList.TryDequeue(out pos);
+            food.foodTime *= staffProp.cookingTime;                                                                             //动态减少cookingtime
+            behaviorTree.SetVariableValue(StaffBTVal.CookingTime.ToString(), food.foodTime+1);             // 动态设置cookingtime,+1是给时间缓冲一下,多wait 1秒
+
+            pos = food.foodPosition;
+
+            return true;
         }
 
         pos = default(Vector3);
@@ -105,9 +97,4 @@ public class Staff : PersonBase
         return currentOrder.staffPosition;
     }
 
-    protected override void Update()
-    {
-        base.Update();
-        //ai.areaMask = HaveOrder() ? originMask : switchMask;
-    }
 }

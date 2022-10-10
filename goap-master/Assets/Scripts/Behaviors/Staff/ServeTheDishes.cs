@@ -10,17 +10,17 @@ public class ServeTheDishes : NavMeshMovement
 {
     public Staff staff;
 
-    public SharedFloat waitTime = 1;
+    //public SharedFloat waitTime = 1;
 
-    protected float waitDuration;
-    protected float startTime;
-    protected float pauseTime;
+    //protected float waitDuration;
+    //protected float startTime;
+    //protected float pauseTime;
 
-    protected bool firstArrive = true;
+    //protected bool firstArrive = true;
 
     public override void OnStart()
     {
-        waitDuration = waitTime.Value;
+        //waitDuration = waitTime.Value;
 
         staff = GetComponent<Staff>();
     }
@@ -29,6 +29,8 @@ public class ServeTheDishes : NavMeshMovement
     {
         if (!staff.HaveOrder())
         {
+            //staff.OrderFinish();   
+
             return TaskStatus.Failure;
         }
 
@@ -37,32 +39,33 @@ public class ServeTheDishes : NavMeshMovement
 
         if (HasArrived())
         {
-            if(firstArrive)
-            {
-                startTime = Time.time;
-                firstArrive = false;
-            }
             staff.OrderFinish();    //如果是放在waitDuration之后还需要改一些staff的东西?
 
-            if (startTime + waitDuration < Time.time)
-            {
-                return TaskStatus.Success;
-            }
+            //if(firstArrive)
+            //{
+            //    startTime = Time.time;
+            //    firstArrive = false;
+            //}
+
+            //if (startTime + waitDuration < Time.time)
+            //{
+            //    return TaskStatus.Success;
+            //}
             //return TaskStatus.Running;
         }
 
         return TaskStatus.Running;
     }
 
-    public override void OnPause(bool paused)
-    {
-        if (paused)
-        {
-            pauseTime = Time.time;
-        }
-        else
-        {
-            startTime += (Time.time - pauseTime);
-        }
-    }
+    //public override void OnPause(bool paused)
+    //{
+    //    if (paused)
+    //    {
+    //        pauseTime = Time.time;
+    //    }
+    //    else
+    //    {
+    //        startTime += (Time.time - pauseTime);
+    //    }
+    //}
 }

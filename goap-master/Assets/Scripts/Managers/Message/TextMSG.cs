@@ -3,39 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//文字msg
 public class TextMSG : MessageBase
 {
-    public Image image;
+    [Invector.vEditorToolbar("UI")]
     public Text text;
+    public Color color;
 
-    protected string msg;
+    //protected string msg;
 
     protected override void Start()
     {
         base.Start();
 
-        MessageCenter.Instance.RegistText(person.gameObject, this);
+        if(person)
+        {
+            MessageCenter.Instance.RegistMSG(person.gameObject, this);
+        }
 
-        //text = GetComponent<Text>();
     }
 
-    public override void HandleMessage(MessageType emoji, Order messageText)
+    public  void HandleMessage(MessageType emoji, Order order,string content)
     {
-        base.HandleMessage(emoji, messageText);
-
-        EmojiTem tem = EmojiTem.Tem(emoji.ToString());
-        msg = tem.Location;
+        Toggle();
 
         if (emoji == MessageType.OrderName)
         {
-            msg += messageText.orderFoodName;
+            content += ColorUtils.HtmlColor(order.orderFoodName, color) ;
 
-            //Dalechn.bl_UpdateManager.RunActionOnce("", 1.0f, () =>
-            //{
-            //    MessageCenter.Instance.SendMessageImage(person.gameObject, emoji, messageText);
-            //});
+            //发起图片消息,图片消息会根据order是否null来判断加载
+            Dalechn.bl_UpdateManager.RunActionOnce("", TotalTime(), () =>
+            {
+                MessageCenter.Instance.SendMessageHandle(person.gameObject, emoji, order);
+            });
+        }
+        else if(emoji == MessageType.OrderNameStaff)
+        {
+            content += ColorUtils.HtmlColor(order.orderFoodName, color);
         }
 
-        text.text = msg;
+        text.text = content;
     }
 }

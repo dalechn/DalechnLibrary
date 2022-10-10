@@ -3,28 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MessageBase : MonoBehaviour
+public class MessageBase : PopupUI
 {
-    protected PopupUI pop;
     protected PersonBase person;
 
-
-
-    protected virtual void Start()
+    protected override void Start()
     {
+        base.Start();
         person = GetComponentInParent<PersonBase>();
-        pop = GetComponent<PopupUI>();
-
-    }
-
-    void Update()
-    {
-
-    }
-
-    public virtual void HandleMessage(MessageType emoji, Order messageText)
-    {
-        pop.Toggle();
-
     }
 }

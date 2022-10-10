@@ -18,6 +18,6 @@ public class GetServed : Conditional
 
     public override TaskStatus OnUpdate()
     {
-        return customer.served ? TaskStatus.Success : TaskStatus.Failure;
+        return customer.Served ? TaskStatus.Success : TaskStatus.Running;   
     }
 }

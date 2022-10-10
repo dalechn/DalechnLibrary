@@ -25,6 +25,8 @@ public class TakeOrder : NavMeshMovement
     {
         if (!staff.HaveOrder()|| !haveFood)
         {
+            //staff.OrderFinish();
+
             return TaskStatus.Failure;
         }
         //Debug.Log(navMeshAgent.velocity.magnitude);
@@ -33,6 +35,9 @@ public class TakeOrder : NavMeshMovement
         SetDestination(currentPos);
         if (HasArrived())
         {
+            staff.Emoji(false);
+
+
             return TaskStatus.Success;
         }
 

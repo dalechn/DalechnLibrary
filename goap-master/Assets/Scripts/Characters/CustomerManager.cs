@@ -10,6 +10,7 @@ public class CustomerManager : MonoBehaviour
 
     public List<Transform> genList;
     public List<Transform> targetList;
+    public Transform midPoint;
 
     private Dalechn.vFisherYatesRandom genRandom = new Dalechn.vFisherYatesRandom();
     private Dalechn.vFisherYatesRandom targetRandom = new Dalechn.vFisherYatesRandom();
@@ -96,16 +97,26 @@ public class CustomerManager : MonoBehaviour
     }
 
     private List<Transform> destroyList = new List<Transform>();
-    private List<Customer> destroyCustomerList = new List<Customer>();
+    private HashSet<Customer> destroyCustomerList = new HashSet<Customer>();
 
     void Update()
     {
         destroyCustomerList.Clear();
-        foreach (var val in destroyList)
+
+        foreach (var c in customerList)
         {
-            foreach (var c in customerList)
+            if (Vector3.SqrMagnitude(midPoint.position- c.tr.position) <Mathf.Pow( GlobalConfig.DistanceJudgeConst,2))  //不开方会不会好点,,
             {
-                if (c.unused && Vector3.Distance(val.position, c.tr.position) < 1)
+                if (!c.Unused)
+                {
+                    c.Emoji(MessageType.PasserBy, 0.3f);
+                }
+                c.Unused = true;
+            }
+
+            foreach (var val in destroyList)
+            {
+                if (c.Unused && Vector3.SqrMagnitude(val.position-c.tr.position) < Mathf.Pow(GlobalConfig.DistanceJudgeConst, 2))
                 {
                     destroyCustomerList.Add(c);
                 }
@@ -117,8 +128,19 @@ public class CustomerManager : MonoBehaviour
             customerList.Remove(val);
             //Destroy(val.gameObject);
 
-            val.Reset();
+            //val.Reset();
             PoolManager.Pools["CustomerPool"].Despawn(val.tr);
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        UnityEditor.Handles.color = Color.red;
+        UnityEditor.Handles.DrawWireDisc(midPoint.position, Vector3.up, GlobalConfig.DistanceJudgeConst);
+
+        foreach (var c in destroyList)
+        {
+            UnityEditor.Handles.DrawWireDisc(c.position, Vector3.up, GlobalConfig.DistanceJudgeConst);
         }
     }
 }

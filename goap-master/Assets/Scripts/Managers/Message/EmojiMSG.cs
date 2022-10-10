@@ -1,44 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+//单纯的表情msg
 public class EmojiMSG : MessageBase
 {
-    protected Sprite emojiSprite;
-    //public Image image;
-    public Button button;
+    [Invector.vEditorToolbar("UI")]
+    public Image image;         //表情
 
     protected override void Start()
     {
         base.Start();
-        
-        MessageCenter.Instance.RegistEmoji(person.gameObject, this);
-        //image = GetComponent<Image>();
+
+        if (person)
+        {
+            MessageCenter.Instance.RegistMSG(person.gameObject, this);
+        }
     }
 
-    public override void HandleMessage( MessageType emoji, Order messageText)
+    public void HandleMessage(MessageType emoji, Order order,string content)
     {
-        base.HandleMessage(emoji, messageText);
+        image.sprite = Resources.Load<Sprite>(content);
 
-        if(messageText!=null)
-        {
-            emojiSprite = Resources.Load<Sprite>(messageText.foodSpriteLocation);
-
-            button.enabled = true;
-
-            button.onClick.AddListener(() =>{
-
-                button.enabled = false;
-                //弹窗
-            });
-        }
-        else
-        {
-            EmojiTem tem = EmojiTem.Tem(emoji.ToString());
-            emojiSprite = Resources.Load<Sprite>(tem.Location);
-        }
-
-        button.image.sprite = emojiSprite;
+        Toggle();
     }
 }

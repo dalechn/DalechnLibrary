@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -46,6 +47,11 @@ namespace Dalechn
             return temp;
         }
 
+        public static  T RandomEnum<T>()
+        {
+            T[] values = (T[])Enum.GetValues(typeof(T));
+            return values[UnityEngine.Random.Range(0, values.Length)];
+        }
 
     }
 
@@ -75,7 +81,7 @@ namespace Dalechn
                 {
                     for (int i = 0; i < len - 1; i++)
                     {
-                        int j = Random.Range(i, len);
+                        int j = UnityEngine.Random.Range(i, len);
                         if (j != i)
                         {
                             int tmp = randomIndices[i];
@@ -115,7 +121,7 @@ namespace Dalechn
                 {
                     for (int i = 0; i < len - 1; i++)
                     {
-                        int j = Random.Range(i, len);
+                        int j = UnityEngine.Random.Range(i, len);
                         if (j != i)
                         {
                             int tmp = randomIndices[i];

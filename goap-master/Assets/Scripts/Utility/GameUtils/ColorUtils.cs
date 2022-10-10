@@ -35,4 +35,9 @@ public static class ColorUtils
         result[3] = color.a;
         return (int)(result[0] << 24 | result[1] << 16 | result[2] << 8 | result[3]);
     }
+
+    public static string HtmlColor(string content,Color color)
+    {
+        return "<color=#" + ColorUtility.ToHtmlStringRGB(color)+ ">" + content+ "</color>";
+    }
 }

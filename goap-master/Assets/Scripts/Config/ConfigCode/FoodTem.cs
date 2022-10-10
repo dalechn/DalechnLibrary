@@ -47,51 +47,92 @@ public class FoodTem
 //.......................................
 template = new FoodTem();
 template.key = "hotdog";
-template.Location = "Textures/FoodIcon/hotdog";
+template.Location = "Textures/FoodIcon/512/hotdog";
 template.Owned = true;
-template.Need = "Furniture1";
+template.Need = "hotdog";
+template.NeedFurniture = "Furniture1";
+template.Time = 4.0f;
+template.Price = 4.0f;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
 template.key = "burger";
-template.Location = "Textures/FoodIcon/burger";
+template.Location = "Textures/FoodIcon/512/burger";
 template.Owned = true;
-template.Need = "Furniture1;Furniture2";
+template.Need = "burger";
+template.NeedFurniture = "Furniture2";
+template.Time = 5.0f;
+template.Price = 5.0f;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
 template.key = "popcorn";
-template.Location = "Textures/FoodIcon/popcorn";
+template.Location = "Textures/FoodIcon/512/popcorn";
 template.Owned = true;
-template.Need = "Furniture1;Furniture2;Furniture3";
+template.Need = "popcorn";
+template.NeedFurniture = "Furniture3";
+template.Time = 2.0f;
+template.Price = 2.0f;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
 template.key = "taco";
-template.Location = "Textures/FoodIcon/taco";
+template.Location = "Textures/FoodIcon/512/taco";
 template.Owned = true;
-template.Need = "Furniture1;Furniture4";
+template.Need = "taco";
+template.NeedFurniture = "Furniture4";
+template.Time = 2.0f;
+template.Price = 2.0f;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
 template.key = "cola";
-template.Location = "Textures/FoodIcon/cola";
+template.Location = "Textures/FoodIcon/512/cola";
 template.Owned = true;
-template.Need = "Furniture2;Furniture5";
+template.Need = "cola";
+template.NeedFurniture = "Furniture5";
+template.Time = 4.0f;
+template.Price = 4.0f;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
 template.key = "beer";
-template.Location = "Textures/FoodIcon/beer";
+template.Location = "Textures/FoodIcon/512/beer";
 template.Owned = true;
-template.Need = "Furniture3;Furniture6";
+template.Need = "beer";
+template.NeedFurniture = "Furniture6";
+template.Time = 3.0f;
+template.Price = 3.0f;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
 template.key = "wine";
-template.Location = "Textures/FoodIcon/wine";
+template.Location = "Textures/FoodIcon/512/wine";
 template.Owned = true;
-template.Need = "Furniture4;Furniture7";
+template.Need = "wine";
+template.NeedFurniture = "Furniture7";
+template.Time = 2.0f;
+template.Price = 2.0f;
+msData.Add(template.key,template);
+//.......................................
+template = new FoodTem();
+template.key = "hotdogBurger";
+template.Location = "Textures/FoodIcon/512/burger";
+template.Owned = true;
+template.Need = "hotdog;burger";
+template.NeedFurniture = "";
+template.Time = 0.0f;
+template.Price = 0.0f;
+msData.Add(template.key,template);
+//.......................................
+template = new FoodTem();
+template.key = "hotdogBurgerpoPcorn";
+template.Location = "Textures/FoodIcon/512/popcorn";
+template.Owned = true;
+template.Need = "hotdog;burger;popcorn";
+template.NeedFurniture = "";
+template.Time = 0.0f;
+template.Price = 0.0f;
 msData.Add(template.key,template);
             
             #endregion
@@ -127,6 +168,9 @@ msData.Add(template.key,template);
     public string Location;
 public bool Owned;
 public string Need;
+public string NeedFurniture;
+public float Time;
+public float Price;
 
     #endregion
 }

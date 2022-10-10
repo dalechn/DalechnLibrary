@@ -9,24 +9,25 @@ public class LeaveShop: Seek
 {
     public Customer customer;
     public MessageType emojiType;
+    public bool cancelOrder;
 
-    public override TaskStatus OnUpdate()
-    {
-        if (HasArrived())
-        {
-            return TaskStatus.Success;
-        }
+    //public override TaskStatus OnUpdate()
+    //{
+    //    if (HasArrived())
+    //    {
+    //        return TaskStatus.Success;
+    //    }
 
-        SetDestination(Target());
+    //    SetDestination(Target());
 
-        return TaskStatus.Running;
-    }
+    //    return TaskStatus.Running;
+    //}
 
     public override void OnStart()
     {
         base.OnStart();
         customer = GetComponent<Customer>();
 
-        customer.LeaveShop(emojiType);
+        customer.LeaveShop(emojiType, cancelOrder);
     }
 }

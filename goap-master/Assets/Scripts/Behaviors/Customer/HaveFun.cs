@@ -38,6 +38,6 @@ public class HaveFun : NavMeshMovement
         base.OnStart();
         customer = GetComponent<Customer>();
 
-        customer.LeaveShop(emojiType);
+        customer.LeaveShop(emojiType,false);
     }
 }
