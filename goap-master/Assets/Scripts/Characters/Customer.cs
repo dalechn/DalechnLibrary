@@ -30,7 +30,7 @@ public class Customer : PersonBase
 
     private GameObject currentSite;
     private GameObject currentGame;
-    private GameObject waitTarget;
+    //private GameObject waitTarget;
 
     private MessageType currentEmoji;
 
@@ -58,10 +58,10 @@ public class Customer : PersonBase
     {
         base.Start();
 
-        waitTarget = GameObject.Find(CustomerBTVal.WaitTarget.ToString());
+        //waitTarget = GameObject.Find(CustomerBTVal.WaitTarget.ToString());
 
         behaviorTree.SetVariableValue(CustomerBTVal.Speed.ToString(), moveSpeed);
-        behaviorTree.SetVariableValue(CustomerBTVal.WaitTarget.ToString(), waitTarget);
+        //behaviorTree.SetVariableValue(CustomerBTVal.WaitTarget.ToString(), waitTarget);
         behaviorTree.SetVariableValue(CustomerBTVal.DinnerTime.ToString(), customerProp.dinnerTime);
         behaviorTree.SetVariableValue(CustomerBTVal.PatienceTime.ToString(), customerProp.patienceTime);
 
@@ -170,7 +170,8 @@ public class Customer : PersonBase
     public GameObject GetUeableTable(bool checkDistance = false)
     {
         // 确保不会一出生就预定桌子
-        if (checkDistance && Vector3.Distance(tr.position, waitTarget.transform.position) > GlobalConfig.DistanceJudgeConst)
+        // 改成在customermanager里面判断了
+        if (checkDistance &&  !Unused /*Vector3.Distance(tr.position, waitTarget.transform.position) > GlobalConfig.DistanceJudgeConst*/)
         {
             return null;
         }

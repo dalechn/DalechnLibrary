@@ -23,6 +23,7 @@ public struct OrderState
     public int hateOrder;   //评价不喜欢的客人
     public int leavedCustomer;  //没有进来的客人(已经在等待)
     public int currentWaitNumber;   //当前等待的人数
+    public float totalPrice;
 }
 
 public enum FoodType
@@ -35,8 +36,6 @@ public enum FoodType
 public class ShopInfo : MonoBehaviour
 {
     //private static int orderID = 0;
-
-    public Dictionary<string, RandomArea> areaDict = new Dictionary<string, RandomArea>();  //管理随机区域
 
     // 每个家具/桌子start的时候会向这里注册
     public Dictionary<string, Slot> furnitureDict = new Dictionary<string, Slot>();
@@ -98,6 +97,7 @@ public class ShopInfo : MonoBehaviour
         else
         {
             orderState.totalOrder++;
+            orderState.totalPrice += order.price;
         }
     }
 
@@ -106,7 +106,7 @@ public class ShopInfo : MonoBehaviour
     {
         if (order.staff == null)        //一定要确保没被系统分配过
         {
-            if (canBeAssigned&&!order.orderFinished)    //再次确认订单没被顾客提前结束
+            if (canBeAssigned && !order.orderFinished)    //再次确认订单没被顾客提前结束
             {
                 order.canBeAssigned = canBeAssigned;
                 orderQueue.Enqueue(order);
@@ -121,9 +121,15 @@ public class ShopInfo : MonoBehaviour
         //orderState.canceledOrder++;
     }
 
-    public void RegistFloor(string areaName, RandomArea area)
+    public RandomArea GetFloor(RandomAreaName areaName)
     {
-        areaDict.Add(areaName, area);
+        return staffManager.areaDict[areaName.ToString()];
+    }
+
+    public void RegistFloor(RandomAreaName areaName, RandomArea area)
+    {
+        //areaDict.Add(areaName, area);
+        staffManager.areaDict.Add(areaName.ToString(), area);
     }
 
     public void RegistSlot(string objName, Slot table, RegistName registName)
@@ -194,6 +200,8 @@ public class ShopInfo : MonoBehaviour
         order.staffPosition = pos;
 
         order.foodSpriteLocation = tem.Location;
+        order.price = tem.Price;
+        order.havePlate = tem.HavePlate;
 
         orderQueue.Enqueue(order);
         //Debug.Log(orderQueue.Count);
@@ -248,9 +256,9 @@ public class ShopInfo : MonoBehaviour
     void Update()
     {
         Staff staff = staffManager.GetFreeStaff();
-        if (staff&& orderQueue.TryDequeue(out Order order))
+        if (staff && orderQueue.TryDequeue(out Order order))
         {
-            if (order.canBeAssigned&&!order.orderFinished)//确保没被手动操作过,或者顾客提前走人的
+            if (order.canBeAssigned && !order.orderFinished)//确保没被手动操作过,或者顾客提前走人的
             {
                 //Debug.Log(111);
                 staffManager.StaffGetOrder(staff, order);

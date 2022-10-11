@@ -4,6 +4,7 @@ using UnityEngine;
 using UObject = UnityEngine.Object;
 using System;
 using UnityEngine.UI;
+using Lean.Gui;
 
 public class PrefabObjBinder : MonoBehaviour
 {
@@ -37,6 +38,22 @@ public class PrefabObjBinder : MonoBehaviour
     public T GetObj<T>(string name) where T : UObject
     {
         return GetObj(name) as T;
+    }
+
+    public LeanButton SetLeanButtonClick(string name, Action cb)
+    {
+        var obj = GetObj(name);
+        if (null == obj)
+        {
+            Debug.LogError("SetClick Error, null == obj, name:" + name);
+            return null;
+        }
+        var btn = obj as LeanButton;
+        btn.OnClick.AddListener(() =>
+        {
+            cb?.Invoke();
+        });
+        return btn;
     }
 
     public Button SetBtnClick(string name, Action cb)

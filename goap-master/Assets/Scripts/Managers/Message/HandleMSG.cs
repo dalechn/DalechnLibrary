@@ -11,6 +11,7 @@ public class HandleMSG : MessageBase
     [Invector.vEditorToolbar("UI")]
     public LeanButton button;       //可操作按钮
     public Image buttonImage; //按钮的图标
+    public Image plate;
 
     protected override void Start()
     {
@@ -45,6 +46,10 @@ public class HandleMSG : MessageBase
                 ShopInfo.Instance.HandleOrder(order, false);
             });
             buttonImage.sprite = emojiSprite;
+            if(plate!=null)
+            {
+                plate.enabled = order.havePlate;
+            }
 
             Toggle();
         }

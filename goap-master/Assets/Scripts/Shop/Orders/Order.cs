@@ -23,6 +23,8 @@ public class Order
     public Queue<Food> foodQueue = new Queue<Food>();   //小食物的队列
     public Food currentFood;                                        //当前队列头的食物
     public string date;                     //订单产生的时间
+    public float price;                     //价格
+    public bool havePlate;              //是否有盘子
 
     public bool GetCurrentFood(out Food food)
     {

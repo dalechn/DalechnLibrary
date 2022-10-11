@@ -53,6 +53,7 @@ template.Need = "hotdog";
 template.NeedFurniture = "Furniture1";
 template.Time = 4.0f;
 template.Price = 4.0f;
+template.HavePlate = true;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
@@ -63,6 +64,7 @@ template.Need = "burger";
 template.NeedFurniture = "Furniture2";
 template.Time = 5.0f;
 template.Price = 5.0f;
+template.HavePlate = true;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
@@ -73,6 +75,7 @@ template.Need = "popcorn";
 template.NeedFurniture = "Furniture3";
 template.Time = 2.0f;
 template.Price = 2.0f;
+template.HavePlate = false;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
@@ -83,6 +86,7 @@ template.Need = "taco";
 template.NeedFurniture = "Furniture4";
 template.Time = 2.0f;
 template.Price = 2.0f;
+template.HavePlate = false;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
@@ -93,6 +97,7 @@ template.Need = "cola";
 template.NeedFurniture = "Furniture5";
 template.Time = 4.0f;
 template.Price = 4.0f;
+template.HavePlate = false;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
@@ -103,6 +108,7 @@ template.Need = "beer";
 template.NeedFurniture = "Furniture6";
 template.Time = 3.0f;
 template.Price = 3.0f;
+template.HavePlate = false;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
@@ -113,6 +119,7 @@ template.Need = "wine";
 template.NeedFurniture = "Furniture7";
 template.Time = 2.0f;
 template.Price = 2.0f;
+template.HavePlate = false;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
@@ -123,6 +130,7 @@ template.Need = "hotdog;burger";
 template.NeedFurniture = "";
 template.Time = 0.0f;
 template.Price = 0.0f;
+template.HavePlate = true;
 msData.Add(template.key,template);
 //.......................................
 template = new FoodTem();
@@ -133,6 +141,7 @@ template.Need = "hotdog;burger;popcorn";
 template.NeedFurniture = "";
 template.Time = 0.0f;
 template.Price = 0.0f;
+template.HavePlate = false;
 msData.Add(template.key,template);
             
             #endregion
@@ -171,6 +180,7 @@ public string Need;
 public string NeedFurniture;
 public float Time;
 public float Price;
+public bool HavePlate;
 
     #endregion
 }

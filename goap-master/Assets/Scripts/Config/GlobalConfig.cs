@@ -7,5 +7,5 @@ public class GlobalConfig
     public const string CustomerPool = "CustomerPool";
     public const string EmojiPool = "EmojiPool";
     //public const int MaxWaitNumber
-    public const int DistanceJudgeConst = 5;
+    //public const int DistanceJudgeConst = 5;
 }

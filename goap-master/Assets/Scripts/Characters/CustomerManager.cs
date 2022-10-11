@@ -5,18 +5,19 @@ using UnityEngine;
 
 public class CustomerManager : MonoBehaviour
 {
-    //public float genRate = 1.0f;
-    //public List<Transform> customerList;
-
     public List<Transform> genList;
     public List<Transform> targetList;
-    public Transform midPoint;
 
     private Dalechn.vFisherYatesRandom genRandom = new Dalechn.vFisherYatesRandom();
     private Dalechn.vFisherYatesRandom targetRandom = new Dalechn.vFisherYatesRandom();
     private Dalechn.vFisherYatesRandom customerRandom = new Dalechn.vFisherYatesRandom();
 
     private List<Customer> customerList = new List<Customer>();
+
+
+    public Transform midPoint;
+    public List<Transform> midPointList = new List<Transform>();
+    private HashSet<Customer> currentWaitCustomer = new HashSet<Customer>();
 
     void Start()
     {
@@ -54,7 +55,7 @@ public class CustomerManager : MonoBehaviour
             int r = UnityEngine.Random.Range(0, 2);
             if (r < 1)
             {
-                customerTr.position = gen.position;  //...null pointer
+                customerTr.position = gen.position;  
                 customer.LeaveTarget = target.gameObject;
             }
             else
@@ -99,15 +100,18 @@ public class CustomerManager : MonoBehaviour
     private List<Transform> destroyList = new List<Transform>();
     private HashSet<Customer> destroyCustomerList = new HashSet<Customer>();
 
+    const int recycledDistance = 5;
+    const int midDistance = 8;
     void Update()
     {
         destroyCustomerList.Clear();
 
         foreach (var c in customerList)
         {
-            if (Vector3.SqrMagnitude(midPoint.position- c.tr.position) <Mathf.Pow( GlobalConfig.DistanceJudgeConst,2))  //不开方会不会好点,,
+            //防止路人不被回收
+            if (Vector3.SqrMagnitude(midPoint.position- c.tr.position) <Mathf.Pow(midDistance, 2))  //不开方会不会好点,,
             {
-                if (!c.Unused)
+                if (!c.Unused&&!c.GetInto())
                 {
                     c.Emoji(MessageType.PasserBy, 0.3f);
                 }
@@ -116,7 +120,7 @@ public class CustomerManager : MonoBehaviour
 
             foreach (var val in destroyList)
             {
-                if (c.Unused && Vector3.SqrMagnitude(val.position-c.tr.position) < Mathf.Pow(GlobalConfig.DistanceJudgeConst, 2))
+                if (c.Unused && Vector3.SqrMagnitude(val.position-c.tr.position) < Mathf.Pow(recycledDistance, 2))
                 {
                     destroyCustomerList.Add(c);
                 }
@@ -135,12 +139,13 @@ public class CustomerManager : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        UnityEditor.Handles.color = Color.red;
-        UnityEditor.Handles.DrawWireDisc(midPoint.position, Vector3.up, GlobalConfig.DistanceJudgeConst);
+
+        UnityEditor.Handles.color = Color.blue;
+        UnityEditor.Handles.DrawWireDisc(midPoint.position, Vector3.up, midDistance);
 
         foreach (var c in destroyList)
         {
-            UnityEditor.Handles.DrawWireDisc(c.position, Vector3.up, GlobalConfig.DistanceJudgeConst);
+            UnityEditor.Handles.DrawWireDisc(c.position, Vector3.up, recycledDistance);
         }
     }
 }

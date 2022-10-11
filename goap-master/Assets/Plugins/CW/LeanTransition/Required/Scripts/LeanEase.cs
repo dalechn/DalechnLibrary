@@ -13,6 +13,7 @@ namespace Lean.Transition
 		Elastic    = 300,
 		Back       = 400,
 		Bounce     = 500,
+		Spring	= 600,
 
 		// Advanced
 		SineIn = 1000,

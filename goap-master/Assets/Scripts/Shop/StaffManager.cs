@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class StaffManager : MonoBehaviour
 {
+    public Dictionary<string, RandomArea> areaDict = new Dictionary<string, RandomArea>();  //管理随机区域
+
     // 每个员工start的时候会向这里注册
     public List<Staff> staffList = new List<Staff>();
     //public System.Action<Staff> idleEvent;
@@ -25,6 +27,11 @@ public class StaffManager : MonoBehaviour
         //    }
         //});
     }
+
+    //public void RegistArea(RandomAreaName areaName, RandomArea area)
+    //{
+    //    areaDict.Add(areaName.ToString(),area);
+    //}
 
     public void StaffGetOrder(Staff staff, Order order)
     {

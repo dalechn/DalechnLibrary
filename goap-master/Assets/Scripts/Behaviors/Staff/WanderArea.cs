@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace BehaviorDesigner.Runtime.Tasks.Movement
 {
-    [TaskCategory("Movement")]
+    [TaskCategory("Shop")]
     public class WanderArea : Wander
     {
         public RandomAreaName areaName;
@@ -12,7 +12,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Movement
         {
             base.OnStart();
 
-            area = ShopInfo.Instance.areaDict[areaName.ToString()];
+            area = ShopInfo.Instance.GetFloor(areaName);
         }
 
         protected override bool TrySetTarget()

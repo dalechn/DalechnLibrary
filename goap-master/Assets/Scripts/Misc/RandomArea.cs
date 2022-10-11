@@ -2,7 +2,7 @@ using UnityEngine;
 
 public enum RandomAreaName
 {
-    StaffArea,ShopKeeperArea
+    None,StaffArea,ShopKeeperArea,WaitArea
 }
 
 public class RandomArea : MonoBehaviour
@@ -14,7 +14,10 @@ public class RandomArea : MonoBehaviour
 
     private void Start()
     {
-        ShopInfo.Instance.RegistFloor(areaName.ToString(), this);
+        if(areaName!=RandomAreaName.None)
+        {
+            ShopInfo.Instance.RegistFloor(areaName, this);
+        }
     }
 
     public Quaternion GetRotation()
