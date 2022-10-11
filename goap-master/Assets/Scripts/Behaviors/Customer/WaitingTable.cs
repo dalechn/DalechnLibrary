@@ -20,9 +20,12 @@ public class WaitingTable : NavMeshMovement
         customer = GetComponent<Customer>();
         area = ShopInfo.Instance.GetFloor(areaName);
 
-        pos = area.GetPosition();
-        SetDestination(pos);
         customer.WaitingTable();
+
+        pos= ShopInfo.Instance.GetWaitingPoint(customer);
+
+        //pos = area.GetPosition();     //如果是用这种的话就不要waitingtable2了
+        SetDestination(pos);
     }
 
     public override TaskStatus OnUpdate()
@@ -31,6 +34,9 @@ public class WaitingTable : NavMeshMovement
         {
             return TaskStatus.Success;
         }
+
+        //customer.WaitingTable(out pos);
+        pos = ShopInfo.Instance.GetWaitingPoint(customer);
 
         SetDestination(pos);
 

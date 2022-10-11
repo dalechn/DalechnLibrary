@@ -28,9 +28,11 @@ public class Customer : PersonBase
     public bool Unused { get; set; }  //是否被回收
     public bool Served { get; set; }  //是否被服务了
 
+    public bool IsRight { get; set; }            //是否从右边来
+
     private GameObject currentSite;
     private GameObject currentGame;
-    //private GameObject waitTarget;
+    private GameObject waitTarget;
 
     private MessageType currentEmoji;
 
@@ -58,10 +60,10 @@ public class Customer : PersonBase
     {
         base.Start();
 
-        //waitTarget = GameObject.Find(CustomerBTVal.WaitTarget.ToString());
+        waitTarget = GameObject.Find(CustomerBTVal.WaitTarget.ToString());
 
         behaviorTree.SetVariableValue(CustomerBTVal.Speed.ToString(), moveSpeed);
-        //behaviorTree.SetVariableValue(CustomerBTVal.WaitTarget.ToString(), waitTarget);
+        behaviorTree.SetVariableValue(CustomerBTVal.WaitTarget.ToString(), waitTarget);
         behaviorTree.SetVariableValue(CustomerBTVal.DinnerTime.ToString(), customerProp.dinnerTime);
         behaviorTree.SetVariableValue(CustomerBTVal.PatienceTime.ToString(), customerProp.patienceTime);
 
@@ -69,7 +71,7 @@ public class Customer : PersonBase
     }
 
     private bool judged = false;
-    public void Emoji(MessageType emojiType,float possibility = 1.0f)
+    public void Emoji(MessageType emojiType, float possibility = 1.0f)
     {
         if (emojiType == MessageType.None)
         {
@@ -95,7 +97,7 @@ public class Customer : PersonBase
         currentEmoji = emojiType;
 
         float p = UnityEngine.Random.value;
-        if(p<=possibility)
+        if (p <= possibility)
         {
             MessageCenter.Instance.SendMessageByCustomer(gameObject, emojiType, currentOrder);
         }
@@ -171,7 +173,7 @@ public class Customer : PersonBase
     {
         // 确保不会一出生就预定桌子
         // 改成在customermanager里面判断了
-        if (checkDistance &&  !Unused /*Vector3.Distance(tr.position, waitTarget.transform.position) > GlobalConfig.DistanceJudgeConst*/)
+        if (checkDistance && !Unused /*Vector3.Distance(tr.position, waitTarget.transform.position) > GlobalConfig.DistanceJudgeConst*/)
         {
             return null;
         }
@@ -182,7 +184,8 @@ public class Customer : PersonBase
             currentSite = ShopInfo.Instance.GetUeableTable();
             if (currentSite)
             {
-                ShopInfo.Instance.orderState.currentWaitNumber--; //减掉当前在等待的人数
+                //ShopInfo.Instance.CurrentWaitNumber--; //减掉当前在等待的人数
+                ShopInfo.Instance.RemoveWaitingCustomer(this);
 
                 currentSite.SetActive(false);
                 return currentSite;
@@ -213,9 +216,11 @@ public class Customer : PersonBase
 
     public void WaitingTable()
     {
-        if(!currentSite)
+        if (!currentSite)
         {
-            ShopInfo.Instance.orderState.currentWaitNumber++;
+            //ShopInfo.Instance.orderState.currentWaitNumber++;
+
+            ShopInfo.Instance.AddWaitingCustomer(this);
         }
     }
 
@@ -223,13 +228,13 @@ public class Customer : PersonBase
     public bool GetInto()
     {
         return ShopInfo.Instance.WillCustomerInto(customerProp.needEnvironmentScore);
-      
+
     }
 
     //是否被对待,不是被服务
     public bool GetTreated()
     {
-        if(currentOrder==null)
+        if (currentOrder == null)
         {
             return false;
         }

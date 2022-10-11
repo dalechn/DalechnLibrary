@@ -22,7 +22,6 @@ public struct OrderState
     public int canceledOrder; //强行取消的订单(太慢了)
     public int hateOrder;   //评价不喜欢的客人
     public int leavedCustomer;  //没有进来的客人(已经在等待)
-    public int currentWaitNumber;   //当前等待的人数
     public float totalPrice;
 }
 
@@ -54,6 +53,8 @@ public class ShopInfo : MonoBehaviour
 
     public OrderState orderState;
     public Queue<Order> orderQueue = new Queue<Order>();
+
+    public int CurrentWaitNumber { get { return customerManager.currentWaitCustomer.Count; } }
 
     public static ShopInfo Instance { get; private set; }
     protected virtual void Awake()
@@ -121,6 +122,39 @@ public class ShopInfo : MonoBehaviour
         //orderState.canceledOrder++;
     }
 
+    public void GenOrder(GameObject table, ref Order order)
+    {
+
+        FoodTem tem = FoodTem.Tem(order.orderFoodName);
+        string[] splitParts = tem.Need.Split(';');
+        foreach (var val in splitParts)
+        {
+            FoodTem tem2 = FoodTem.Tem(val);
+
+            if (furnitureSlotDict.TryGetValue(tem2.NeedFurniture, out GameObject furniture))
+            {
+                Food food = new Food();
+                food.foodPosition = furniture.transform.position;
+                food.foodTime = tem2.Time;
+                food.subFoodSpriteLocation = tem2.Location;
+
+                order.foodQueue.Enqueue(food);
+            }
+        }
+
+        Slot slot = tableSlotDict[table];
+        Vector3 pos = slot.GetUsableStaffPosition().transform.position;
+        order.staffPosition = pos;
+
+        order.foodSpriteLocation = tem.Location;
+        order.price = tem.Price;
+        order.havePlate = tem.HavePlate;
+
+        orderQueue.Enqueue(order);
+        //Debug.Log(orderQueue.Count);
+        //Debug.Log(task.foodSprite);
+    }
+
     public RandomArea GetFloor(RandomAreaName areaName)
     {
         return staffManager.areaDict[areaName.ToString()];
@@ -175,39 +209,6 @@ public class ShopInfo : MonoBehaviour
         staffManager.staffList.Add(staff);
     }
 
-    public void GenOrder(GameObject table, ref Order order)
-    {
-
-        FoodTem tem = FoodTem.Tem(order.orderFoodName);
-        string[] splitParts = tem.Need.Split(';');
-        foreach (var val in splitParts)
-        {
-            FoodTem tem2 = FoodTem.Tem(val);
-
-            if (furnitureSlotDict.TryGetValue(tem2.NeedFurniture, out GameObject furniture))
-            {
-                Food food = new Food();
-                food.foodPosition = furniture.transform.position;
-                food.foodTime = tem2.Time;
-                food.subFoodSpriteLocation = tem2.Location;
-
-                order.foodQueue.Enqueue(food);
-            }
-        }
-
-        Slot slot = tableSlotDict[table];
-        Vector3 pos = slot.GetUsableStaffPosition().transform.position;
-        order.staffPosition = pos;
-
-        order.foodSpriteLocation = tem.Location;
-        order.price = tem.Price;
-        order.havePlate = tem.HavePlate;
-
-        orderQueue.Enqueue(order);
-        //Debug.Log(orderQueue.Count);
-        //Debug.Log(task.foodSprite);
-    }
-
     public GameObject GetUeableGame()
     {
         List<GameObject> usableList = new List<GameObject>();
@@ -250,7 +251,22 @@ public class ShopInfo : MonoBehaviour
     public bool WillCustomerInto(float needScore)
     {
         return needScore <= currentScore.environmentScore
-          && orderState.currentWaitNumber < currentScore.maxWaitNumber;
+          && CurrentWaitNumber < currentScore.maxWaitNumber;    //不能等于会再加一个,只能小于
+    }
+
+    public void AddWaitingCustomer(Customer customer)
+    {
+        customerManager.AddWaitingCustomer(customer);
+    }
+
+    public void RemoveWaitingCustomer(Customer customer)
+    {
+        customerManager.RemoveWaitingCustomer(customer);
+    }
+
+    public Vector3 GetWaitingPoint(Customer customer)
+    {
+        return customerManager.GetWaitingPoint(customer);
     }
 
     void Update()
