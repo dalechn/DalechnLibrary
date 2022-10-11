@@ -67,6 +67,7 @@ public class HandleMSG : MessageBase
         }
     }
 
+    // 对象池调用
     public void OnDisable()
     {
         order = null;

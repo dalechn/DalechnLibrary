@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using Lean.Gui;
 
-public class SettingWindow : MonoBehaviour
+public class SettingWindow : PopupWindow
 {
-    // Start is called before the first frame update
-    void Start()
+    [Invector.vEditorToolbar("UI")]
+    public LeanButton closeBtn;
+
+    protected override void Start()
     {
-        
+        base.Start();
+
+        closeBtn.OnClick.AddListener(() =>
+        {
+            Hide();
+        });
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

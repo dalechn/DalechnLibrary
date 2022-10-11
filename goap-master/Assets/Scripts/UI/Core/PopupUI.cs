@@ -10,16 +10,27 @@ public class PopupUI : vMonoBehaviour
 {
     [Invector.vEditorToolbar("default")]
     public RectTransform canvas = null;
+    public PivotPreset pivot = PivotPreset.MiddleCenter;
+
     public float time = 0.5f;
-    public float autoHideTime = 0;
+
+    [vToggleOption]                                             //对bool类型加提示
     public bool autoHide = true;
+    [Invector.vHideInInspector("autoHide", false)] // 隐藏inspector属性
+    public float autoHideTime = 0;
+
+    public LeanPlayer OnTransitions { get { if (onTransitions == null) onTransitions = new LeanPlayer(); return onTransitions; } }
+    [SerializeField] private LeanPlayer onTransitions;
+
+    public LeanPlayer OffTransitions { get { if (offTransitions == null) offTransitions = new LeanPlayer(); return offTransitions; } }
+    [SerializeField] private LeanPlayer offTransitions;
 
     [Invector.vEditorToolbar("position")]
     public bool usePosition = true;
-    public Vector2 startPosition = Vector2.zero;
-    public Vector2 showDesirePosition = Vector2.zero;
+    public Vector2 startPosition = new Vector2(0.5f,0.5f);
+    public Vector2 showDesirePosition = new Vector2(0.5f, 0.5f);
     [vHelpBox("一般等于start", vHelpBoxAttribute.MessageType.Info)]
-    public Vector2 hideDesirePosition = Vector2.zero;
+    public Vector2 hideDesirePosition = new Vector2(0.5f, 0.5f);
     public LeanEase enterEase = LeanEase.Spring;
     public LeanEase exitEase = LeanEase.Spring;
 
@@ -59,11 +70,15 @@ public class PopupUI : vMonoBehaviour
 
         if (usePosition)
         {
-            thisRect.anchoredPosition = thisRect.FromAbsolutePositionToAnchoredPosition(startPosition, canvas);
+            thisRect.anchoredPosition = thisRect.FromAbsolutePositionToAnchoredPosition(startPosition, canvas, pivot);
         }
         if (useScale)
         {
             thisRect.localScale = startScale;
+        }
+        else
+        {
+            thisRect.localScale = Vector2.zero; //不使用动画的话默认scale = 0;
         }
         if (useRotation)
         {
@@ -83,15 +98,22 @@ public class PopupUI : vMonoBehaviour
         return time * 2 + autoHideTime;
     }
 
-    public void Show()
+    public virtual void Show()
     {
         if(isVisible)
         {
             return;
         }
+
+
+        if (onTransitions != null)
+        {
+            onTransitions.Begin();
+        }
+
         if (usePosition)
         {
-            Vector2 pos = thisRect.FromAbsolutePositionToAnchoredPosition(showDesirePosition, canvas, PivotPreset.MiddleCenter);
+            Vector2 pos = thisRect.FromAbsolutePositionToAnchoredPosition(showDesirePosition, canvas, pivot);
             thisRect.anchoredPositionTransition(pos, time, enterEase).JoinTransition().EventTransition(() =>
             {
                 isBusy = false;
@@ -118,6 +140,10 @@ public class PopupUI : vMonoBehaviour
             //    isVisible = true;
             //});
         }
+        else
+        {
+            thisRect.localScale = Vector2.one; 
+        }
         if (useRotation)
         {
             Quaternion toRotation = Quaternion.Euler(transform.forward * showDesireRotation.z);
@@ -133,7 +159,7 @@ public class PopupUI : vMonoBehaviour
             //});
         }
 
-        if (autoHide)
+        if (autoHide&&autoHideTime>0)
         {
             StartCoroutine(CoroutineHide());
         }
@@ -162,19 +188,31 @@ public class PopupUI : vMonoBehaviour
         }
     }
 
-    public void Hide()
+    public virtual void Hide()
     {
         if(!isVisible)
         {
             return;
         }
+
+        if (offTransitions != null)
+        {
+            offTransitions.Begin();
+        }
+
         if (usePosition)
         {
+            //这函数还有问题? 已知需要设置锚点模式为PivotPreset.MiddleCenter,好像stretch也xing?
             Vector2 pos = thisRect.FromAbsolutePositionToAnchoredPosition(hideDesirePosition, canvas, PivotPreset.MiddleCenter);
             thisRect.anchoredPositionTransition(pos, time, exitEase).JoinTransition().EventTransition(() =>
             {
                 isBusy = false;
                 isVisible = false;
+
+                if (!useScale)
+                {
+                    thisRect.localScale = Vector2.zero;
+                }
             });
 
             //thisRect.MoveUI(hideDesirePosition, canvas, time).SetEase(exitEase).SetOnComplete(delegate
@@ -202,6 +240,11 @@ public class PopupUI : vMonoBehaviour
             Quaternion toRotation = Quaternion.Euler(transform.forward * hideDesireRotation.z);
             thisRect.rotationTransition(toRotation, time, exitRotationEase).JoinTransition().EventTransition(() =>
             {
+                if (!useScale)
+                {
+                    thisRect.localScale = Vector2.zero;
+                }
+
                 isBusy = false;
                 isVisible = false;
             });
@@ -213,7 +256,7 @@ public class PopupUI : vMonoBehaviour
         }
     }
 
-    public void Toggle()
+    public virtual void Toggle()
     {
         if (isBusy)
             return;

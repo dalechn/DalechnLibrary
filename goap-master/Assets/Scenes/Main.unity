@@ -23054,7 +23054,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  Color: {r: 1, g: 0, b: 0, a: 1}
+  Color: {r: 0.990566, g: 0, b: 0, a: 1}
   areaName: 2
 --- !u!23 &1523589651
 MeshRenderer:

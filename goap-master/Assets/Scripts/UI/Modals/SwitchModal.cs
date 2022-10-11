@@ -3,17 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 using Lean.Gui;
 
-public class SwitchModal : PopupUI
+public class SwitchModal : PopupUI      //这个不能继承PopupWidow ，因为要call base.hide()
 {
+    [Invector.vEditorToolbar("UI")]
     public LeanButton button;
+    public LeanButton xButton;
+    public LeanButton cancelButton;
+
+    private LeanButton[] buttonList;
 
     protected override void Start()
     {
         base.Start();
 
-        button.OnClick.AddListener(() => {
+        buttonList = GetComponentsInChildren<LeanButton>();
 
-            UIManager.Instance.TogglePop(ModalType.modeFrame,true);
+        button.OnClick.AddListener(() =>
+        {
+            UIManager.Instance.TogglePop(ModalType.modeFrame, true);
+            base.Hide();        //不toggle main
         });
+        xButton.OnClick.AddListener(() =>
+        {
+            Hide();
+        });
+        cancelButton.OnClick.AddListener(() =>
+        {
+            //UIManager.Instance.TogglePop(ModalType.modeFrame, true);
+            Hide();
+        });
+    }
+
+    public void EnableButton(bool en)
+    {
+        foreach (var val in buttonList)
+        {
+            val.enabled = en;
+        }
+    }
+
+    public override void Show()
+    {
+        base.Show();
+        //UIManager.Instance.ToggleMainPop(false);
+    }
+
+    public override void Hide()
+    {
+        base.Hide();
+
+        //UIManager.Instance.ToggleMainPop(true);
     }
 }
