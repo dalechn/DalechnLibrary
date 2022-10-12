@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class StaffManager : MonoBehaviour
 {
-    public Dictionary<string, RandomArea> areaDict = new Dictionary<string, RandomArea>();  //管理随机区域
+    //public Dictionary<string, RandomArea> areaDict = new Dictionary<string, RandomArea>();  //管理随机区域
 
     // 每个员工start的时候会向这里注册
     public List<Staff> staffList = new List<Staff>();

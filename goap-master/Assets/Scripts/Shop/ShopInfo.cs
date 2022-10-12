@@ -54,7 +54,7 @@ public class ShopInfo : MonoBehaviour
     public OrderState orderState;
     public Queue<Order> orderQueue = new Queue<Order>();
 
-    public int CurrentWaitNumber { get { return customerManager.currentWaitCustomer.Count; } }
+    public int CurrentWaitNumber { get { return customerManager.leftWaitCustomer.Count+customerManager.rightWaitCustomer.Count; } }
 
     public static ShopInfo Instance { get; private set; }
     protected virtual void Awake()
@@ -155,16 +155,16 @@ public class ShopInfo : MonoBehaviour
         //Debug.Log(task.foodSprite);
     }
 
-    public RandomArea GetFloor(RandomAreaName areaName)
-    {
-        return staffManager.areaDict[areaName.ToString()];
-    }
+    //public RandomArea GetFloor(RandomAreaName areaName)
+    //{
+    //    return staffManager.areaDict[areaName.ToString()];
+    //}
 
-    public void RegistFloor(RandomAreaName areaName, RandomArea area)
-    {
-        //areaDict.Add(areaName, area);
-        staffManager.areaDict.Add(areaName.ToString(), area);
-    }
+    //public void RegistFloor(RandomAreaName areaName, RandomArea area)
+    //{
+    //    //areaDict.Add(areaName, area);
+    //    staffManager.areaDict.Add(areaName.ToString(), area);
+    //}
 
     public void RegistSlot(string objName, Slot table, RegistName registName)
     {

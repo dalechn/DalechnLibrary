@@ -12,7 +12,8 @@ namespace BehaviorDesigner.Runtime.Tasks.Movement
         {
             base.OnStart();
 
-            area = ShopInfo.Instance.GetFloor(areaName);
+            //area = ShopInfo.Instance.GetFloor(areaName);
+            area = RandomArea.areaDict[areaName.ToString()];
         }
 
         protected override bool TrySetTarget()

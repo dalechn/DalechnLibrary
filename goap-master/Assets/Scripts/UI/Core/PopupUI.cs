@@ -4,6 +4,7 @@ using Platinio.UI;
 using System.Collections;
 using UnityEngine.UI;
 using Lean.Transition;
+using UnityEngine.Events;
 
 [Invector.vClassHeader("PopupUI")]
 public class PopupUI : vMonoBehaviour
@@ -11,6 +12,8 @@ public class PopupUI : vMonoBehaviour
     [Invector.vEditorToolbar("default")]
     public RectTransform canvas = null;
     public PivotPreset pivot = PivotPreset.MiddleCenter;
+    public UnityEvent startOvercall;
+    public UnityEvent endOvercall;
 
     public float time = 0.5f;
 
@@ -53,11 +56,11 @@ public class PopupUI : vMonoBehaviour
     public LeanEase enterRotationEase = LeanEase.Spring;
     public LeanEase exitRotationEase = LeanEase.Spring;
 
-    private bool isVisible = false;
-    private bool isBusy = false;
-    private RectTransform thisRect = null;
+    protected bool isVisible = false;
+    protected bool isBusy = false;
+    protected RectTransform thisRect = null;
 
-    private GraphicRaycaster touch;
+    protected GraphicRaycaster touch;
 
     protected virtual void Start()
     {
@@ -72,6 +75,7 @@ public class PopupUI : vMonoBehaviour
         {
             thisRect.anchoredPosition = thisRect.FromAbsolutePositionToAnchoredPosition(startPosition, canvas, pivot);
         }
+
         if (useScale)
         {
             thisRect.localScale = startScale;
@@ -80,6 +84,7 @@ public class PopupUI : vMonoBehaviour
         {
             thisRect.localScale = Vector2.zero; //不使用动画的话默认scale = 0;
         }
+
         if (useRotation)
         {
             thisRect.rotation = Quaternion.Euler(startRotation);
@@ -116,6 +121,8 @@ public class PopupUI : vMonoBehaviour
             Vector2 pos = thisRect.FromAbsolutePositionToAnchoredPosition(showDesirePosition, canvas, pivot);
             thisRect.anchoredPositionTransition(pos, time, enterEase).JoinTransition().EventTransition(() =>
             {
+                startOvercall.Invoke();
+
                 isBusy = false;
                 isVisible = true;
                 //Debug.Log("Hello World!");
@@ -206,6 +213,8 @@ public class PopupUI : vMonoBehaviour
             Vector2 pos = thisRect.FromAbsolutePositionToAnchoredPosition(hideDesirePosition, canvas, PivotPreset.MiddleCenter);
             thisRect.anchoredPositionTransition(pos, time, exitEase).JoinTransition().EventTransition(() =>
             {
+                endOvercall.Invoke();
+
                 isBusy = false;
                 isVisible = false;
 

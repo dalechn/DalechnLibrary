@@ -1,23 +1,34 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum RandomAreaName
 {
-    None,StaffArea,ShopKeeperArea,WaitArea
+    None, StaffArea, ShopKeeperArea, WaitArea
 }
 
 public class RandomArea : MonoBehaviour
 {
+    public static Dictionary<string, RandomArea> areaDict = new Dictionary<string, RandomArea>();  //管理随机区域,放static是因为start就要取值,放 awake ShopInfo可能还没初始化
+
     public enum _AreaType { Square, Circle }
     public _AreaType type;
     public Color Color = Color.red;
     public RandomAreaName areaName;
 
+    private void Awake()
+    {
+        if (areaName != RandomAreaName.None)
+        {
+            areaDict.Add(areaName.ToString(), this);
+        }
+    }
+
     private void Start()
     {
-        if(areaName!=RandomAreaName.None)
-        {
-            ShopInfo.Instance.RegistFloor(areaName, this);
-        }
+        //if (areaName != RandomAreaName.None)
+        //{
+        //    ShopInfo.Instance.RegistFloor(areaName, this);
+        //}
     }
 
     public Quaternion GetRotation()

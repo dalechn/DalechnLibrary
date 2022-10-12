@@ -15,8 +15,9 @@ public class ModeFrame : PopupWindow
         base.Show();
         //UIManager.Instance.ToggleMainPop(false);
 
-        UIManager.Instance.TogglePop(ModalType.topFrame, true);
+        UIManager.Instance.TogglePopUI(ModalType.topFrame, true);
 
+        // 动态注册关闭事件,因为可能被多个frame使用,每个frame不一样
         TopFrame top = UIManager.Instance.GetObj<TopFrame>(ModalType.topFrame.ToString());
 
         top.RegistClick(() =>
@@ -30,6 +31,6 @@ public class ModeFrame : PopupWindow
         base.Hide();
         //UIManager.Instance.ToggleMainPop(true);
 
-        UIManager.Instance.TogglePop(ModalType.topFrame, false);
+        UIManager.Instance.TogglePopUI(ModalType.topFrame, false);
     }
 }

@@ -18,7 +18,8 @@ public class WaitingTable : NavMeshMovement
     {
         base.OnStart();
         customer = GetComponent<Customer>();
-        area = ShopInfo.Instance.GetFloor(areaName);
+        //area = ShopInfo.Instance.GetFloor(areaName);
+        area = RandomArea.areaDict[areaName.ToString()];
 
         customer.WaitingTable();
 

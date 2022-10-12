@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Lean.Gui;
 
-public class SwitchModal : PopupUI      //这个不能继承PopupWidow ，因为要call base.hide()
+public class SwitchModal : PopupWindow      //这个不能继承PopupWidow ，因为要call base.hide()
 {
     [Invector.vEditorToolbar("UI")]
     public LeanButton button;
@@ -20,8 +20,9 @@ public class SwitchModal : PopupUI      //这个不能继承PopupWidow ，因为要call ba
 
         button.OnClick.AddListener(() =>
         {
-            UIManager.Instance.TogglePop(ModalType.modeFrame, true);
-            base.Hide();        //不toggle main
+            UIManager.Instance.TogglePopUI(ModalType.modeFrame, true);
+            //base.Hide();        //不toggle main
+            HideOnlySelf();
         });
         xButton.OnClick.AddListener(() =>
         {
@@ -42,16 +43,16 @@ public class SwitchModal : PopupUI      //这个不能继承PopupWidow ，因为要call ba
         }
     }
 
-    public override void Show()
-    {
-        base.Show();
-        //UIManager.Instance.ToggleMainPop(false);
-    }
+    //public override void Show()
+    //{
+    //    base.Show();
+    //    UIManager.Instance.ToggleMainPop(false);
+    //}
 
-    public override void Hide()
-    {
-        base.Hide();
+    //public override void Hide()
+    //{
+    //    base.Hide();
 
-        //UIManager.Instance.ToggleMainPop(true);
-    }
+    //    UIManager.Instance.ToggleMainPop(true);
+    //}
 }

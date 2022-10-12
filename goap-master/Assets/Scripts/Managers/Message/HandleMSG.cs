@@ -38,7 +38,7 @@ public class HandleMSG : MessageBase
             button.OnClick.AddListener(() =>
             {
                 EnableRaycast(false);
-                Toggle();
+                //Toggle();
 
                 //µ¯´°
                 Debug.Log("operation");

@@ -6,7 +6,8 @@ using UObject = UnityEngine.Object;
 
 public enum ModalType
 {
-    switchModal, modeFrame, topFrame
+    switchModal, modeFrame, topFrame,
+    chatWindow, infoWindow, settingWindow, staffWindow
 }
 
 public class UIManager : MonoBehaviour
@@ -28,6 +29,11 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         binder = GetComponent<PrefabObjBinder>();
+
+        if(binder.items.Length<=0)
+        {
+            return;
+        }
 
         foreach (var val in binder.items)
         {
@@ -57,7 +63,6 @@ public class UIManager : MonoBehaviour
         LeanButton gold = binder.GetObj<LeanButton>("reward");
         LeanButton reward = binder.GetObj<LeanButton>("gold");
         LeanButton gem = binder.GetObj<LeanButton>("gem");
-        LeanButton staff = binder.GetObj<LeanButton>("staff");
         LeanButton furniture = binder.GetObj<LeanButton>("furniture");
         LeanButton info = binder.SetLeanButtonClick("info", () =>
         {
@@ -70,6 +75,10 @@ public class UIManager : MonoBehaviour
         LeanButton chat = binder.SetLeanButtonClick("chat", () =>
         {
             binder.GetObj<PopupUI>("chatWindow").Toggle();
+        });
+        LeanButton staff = binder.SetLeanButtonClick("staff", () =>
+        {
+            binder.GetObj<PopupUI>("staffWindow").Toggle();
         });
     }
 
@@ -100,7 +109,7 @@ public class UIManager : MonoBehaviour
         bottom.Toggle();
     }
 
-    public void TogglePop(ModalType modalType)
+    public void TogglePopUI(ModalType modalType)
     {
         PopupUI switchPop = binder.GetObj<PopupUI>(modalType.ToString());
 
@@ -110,7 +119,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void TogglePop(ModalType modalType, bool enable)
+    public void TogglePopUI(ModalType modalType, bool enable)
     {
         PopupUI switchPop = binder.GetObj<PopupUI>(modalType.ToString());
 
@@ -125,6 +134,18 @@ public class UIManager : MonoBehaviour
                 switchPop.Hide();
             }
         }
+    }
+
+    public void TogglePopWindow(ModalType modalType,bool selfMode)
+    {
+        PopupWindow switchPop = binder.GetObj<PopupWindow>(modalType.ToString());
+
+        switchPop.selfMode = selfMode;
+        if (switchPop)
+        {
+            switchPop.Toggle();
+        }
+        //switchPop.selfMode = false;
     }
 
     public T GetObj<T>(string name) where T : UObject

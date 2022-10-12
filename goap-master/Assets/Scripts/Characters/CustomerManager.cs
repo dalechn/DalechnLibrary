@@ -10,10 +10,12 @@ public class CustomerManager : MonoBehaviour
 
     public List<Transform> leftPointList = new List<Transform>();            //mid等待的地方, 一定要按顺序初始化!而且和rightPointList相加需要和shopinfo的maxWaitNumber相同
     public List<Transform> rightPointList = new List<Transform>();
-    public List<Customer> currentWaitCustomer = new List<Customer>();
+    public List<Customer> leftWaitCustomer = new List<Customer>();
+    public List<Customer> rightWaitCustomer = new List<Customer>();
     public Transform midPoint;                                  //用来判断是否可以被回收
 
-    private Dictionary<Customer, Vector3> posDict = new Dictionary<Customer, Vector3>();
+    private Dictionary<Customer, Vector3> leftPosDict = new Dictionary<Customer, Vector3>();
+    private Dictionary<Customer, Vector3> rightPosDict = new Dictionary<Customer, Vector3>();
     //public int CurrentWaitNumber { get { return currentWaitCustomer.Count; } }   //当前等待的人数
 
 
@@ -31,39 +33,59 @@ public class CustomerManager : MonoBehaviour
 
     public void AddWaitingCustomer(Customer customer)
     {
-        currentWaitCustomer.Add(customer);
+        int num = 5;
+        int sideMax = ShopInfo.Instance.currentScore.maxWaitNumber/2;
+        int leftCount = leftWaitCustomer.Count;
+        int rightCount = rightWaitCustomer.Count;
 
-        //posDict.Add(customer, midPointList[currentWaitCustomer.Count-1].position);
-        UpdatePos(customer, false);
+        if (rightCount >= num && leftCount >= num)      //如果竖着排满了 就按照左右来进
+        {
+            if((leftCount>= sideMax|| customer.IsRight)&& rightCount< sideMax)         //左边3个又排满了也要排到右边
+                rightWaitCustomer.Add(customer);
+            else
+            {
+                leftWaitCustomer.Add(customer);
+            }
+
+        }
+        else
+        {
+            if ((rightCount - leftCount)>1|| rightCount>= num)     //如果竖着排还没满 哪边少人就进哪边,直到一边超过5了
+                leftWaitCustomer.Add(customer);
+            else
+                rightWaitCustomer.Add(customer);
+        }
+
+        UpdatePos();
     }
 
     public void RemoveWaitingCustomer(Customer customer)
     {
         //currentWaitCustomer.Remove(customer); //不是移除自己 ,只要有人分配到位置就移除第一个位置
+        if (rightWaitCustomer.Exists(e => { return e == customer; })) //如果不在右边 就在左边,因为不是按照isRight分配的了
+        {
+            rightWaitCustomer.RemoveAt(0);
+            rightPosDict.Remove(customer);
+        }
+        else
+        {
+            leftWaitCustomer.RemoveAt(0);
+            leftPosDict.Remove(customer);
+        }
 
-        currentWaitCustomer.RemoveAt(0);
-
-        posDict.Remove(customer);
-
-        UpdatePos(customer, true);
+        UpdatePos();
     }
 
     // 更新所有人的位置信息
-    //int updateTime = 1;      //双人队,,走两个在更新位置,,,哈哈哈哈
-    private void UpdatePos(Customer c, bool remove)
+    private void UpdatePos()
     {
-        //if(remove)
-        //{
-        //    updateTime++;
-        //    if (updateTime % 2 == 0)
-        //        return;
-        //}
-
-        for (int i = 0; i < currentWaitCustomer.Count; i++)
+        for (int i = 0; i < leftWaitCustomer.Count; i++)
         {
-            //posDict[currentWaitCustomer[i]] = c.IsRight ? rightPointList[i].position : leftPointList[i].position;
-
-            posDict[currentWaitCustomer[i]] = RandomCirclePosition(leftPointList[i].position);
+            leftPosDict[leftWaitCustomer[i]] = RandomCirclePosition(leftPointList[i].position);
+        }
+        for (int i = 0; i < rightWaitCustomer.Count; i++)
+        {
+            rightPosDict[rightWaitCustomer[i]] = RandomCirclePosition(rightPointList[i].position);
         }
     }
 
@@ -76,22 +98,14 @@ public class CustomerManager : MonoBehaviour
 
     public Vector3 GetWaitingPoint(Customer customer)
     {
-        //int index = currentWaitCustomer.FindIndex(e => { return e == customer; });
-
-        //if(index>=0&&index<midPointList.Count)
-        //{
-        //    pos = midPointList[index].position;
-
-        //    //Debug.Log(customer.name+"  "+index);
-
-
-        //    return false;
-        //}
-
-        //pos = default(Vector3);
-        //return true;
-
-        return posDict[customer];
+        if (rightWaitCustomer.Exists(e => { return e == customer; })) //如果不在右边 就在左边,因为不是按照isRight分配的了
+        {
+            return rightPosDict[customer];
+        }
+        else
+        {
+            return leftPosDict[customer];
+        }
     }
 
     public void StartGen(float genRate)
