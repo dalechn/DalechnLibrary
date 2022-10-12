@@ -111,7 +111,7 @@ public class Customer : PersonBase
 
     public void LeaveShop(MessageType emojiType, bool cancelOrder)
     {
-        ShopInfo.Instance.RemoveWaitingCustomer(this);          //移除等待的人
+        ShopInfo.Instance.RemoveWaitingCustomer(this);          //移除等待的人(没有进店铺的)
 
         if (!judged)//只能判断一次,因为havefun和leaveshop都会判断这个
         {
@@ -202,7 +202,7 @@ public class Customer : PersonBase
         currentOrder = new Order();
         currentOrder.customer = this;
         currentOrder.orderFoodName = customerProp.foodType.ToString();
-        currentOrder.customerPosition = currentSite.transform.position; //暂时没用了
+        //currentOrder.customerPosition = currentSite.transform; //暂时没用了
         currentOrder.date = DateTime.Now.TimeOfDay.ToString();        		// 17:16:40.8520884
 
         ShopInfo.Instance.GenOrder(currentSite, ref currentOrder);

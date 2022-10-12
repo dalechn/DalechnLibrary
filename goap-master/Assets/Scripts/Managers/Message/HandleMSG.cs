@@ -12,7 +12,7 @@ public class HandleMSG : MessageBase
     public LeanButton button;       //可操作按钮
     public Image buttonImage; //按钮的图标
     public Image plate;
-
+    public LeanPulse pulse;
 
     protected override void Start()
     {
@@ -28,8 +28,14 @@ public class HandleMSG : MessageBase
     {
         if (order != null)
         {
+            Dalechn.bl_UpdateManager.RunActionOnce("",1.5f,() => {
+                if (pulse)
+                {
+                    pulse.enabled = true;
+                }
+            });
+
             this.order = order;
-            //autoHideTime = order.customer.customerProp.patienceTime;
             autoHide = false;
             EnableRaycast(true);
 
@@ -57,12 +63,24 @@ public class HandleMSG : MessageBase
         }
     }
 
+    public override void Hide()
+    {
+        base.Hide();
+        
+        EnableRaycast(false);
+
+        if (pulse)
+        {
+            pulse.enabled = false;
+        }
+    }
+
 
     Order order;
     bool entered = false;
     protected void Update()
     {
-        if (!entered && order != null && (order.staff != null || order.orderFinished))//被系统分配,或者顾客提前走人
+        if (!entered && order != null && (order.staff != null || order.orderFinished||order.customer.Served))//被系统分配,或者顾客提前走人,或者玩家手动结束
         {
             entered = true;
             TryHide();

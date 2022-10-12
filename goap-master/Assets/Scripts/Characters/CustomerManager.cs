@@ -41,7 +41,10 @@ public class CustomerManager : MonoBehaviour
                 MessageCenter.Instance.ToggleAllCanvas(val.gameObject, en);
             }
             else
+            {
+                //val.ToggleOutline(!en);
                 MessageCenter.Instance.ToggleHandleCanvas(val.gameObject, en);
+            }
         }
     }
 

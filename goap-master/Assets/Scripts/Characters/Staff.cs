@@ -83,7 +83,7 @@ public class Staff : PersonBase
             food.foodTime *= staffProp.cookingTime;                                                                             //动态减少cookingtime
             behaviorTree.SetVariableValue(StaffBTVal.CookingTime.ToString(), food.foodTime+1);             // 动态设置cookingtime,+1是给时间缓冲一下,多wait 1秒
 
-            pos = food.foodPosition;
+            pos = food.foodPosition.position;
 
             return true;
         }
@@ -94,7 +94,7 @@ public class Staff : PersonBase
 
     public Vector3 GetStaffPosition()
     {
-        return currentOrder.staffPosition;
+        return currentOrder.staffPosition.position;
     }
 
 }

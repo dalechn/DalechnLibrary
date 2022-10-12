@@ -1,4 +1,5 @@
 using BehaviorDesigner.Runtime;
+using Spine.Unity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,7 @@ public class PersonBase : MonoBehaviour
 	protected BehaviorTree behaviorTree;
 	protected Spine.Unity.Examples.SkeletonAnimationHandleExample animationHandle;
 	protected NavMeshAgent ai;
+	protected SkeletonRendererCustomMaterials customMaterials;
 
 	protected CharacterState previousState, currentState;
 
@@ -36,11 +38,25 @@ public class PersonBase : MonoBehaviour
 		animationHandle = GetComponentInChildren<Spine.Unity.Examples.SkeletonAnimationHandleExample>();
 
 		tr = GetComponent<Transform>();
+
+        {
+			customMaterials = GetComponentInChildren<SkeletonRendererCustomMaterials>();
+			if (customMaterials)
+            {
+				customMaterials.enabled = false;
+			}
+		}
+
 	}
 
 	protected virtual void Start()
 	{
 	
+	}
+
+	public void ToggleOutline(bool en)
+    {
+		customMaterials.enabled = en;
 	}
 
 	public void TogglePerson(bool en)

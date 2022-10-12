@@ -43,7 +43,7 @@ public class ShopInfo : MonoBehaviour
 
     private List<GameObject> gameSlotList = new List<GameObject>();
     private Dictionary<GameObject, Slot> tableSlotDict = new Dictionary<GameObject, Slot>();
-    private Dictionary<string, GameObject> furnitureSlotDict = new Dictionary<string, GameObject>();
+    private Dictionary<string, Slot> furnitureSlotDict = new Dictionary<string, Slot>();
 
     public CustomerManager customerManager;
     public StaffManager staffManager;
@@ -54,7 +54,7 @@ public class ShopInfo : MonoBehaviour
     public OrderState orderState;
     public Queue<Order> orderQueue = new Queue<Order>();
 
-    public int CurrentWaitNumber { get { return customerManager.leftWaitCustomer.Count+customerManager.rightWaitCustomer.Count; } }     //当前等待的人数
+    public int CurrentWaitNumber { get { return customerManager.leftWaitCustomer.Count + customerManager.rightWaitCustomer.Count; } }     //当前等待的人数
     public Order CurrentHandleOrder { get; set; }   //当前手动处理的订单,由handle msg发出
 
     public static ShopInfo Instance { get; private set; }
@@ -104,19 +104,47 @@ public class ShopInfo : MonoBehaviour
     }
 
     //手动处理订单
-    public void HandleOrder(bool canBeAssigned)
+    public void HandleOrder(bool canBeAssigned, bool finishOrder = false)
     {
+        if (CurrentHandleOrder == null)
+        {
+            return;
+        }
+
+        // 显示/关闭每个小食物的tag
+        foreach (var val in CurrentHandleOrder.foodList)
+        {
+            val.tagPosition.gameObject.SetActive(!canBeAssigned);
+        }
+
+        CurrentHandleOrder.customer.ToggleOutline(!canBeAssigned);
+
+        //手动结束订单
+        if (finishOrder)               
+        {
+            CurrentHandleOrder.cookingScore = int.MaxValue;     //直接拉满,,,
+            FinishOrder(CurrentHandleOrder, true);
+            TogglePerson(true, false);
+
+            CurrentHandleOrder = null;
+
+            return;
+        }
+
         if (CurrentHandleOrder.staff == null)        //一定要确保没被系统分配过
         {
+            TogglePerson(canBeAssigned, false);
+
+            CurrentHandleOrder.canBeAssigned = canBeAssigned;
+
+            //重新加入队列
             if (canBeAssigned && !CurrentHandleOrder.orderFinished)    //再次确认订单没被顾客提前结束
-            {
-                CurrentHandleOrder.canBeAssigned = canBeAssigned;
-                orderQueue.Enqueue(CurrentHandleOrder);
-                Debug.Log("enqeue");
+            {                                                                                 
+                orderQueue.Enqueue(CurrentHandleOrder);         //应该不用插队把,因为手动操作也要时间的,直接放到新订单处理了
+                //Debug.Log("enqeue");
                 CurrentHandleOrder = null;
             }
         }
-        TogglePerson(canBeAssigned,false);
     }
 
     public void CancelOrder(Order orderID)
@@ -136,12 +164,13 @@ public class ShopInfo : MonoBehaviour
         {
             FoodTem tem2 = FoodTem.Tem(val);
 
-            if (furnitureSlotDict.TryGetValue(tem2.NeedFurniture, out GameObject furniture))
+            if (furnitureSlotDict.TryGetValue(tem2.NeedFurniture, out Slot furniture))
             {
                 Food food = new Food();
-                food.foodPosition = furniture.transform.position;
+                food.foodPosition = furniture.transform;
                 food.foodTime = tem2.Time;
                 food.subFoodSpriteLocation = tem2.Location;
+                food.tagPosition = furniture.GetFoodPosition(furniture.slotList[0]);
 
                 order.foodQueue.Enqueue(food);
                 order.foodList.Add(food);
@@ -149,8 +178,9 @@ public class ShopInfo : MonoBehaviour
         }
 
         Slot slot = tableSlotDict[table];
-        Vector3 pos = slot.GetUsableStaffPosition().transform.position;
+        Transform pos = slot.GetUsableStaffPosition();
         order.staffPosition = pos;
+        order.tableFoodPosition = slot.GetFoodPosition(pos.gameObject);
 
         order.foodSpriteLocation = tem.Location;
         order.price = tem.Price;
@@ -178,10 +208,7 @@ public class ShopInfo : MonoBehaviour
             case RegistName.Furniture:
                 {
                     //furnitureDict.Add(objName, table);
-                    if (table.slotList.Count > 0)
-                    {
-                        furnitureSlotDict.Add(objName, table.slotList[0]);
-                    }
+                    furnitureSlotDict.Add(objName, table);
                 }
                 break;
 

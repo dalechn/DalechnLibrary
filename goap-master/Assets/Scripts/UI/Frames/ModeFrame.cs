@@ -8,6 +8,7 @@ public class ModeFrame : PopupWindow
     [Invector.vEditorToolbar("UI")]
     public List<Image> slotImage;       //确保size要>=最大的小食物数量
     public List<GameObject> imageOBJ;
+    public List<Image> slotMask;
 
     protected override void Start()
     {
@@ -29,24 +30,68 @@ public class ModeFrame : PopupWindow
         top.RegistClick(() =>
         {
             Hide();
+
+            ShopInfo.Instance?.HandleOrder(true);
         });
-        
-        ShopInfo.Instance?.HandleOrder( false);
 
-        int count = ShopInfo.Instance.CurrentHandleOrder.foodList.Count;
-
-        for (int i=0;i< slotImage.Count;i++)
+        if (ShopInfo.Instance)
         {
-            if (i< count)
+
+            ShopInfo.Instance?.HandleOrder(false);
+
+            int count = ShopInfo.Instance.CurrentHandleOrder.foodList.Count;
+
+            for (int i = 0; i < slotImage.Count; i++)
             {
-                string location = ShopInfo.Instance.CurrentHandleOrder.foodList[i].subFoodSpriteLocation;
-                slotImage[i].sprite = Resources.Load<Sprite>(location);
-            }
-            else
-            {
-                imageOBJ[i].SetActive(false);           //超出的部分不显示,因为总量固定
+                if (i < count)
+                {
+                    imageOBJ[i].SetActive(true);
+
+                    string location = ShopInfo.Instance.CurrentHandleOrder.foodList[i].subFoodSpriteLocation;
+                    slotImage[i].sprite = Resources.Load<Sprite>(location);
+                    slotMask[i].sprite = Resources.Load<Sprite>(location);
+                    slotMask[i].fillAmount = 0;
+                }
+                else
+                {
+                    imageOBJ[i].SetActive(false);           //超出的部分不显示,因为总量固定
+                    //imageOBJ[i].transform.localScale = Vector3.zero         //..这样写的话就不能自动resize了
+                }
             }
         }
+    }
+
+    int currentTimes = 0;
+    public void ShowMask(Transform tr)
+    {
+        if (ShopInfo.Instance && ShopInfo.Instance.CurrentHandleOrder != null)
+        {
+            Order order = ShopInfo.Instance.CurrentHandleOrder;
+            if (slotMask.Count > 0)
+            {
+                int index = order.foodList.FindIndex(e => { return e.tagPosition == tr; });
+
+                //int times = currentTimes;
+                Dalechn.bl_UpdateManager.RunAction("", 1.0f, (t, r) =>
+                {
+                    slotMask[index].fillAmount = t;
+                }, () =>
+                {
+                    currentTimes++;
+                    if (currentTimes == order.foodList.Count)
+                    {
+                        Hide();
+                        ShopInfo.Instance.HandleOrder(true, true);
+
+                        currentTimes = 0;   //重置点击次数
+                    }
+                });
+            }
+        }
+    }
+
+    protected  void Update()
+    {
     }
 
     public override void Hide()
@@ -56,6 +101,5 @@ public class ModeFrame : PopupWindow
 
         UIManager.Instance.TogglePopUI(PopType.topFrame, false);
 
-        ShopInfo.Instance?.HandleOrder( true);
     }
 }

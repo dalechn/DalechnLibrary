@@ -9,13 +9,16 @@ public enum RegistName
 
 public class Slot : MonoBehaviour
 {
-    public List<GameObject> slotList;
-    public List<GameObject> staffPositionList;
+    public List<GameObject> slotList;           //      插槽位置
+    public List<GameObject> staffPositionList;      //服务员站的位置
+
+    public List<GameObject> foodList;           // 标记和 桌子上的食物食物要和每一个插槽一一对应
+
     public RegistName registName;
 
-    void Start()
+   protected virtual void Start()
     {
-        ShopInfo.Instance.RegistSlot(name,this, registName);
+        ShopInfo.Instance.RegistSlot(name,this, registName);        //要改,不是start就add
     }
 
     //public GameObject GetUsableSlot()
@@ -31,14 +34,27 @@ public class Slot : MonoBehaviour
     //    return null;
     //}
 
+    //给家具用的时候获取的tag,给桌子的时候获取的是桌子上的食物
+    public Transform GetFoodPosition(GameObject obj)
+    {
+        int index = slotList.FindIndex(e => { return e == obj; });
+
+        if(index!=-1)
+        {
+            return foodList[index].transform;
+        }
+
+        return null;
+    }
+
     // 需要动态获取staff送餐的时候站的位置,现在不需要了
-    public GameObject GetUsableStaffPosition()
+    public Transform GetUsableStaffPosition()
     {
         foreach (var val in staffPositionList)
         {
             if (val.activeInHierarchy)
             {
-                return val;
+                return val.transform;
             }
         }
 
@@ -47,7 +63,7 @@ public class Slot : MonoBehaviour
         {
             if (val.activeInHierarchy)
             {
-                return val;
+                return val.transform;
             }
         }
 
