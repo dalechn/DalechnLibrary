@@ -12,4 +12,9 @@ public class MessageBase : PopupUI
         base.Start();
         person = GetComponentInParent<PersonBase>();
     }
+
+    public void ToggleCanvas(bool en)
+    {
+        canvas.enabled = en;
+    }
 }

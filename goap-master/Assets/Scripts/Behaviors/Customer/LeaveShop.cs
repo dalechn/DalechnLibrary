@@ -7,7 +7,7 @@ using BehaviorDesigner.Runtime.Tasks.Movement;
 [TaskCategory("Shop")]
 public class LeaveShop: Seek
 {
-    public Customer customer;
+    protected Customer customer;
     public MessageType emojiType;
     public bool cancelOrder;
 

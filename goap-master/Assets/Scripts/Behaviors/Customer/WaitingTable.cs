@@ -7,7 +7,7 @@ using BehaviorDesigner.Runtime.Tasks.Movement;
 [TaskCategory("Shop")]
 public class WaitingTable : NavMeshMovement
 {
-    public Customer customer;
+    protected Customer customer;
 
     public RandomAreaName areaName;
     private RandomArea area;

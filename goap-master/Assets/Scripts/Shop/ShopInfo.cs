@@ -37,9 +37,9 @@ public class ShopInfo : MonoBehaviour
     //private static int orderID = 0;
 
     // 每个家具/桌子start的时候会向这里注册
-    public Dictionary<string, Slot> furnitureDict = new Dictionary<string, Slot>();
-    public List<Slot> tableList = new List<Slot>();
-    public List<Slot> gameList = new List<Slot>();
+    //public Dictionary<string, Slot> furnitureDict = new Dictionary<string, Slot>();
+    //public List<Slot> tableList = new List<Slot>();
+    //public List<Slot> gameList = new List<Slot>();
 
     private List<GameObject> gameSlotList = new List<GameObject>();
     private Dictionary<GameObject, Slot> tableSlotDict = new Dictionary<GameObject, Slot>();
@@ -54,7 +54,8 @@ public class ShopInfo : MonoBehaviour
     public OrderState orderState;
     public Queue<Order> orderQueue = new Queue<Order>();
 
-    public int CurrentWaitNumber { get { return customerManager.leftWaitCustomer.Count+customerManager.rightWaitCustomer.Count; } }
+    public int CurrentWaitNumber { get { return customerManager.leftWaitCustomer.Count+customerManager.rightWaitCustomer.Count; } }     //当前等待的人数
+    public Order CurrentHandleOrder { get; set; }   //当前手动处理的订单,由handle msg发出
 
     public static ShopInfo Instance { get; private set; }
     protected virtual void Awake()
@@ -103,16 +104,19 @@ public class ShopInfo : MonoBehaviour
     }
 
     //手动处理订单
-    public void HandleOrder(Order order, bool canBeAssigned)
+    public void HandleOrder(bool canBeAssigned)
     {
-        if (order.staff == null)        //一定要确保没被系统分配过
+        if (CurrentHandleOrder.staff == null)        //一定要确保没被系统分配过
         {
-            if (canBeAssigned && !order.orderFinished)    //再次确认订单没被顾客提前结束
+            if (canBeAssigned && !CurrentHandleOrder.orderFinished)    //再次确认订单没被顾客提前结束
             {
-                order.canBeAssigned = canBeAssigned;
-                orderQueue.Enqueue(order);
+                CurrentHandleOrder.canBeAssigned = canBeAssigned;
+                orderQueue.Enqueue(CurrentHandleOrder);
+                Debug.Log("enqeue");
+                CurrentHandleOrder = null;
             }
         }
+        TogglePerson(canBeAssigned,false);
     }
 
     public void CancelOrder(Order orderID)
@@ -124,6 +128,7 @@ public class ShopInfo : MonoBehaviour
 
     public void GenOrder(GameObject table, ref Order order)
     {
+        RemoveWaitingCustomer(order.customer);        //多更新几次,,管他呢
 
         FoodTem tem = FoodTem.Tem(order.orderFoodName);
         string[] splitParts = tem.Need.Split(';');
@@ -139,6 +144,7 @@ public class ShopInfo : MonoBehaviour
                 food.subFoodSpriteLocation = tem2.Location;
 
                 order.foodQueue.Enqueue(food);
+                order.foodList.Add(food);
             }
         }
 
@@ -155,24 +161,13 @@ public class ShopInfo : MonoBehaviour
         //Debug.Log(task.foodSprite);
     }
 
-    //public RandomArea GetFloor(RandomAreaName areaName)
-    //{
-    //    return staffManager.areaDict[areaName.ToString()];
-    //}
-
-    //public void RegistFloor(RandomAreaName areaName, RandomArea area)
-    //{
-    //    //areaDict.Add(areaName, area);
-    //    staffManager.areaDict.Add(areaName.ToString(), area);
-    //}
-
     public void RegistSlot(string objName, Slot table, RegistName registName)
     {
         switch (registName)
         {
             case RegistName.Table:
                 {
-                    tableList.Add(table);
+                    //tableList.Add(table);
                     foreach (var val in table.slotList)
                     {
                         tableSlotDict.Add(val, table);
@@ -182,7 +177,7 @@ public class ShopInfo : MonoBehaviour
 
             case RegistName.Furniture:
                 {
-                    furnitureDict.Add(objName, table);
+                    //furnitureDict.Add(objName, table);
                     if (table.slotList.Count > 0)
                     {
                         furnitureSlotDict.Add(objName, table.slotList[0]);
@@ -192,7 +187,7 @@ public class ShopInfo : MonoBehaviour
 
             case RegistName.Game:
                 {
-                    gameList.Add(table);
+                    //gameList.Add(table);
                     foreach (var val in table.slotList)
                     {
                         gameSlotList.Add(val);
@@ -269,6 +264,22 @@ public class ShopInfo : MonoBehaviour
         return customerManager.GetWaitingPoint(customer);
     }
 
+    public void TogglePerson(bool en, bool all)
+    {
+        staffManager.ToggleStaff(en);
+        customerManager.ToggleCustomer(en, all);
+    }
+
+    //public void ToggleStaff(bool en)
+    //{
+    //    staffManager.ToggleStaff(en);
+    //}
+
+    //public void ToggleCustomer(bool en,bool all)
+    //{
+    //    customerManager.ToggleCustomer(en,all);
+    //}
+
     void Update()
     {
         Staff staff = staffManager.GetFreeStaff();
@@ -276,7 +287,6 @@ public class ShopInfo : MonoBehaviour
         {
             if (order.canBeAssigned && !order.orderFinished)//确保没被手动操作过,或者顾客提前走人的
             {
-                //Debug.Log(111);
                 staffManager.StaffGetOrder(staff, order);
             }
         }

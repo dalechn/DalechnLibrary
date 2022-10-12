@@ -43,6 +43,11 @@ public class PersonBase : MonoBehaviour
 	
 	}
 
+	public void TogglePerson(bool en)
+    {
+		MeshRenderer  mesh = animationHandle.skeletonAnimation.GetComponent<MeshRenderer>();
+		mesh.enabled = en;
+	}
 
 	protected virtual void Update()
 	{

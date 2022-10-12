@@ -5,7 +5,7 @@ using UnityEngine;
 public class PopupWindow : PopupUI
 {
     [Invector.vEditorToolbar("UI")]
-    public bool selfMode;       
+    public bool selfMode;       //只开关自己
 
     protected override void Start()
     {

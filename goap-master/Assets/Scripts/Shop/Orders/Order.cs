@@ -20,6 +20,7 @@ public class Order
     public Staff staff;                 //当前服务的服务员                      * 用来判断单子是否被系统分配
     public Customer customer;   //当前顾客
 
+    public List<Food> foodList = new List<Food>();          //完整的foodlist
     public Queue<Food> foodQueue = new Queue<Food>();   //小食物的队列
     public Food currentFood;                                        //当前队列头的食物
     public string date;                     //订单产生的时间

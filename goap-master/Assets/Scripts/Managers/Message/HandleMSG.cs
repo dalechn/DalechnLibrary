@@ -13,6 +13,7 @@ public class HandleMSG : MessageBase
     public Image buttonImage; //°´Å¥µÄÍ¼±ê
     public Image plate;
 
+
     protected override void Start()
     {
         base.Start();
@@ -37,13 +38,14 @@ public class HandleMSG : MessageBase
             button.OnClick.RemoveAllListeners();
             button.OnClick.AddListener(() =>
             {
-                EnableRaycast(false);
+                //EnableRaycast(false);
                 //Toggle();
 
                 //µ¯´°
                 Debug.Log("operation");
                 //ÒÆ³ý¶©µ¥
-                ShopInfo.Instance.HandleOrder(order, false);
+                ShopInfo.Instance.CurrentHandleOrder = order;
+                UIManager.Instance.TogglePopUI(PopType.switchModal);
             });
             buttonImage.sprite = emojiSprite;
             if(plate!=null)

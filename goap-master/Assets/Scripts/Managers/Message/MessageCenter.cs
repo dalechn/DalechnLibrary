@@ -30,13 +30,10 @@ public class MessageCenter : MonoBehaviour
         //messageCenter = FindObjectOfType<CenterMSG>();
     }
 
-    public void SendMessageCenter(MessageType messageType, string content)
-    {
-        if (messageCenter)
-        {
-            messageCenter.HandleMessage(messageType, content);
-        }
-    }
+    //public void SendMessageCenter(MessageType messageType, string content)
+    //{
+      
+    //}
 
     public void SendMessageHandle(GameObject person, MessageType emoji, Order order)
     {
@@ -48,25 +45,35 @@ public class MessageCenter : MonoBehaviour
         }
     }
 
-    public void SendMessageEmoji(GameObject person, MessageType emoji, Order order, string content)
-    {
-        if (emojiDict.TryGetValue(person, out EmojiMSG e))
-        {
-            //Debug.Log("emoji: " + emoji);
+    //public void SendMessageEmoji(GameObject person, MessageType emoji, Order order, string content)
+    //{
+    //    if (emojiDict.TryGetValue(person, out EmojiMSG e))
+    //    {
+    //        //Debug.Log("emoji: " + emoji);
 
-            e.HandleMessage(emoji, order, content);
-        }
-    }
+    //        e.HandleMessage(emoji, order, content);
+    //    }
+    //}
 
-    public void SendMessageText(GameObject person, MessageType emoji, Order order, string content)
-    {
-        if (textDict.TryGetValue(person, out TextMSG e))
-        {
-            //Debug.Log("emoji: " + emoji);
+    //public void SendMessageText(GameObject person, MessageType emoji, Order order, string content)
+    //{
+    //    if (textDict.TryGetValue(person, out TextMSG e))
+    //    {
+    //        //Debug.Log("emoji: " + emoji);
 
-            e.HandleMessage(emoji, order, content);
-        }
-    }
+    //        e.HandleMessage(emoji, order, content);
+    //    }
+    //}
+
+
+    //public void SendMessageFood(GameObject person, MessageType emoji, Order order)
+    //{
+    //    if (foodDict.TryGetValue(person, out FoodMSG e))
+    //    {
+    //        e.HandleMessage(emoji, order);
+    //    }
+    //}
+
 
     private string SplitMSG(string content)
     {
@@ -79,7 +86,7 @@ public class MessageCenter : MonoBehaviour
         return content;
     }
 
-    public void SendMessageByCustomer(GameObject person, MessageType emoji, Order messageText)
+    public void SendMessageByCustomer(GameObject person, MessageType emoji, Order order)
     {
         EmojiTem tem = EmojiTem.Tem(emoji.ToString());
 
@@ -87,28 +94,33 @@ public class MessageCenter : MonoBehaviour
         string contentEmoji = SplitMSG(tem.EmojiMSG);
         string contentText = SplitMSG(tem.TextMSG);
 
-        if (r < 1 && contentEmoji != "" || contentText=="")
+        if ((r < 1 && contentEmoji != "") || contentText=="")       //只有emoji或者只有text的时候都选择对方
         {
-            SendMessageEmoji(person, emoji, null, contentEmoji);
+            //SendMessageEmoji(person, emoji, null, contentEmoji);
+
+            if (emojiDict.TryGetValue(person, out EmojiMSG e))
+            {
+                e.HandleMessage(emoji, null, contentEmoji);
+            }
         }
         else
         {
-            SendMessageText(person, emoji, messageText, contentText);
+            //SendMessageText(person, emoji, order, contentText);
+
+            if (textDict.TryGetValue(person, out TextMSG e))
+            {
+                e.HandleMessage(emoji, order, contentText);
+            }
         }
 
+        // 消息中心
         if (tem.CenterMSG != "")
         {
-            SendMessageCenter(emoji, tem.CenterMSG);
-        }
-    }
-
-    public void SendMessageFood(GameObject person, MessageType emoji, Order order)
-    {
-        if (foodDict.TryGetValue(person, out FoodMSG e))
-        {
-            //Debug.Log("emoji: " + emoji);
-
-            e.HandleMessage(emoji, order);
+            //SendMessageCenter(emoji, tem.CenterMSG);
+            if (messageCenter)
+            {
+                messageCenter.HandleMessage(emoji, tem.CenterMSG);
+            }
         }
     }
 
@@ -119,11 +131,21 @@ public class MessageCenter : MonoBehaviour
             Debug.Log(order.date);
 
             EmojiTem tem = EmojiTem.Tem(MessageType.OrderNameStaff.ToString());
-            SendMessageText(person, MessageType.OrderNameStaff, order, tem.TextMSG);
+            //SendMessageText(person, MessageType.OrderNameStaff, order, tem.TextMSG);
+
+            if (textDict.TryGetValue(person, out TextMSG e))
+            {
+                e.HandleMessage(MessageType.OrderNameStaff, order, tem.TextMSG);
+            }
         }
         else
         {
-            SendMessageFood(person, MessageType.OrderNameStaff, order);
+            //SendMessageFood(person, MessageType.OrderNameStaff, order);
+
+            if (foodDict.TryGetValue(person, out FoodMSG e))
+            {
+                e.HandleMessage(MessageType.OrderNameStaff, order);
+            }
         }
     }
 
@@ -151,4 +173,31 @@ public class MessageCenter : MonoBehaviour
         }
     }
 
+    public void ToggleHandleCanvas(GameObject person,bool en)
+    {
+        if (handleDict.TryGetValue(person, out HandleMSG e1))
+        {
+            e1.ToggleCanvas(en);
+        }
+    }
+
+    public void ToggleAllCanvas(GameObject person, bool en)
+    {
+        if (handleDict.TryGetValue(person, out HandleMSG e1))
+        {
+            e1.ToggleCanvas(en);
+        }
+        if (emojiDict.TryGetValue(person, out EmojiMSG e2))
+        {
+            e2.ToggleCanvas(en);
+        }
+        if (textDict.TryGetValue(person, out TextMSG e3))
+        {
+            e3.ToggleCanvas(en);
+        }
+        if (foodDict.TryGetValue(person, out FoodMSG e4))
+        {
+            e4.ToggleCanvas(en);
+        }
+    }
 }

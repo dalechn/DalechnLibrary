@@ -7,7 +7,7 @@ using BehaviorDesigner.Runtime.Tasks.Movement;
 [TaskCategory("Shop")]
 public class HaveFun : NavMeshMovement
 {
-    public Customer customer;
+    protected Customer customer;
     public MessageType emojiType;
 
     public override TaskStatus OnUpdate()

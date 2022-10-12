@@ -8,7 +8,7 @@ using BehaviorDesigner.Runtime;
 [TaskCategory("Shop")]
 public class WaitingTable2 : NavMeshMovement    //±ﬂemo±ﬂ∂ØÃ¨…Ë÷√Œª÷√,,,
 {
-    public Customer customer;
+    protected Customer customer;
 
     public MessageType overTimeEmoji;
     [BehaviorDesigner.Runtime.Tasks.Tooltip("The amount of time to wait")]
@@ -29,6 +29,8 @@ public class WaitingTable2 : NavMeshMovement    //±ﬂemo±ﬂ∂ØÃ¨…Ë÷√Œª÷√,,,
         // Remember the start time.
         startTime = Time.time;
         waitDuration = waitTime.Value;
+
+        emoed = false;
     }
 
     public override TaskStatus OnUpdate()

@@ -4,7 +4,7 @@ using UnityEngine;
 using Lean.Gui;
 using UObject = UnityEngine.Object;
 
-public enum ModalType
+public enum PopType
 {
     switchModal, modeFrame, topFrame,
     chatWindow, infoWindow, settingWindow, staffWindow
@@ -109,7 +109,7 @@ public class UIManager : MonoBehaviour
         bottom.Toggle();
     }
 
-    public void TogglePopUI(ModalType modalType)
+    public void TogglePopUI(PopType modalType)
     {
         PopupUI switchPop = binder.GetObj<PopupUI>(modalType.ToString());
 
@@ -119,7 +119,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void TogglePopUI(ModalType modalType, bool enable)
+    public void TogglePopUI(PopType modalType, bool enable)
     {
         PopupUI switchPop = binder.GetObj<PopupUI>(modalType.ToString());
 
@@ -136,7 +136,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void TogglePopWindow(ModalType modalType,bool selfMode)
+    public void TogglePopWindow(PopType modalType,bool selfMode)
     {
         PopupWindow switchPop = binder.GetObj<PopupWindow>(modalType.ToString());
 

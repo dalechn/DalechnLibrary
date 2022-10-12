@@ -7,7 +7,7 @@ using UnityEngine;
 [TaskCategory("Shop")]
 public class PasserBy : Seek
 {
-    public Customer customer;
+    protected Customer customer;
     public Transform midPosition;
 
     public override void OnStart()

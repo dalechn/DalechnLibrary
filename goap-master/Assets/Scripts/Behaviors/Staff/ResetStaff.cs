@@ -6,7 +6,7 @@ using UnityEngine;
 [TaskCategory("Shop")]
 public class ResetStaff : Wait
 {
-    public Staff staff;
+    protected Staff staff;
 
     public override TaskStatus OnUpdate()
     {

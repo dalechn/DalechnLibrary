@@ -6,7 +6,7 @@ using BehaviorDesigner.Runtime.Tasks;
 [TaskCategory("Shop")]
 public class HavingDinner : Wait
 {
-    public Customer customer;
+    protected Customer customer;
 
     public override void OnStart()
     {

@@ -6,7 +6,7 @@ using UnityEngine;
 [TaskCategory("Shop")]
 public class HaveOrder : Conditional
 {
-    public Staff staff;
+    protected Staff staff;
 
     public override void OnStart()
     {

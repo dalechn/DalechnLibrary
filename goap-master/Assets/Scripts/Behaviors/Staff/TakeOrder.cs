@@ -7,7 +7,7 @@ using UnityEngine;
 [TaskCategory("Shop")]
 public class TakeOrder : NavMeshMovement
 {
-    public Staff staff;
+    protected Staff staff;
 
     private Vector3 currentPos;
     private bool haveFood;

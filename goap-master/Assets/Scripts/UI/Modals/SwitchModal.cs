@@ -20,9 +20,10 @@ public class SwitchModal : PopupWindow      //这个不能继承PopupWidow ，因为要cal
 
         button.OnClick.AddListener(() =>
         {
-            UIManager.Instance.TogglePopUI(ModalType.modeFrame, true);
+            UIManager.Instance.TogglePopUI(PopType.modeFrame, true);
             //base.Hide();        //不toggle main
             HideOnlySelf();
+
         });
         xButton.OnClick.AddListener(() =>
         {
@@ -32,6 +33,7 @@ public class SwitchModal : PopupWindow      //这个不能继承PopupWidow ，因为要cal
         {
             //UIManager.Instance.TogglePop(ModalType.modeFrame, true);
             Hide();
+
         });
     }
 

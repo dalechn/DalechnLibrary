@@ -10,7 +10,7 @@ using BehaviorDesigner.Runtime;
 
 public class Emoji : Wait
 {
-    public Customer customer;
+    protected Customer customer;
     public MessageType startEmoji;
     public MessageType overTimeEmoji;
 
@@ -40,5 +40,7 @@ public class Emoji : Wait
         customer = GetComponent<Customer>();
 
         customer.Emoji(startEmoji);
+
+        emoed = false;
     }
 }

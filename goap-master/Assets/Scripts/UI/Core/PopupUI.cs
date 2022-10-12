@@ -10,7 +10,7 @@ using UnityEngine.Events;
 public class PopupUI : vMonoBehaviour
 {
     [Invector.vEditorToolbar("default")]
-    public RectTransform canvas = null;
+    public RectTransform canvasTr = null;
     public PivotPreset pivot = PivotPreset.MiddleCenter;
     public UnityEvent startOvercall;
     public UnityEvent endOvercall;
@@ -61,19 +61,23 @@ public class PopupUI : vMonoBehaviour
     protected RectTransform thisRect = null;
 
     protected GraphicRaycaster touch;
+    protected Canvas canvas;
 
     protected virtual void Start()
     {
-        if (!canvas)
+        canvas = GetComponentInParent<Canvas>();
+        touch = canvas.GetComponent<GraphicRaycaster>();
+
+        if (!canvasTr)
         {
-            canvas = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+            canvasTr = canvas.GetComponent<RectTransform>();
         }
 
         thisRect = GetComponent<RectTransform>();
 
         if (usePosition)
         {
-            thisRect.anchoredPosition = thisRect.FromAbsolutePositionToAnchoredPosition(startPosition, canvas, pivot);
+            thisRect.anchoredPosition = thisRect.FromAbsolutePositionToAnchoredPosition(startPosition, canvasTr, pivot);
         }
 
         if (useScale)
@@ -90,7 +94,6 @@ public class PopupUI : vMonoBehaviour
             thisRect.rotation = Quaternion.Euler(startRotation);
         }
 
-        touch = canvas.GetComponent<GraphicRaycaster>();
     }
 
     public void EnableRaycast(bool e)
@@ -118,7 +121,7 @@ public class PopupUI : vMonoBehaviour
 
         if (usePosition)
         {
-            Vector2 pos = thisRect.FromAbsolutePositionToAnchoredPosition(showDesirePosition, canvas, pivot);
+            Vector2 pos = thisRect.FromAbsolutePositionToAnchoredPosition(showDesirePosition, canvasTr, pivot);
             thisRect.anchoredPositionTransition(pos, time, enterEase).JoinTransition().EventTransition(() =>
             {
                 startOvercall.Invoke();
@@ -149,7 +152,7 @@ public class PopupUI : vMonoBehaviour
         }
         else
         {
-            thisRect.localScale = Vector2.one; 
+            thisRect.localScale = showDesireScale; 
         }
         if (useRotation)
         {
@@ -210,7 +213,7 @@ public class PopupUI : vMonoBehaviour
         if (usePosition)
         {
             //这函数还有问题? 已知需要设置锚点模式为PivotPreset.MiddleCenter,好像stretch也xing?
-            Vector2 pos = thisRect.FromAbsolutePositionToAnchoredPosition(hideDesirePosition, canvas, PivotPreset.MiddleCenter);
+            Vector2 pos = thisRect.FromAbsolutePositionToAnchoredPosition(hideDesirePosition, canvasTr, PivotPreset.MiddleCenter);
             thisRect.anchoredPositionTransition(pos, time, exitEase).JoinTransition().EventTransition(() =>
             {
                 endOvercall.Invoke();

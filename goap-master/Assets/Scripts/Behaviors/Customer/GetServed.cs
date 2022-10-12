@@ -7,7 +7,7 @@ using BehaviorDesigner.Runtime.Tasks;
 
 public class GetServed : Conditional
 {
-    public Customer customer;
+    protected Customer customer;
 
     public override void OnStart()
     {

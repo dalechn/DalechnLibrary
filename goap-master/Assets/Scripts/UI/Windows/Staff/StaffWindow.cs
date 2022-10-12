@@ -36,9 +36,9 @@ public class StaffWindow : PopupWindow
         chat.OnClick.AddListener(() => {
 
             //只关自己
-            PopupWindow window = UIManager.Instance.GetObj<PopupWindow>(ModalType.chatWindow.ToString());
+            PopupWindow window = UIManager.Instance.GetObj<PopupWindow>(PopType.chatWindow.ToString());
             //window.ToggleOnlySelf();
-            UIManager.Instance.TogglePopWindow(ModalType.chatWindow,true);
+            UIManager.Instance.TogglePopWindow(PopType.chatWindow,true);
         });
     }
 }

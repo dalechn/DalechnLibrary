@@ -8,7 +8,7 @@ using BehaviorDesigner.Runtime.Tasks.Movement;
 
 public class GetUeableTable : Conditional
 {
-    public Customer customer;
+    protected Customer customer;
 
     public override void OnStart()
     {

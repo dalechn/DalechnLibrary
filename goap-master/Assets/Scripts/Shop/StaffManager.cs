@@ -33,6 +33,16 @@ public class StaffManager : MonoBehaviour
     //    areaDict.Add(areaName.ToString(),area);
     //}
 
+    public void ToggleStaff(bool en)
+    {
+        foreach (var val in staffList)
+        {
+            val.TogglePerson(en);
+
+            MessageCenter.Instance.ToggleAllCanvas(val.gameObject, en);
+        }
+    }
+
     public void StaffGetOrder(Staff staff, Order order)
     {
         staff.TakeOrder(order);

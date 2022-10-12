@@ -8,21 +8,30 @@ using BehaviorDesigner.Runtime.Tasks.Movement;
 
 public class TakeASeat : NavMeshMovement
 {
-    public Customer customer;
+    protected Customer customer;
 
+    //private bool first = true;
     public override void OnStart()
     {
         base.OnStart();
 
         customer = GetComponent<Customer>();
+
+        //first = true;
     }
 
     public override TaskStatus OnUpdate()
     {
         GameObject pos = customer.GetUeableTable();
-
         if (pos)
         {
+            //if(first)
+            //{
+            //    //ShopInfo.Instance.CurrentWaitNumber--; //减掉当前在等待的人数
+            //    ShopInfo.Instance.RemoveWaitingCustomer(customer);
+            //    first = false;
+            //}
+
             SetDestination(pos.transform.position);
 
             if (HasArrived())

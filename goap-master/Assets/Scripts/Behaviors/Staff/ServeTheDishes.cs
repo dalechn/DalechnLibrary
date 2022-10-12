@@ -8,7 +8,7 @@ using BehaviorDesigner.Runtime;
 [TaskCategory("Shop")]
 public class ServeTheDishes : NavMeshMovement
 {
-    public Staff staff;
+    protected Staff staff;
 
     //public SharedFloat waitTime = 1;
 

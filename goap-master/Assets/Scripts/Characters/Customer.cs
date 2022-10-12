@@ -111,6 +111,8 @@ public class Customer : PersonBase
 
     public void LeaveShop(MessageType emojiType, bool cancelOrder)
     {
+        ShopInfo.Instance.RemoveWaitingCustomer(this);          //移除等待的人
+
         if (!judged)//只能判断一次,因为havefun和leaveshop都会判断这个
         {
             Emoji(emojiType);

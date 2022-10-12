@@ -31,16 +31,30 @@ public class CustomerManager : MonoBehaviour
 
     }
 
+    public void ToggleCustomer(bool en, bool toggleAll)
+    {
+        foreach (var val in customerList)
+        {
+            if (toggleAll)
+            {
+                val.TogglePerson(en);
+                MessageCenter.Instance.ToggleAllCanvas(val.gameObject, en);
+            }
+            else
+                MessageCenter.Instance.ToggleHandleCanvas(val.gameObject, en);
+        }
+    }
+
     public void AddWaitingCustomer(Customer customer)
     {
         int num = 5;
-        int sideMax = ShopInfo.Instance.currentScore.maxWaitNumber/2;
+        int sideMax = ShopInfo.Instance.currentScore.maxWaitNumber / 2;
         int leftCount = leftWaitCustomer.Count;
         int rightCount = rightWaitCustomer.Count;
 
         if (rightCount >= num && leftCount >= num)      //如果竖着排满了 就按照左右来进
         {
-            if((leftCount>= sideMax|| customer.IsRight)&& rightCount< sideMax)         //左边3个又排满了也要排到右边
+            if ((leftCount >= sideMax || customer.IsRight) && rightCount < sideMax)         //左边3个又排满了也要排到右边
                 rightWaitCustomer.Add(customer);
             else
             {
@@ -50,7 +64,7 @@ public class CustomerManager : MonoBehaviour
         }
         else
         {
-            if ((rightCount - leftCount)>1|| rightCount>= num)     //如果竖着排还没满 哪边少人就进哪边,直到一边超过5了
+            if ((rightCount - leftCount) > 1 || rightCount >= num)     //如果竖着排还没满 哪边少人就进哪边,直到一边超过5了
                 leftWaitCustomer.Add(customer);
             else
                 rightWaitCustomer.Add(customer);
@@ -67,7 +81,7 @@ public class CustomerManager : MonoBehaviour
             rightWaitCustomer.RemoveAt(0);
             rightPosDict.Remove(customer);
         }
-        else
+        else if (leftWaitCustomer.Exists(e => { return e == customer; }))
         {
             leftWaitCustomer.RemoveAt(0);
             leftPosDict.Remove(customer);
@@ -77,7 +91,7 @@ public class CustomerManager : MonoBehaviour
     }
 
     // 更新所有人的位置信息
-    private void UpdatePos()
+    public void UpdatePos()
     {
         for (int i = 0; i < leftWaitCustomer.Count; i++)
         {
