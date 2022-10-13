@@ -2,7 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShopKeeper : PersonBase
+namespace MyShop
 {
- 
+
+    public class ShopKeeper : PersonBase
+    {
+
+    }
 }

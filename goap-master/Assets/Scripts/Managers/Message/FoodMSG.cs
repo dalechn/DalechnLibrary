@@ -3,41 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-//动态加载食物的msg
-public class FoodMSG : MessageBase
+namespace MyShop
 {
-    [Invector.vEditorToolbar("UI")]
-    public Image image;         //表情
-    public Image imageSlider;   //表情slider;
-    protected Sprite emojiSprite;
 
-    protected override void Start()
+    //动态加载食物的msg
+    public class FoodMSG : MessageBase
     {
-        base.Start();
+        [Invector.vEditorToolbar("UI")]
+        public Image image;         //表情
+        public Image imageSlider;   //表情slider;
+        protected Sprite emojiSprite;
 
-        if (person)
+        protected override void Start()
         {
-            MessageCenter.Instance.RegistMSG(person.gameObject, this);
-        }
-    }
+            base.Start();
 
-    public void HandleMessage(MessageType emoji, Order order)
-    {
-        autoHideTime = order.currentFood.foodTime;
-
-        emojiSprite = Resources.Load<Sprite>(order.currentFood.subFoodSpriteLocation);
-        image.sprite = emojiSprite;
-        imageSlider.sprite = emojiSprite;
-
-        if (imageSlider)
-        {
-            Dalechn.bl_UpdateManager.RunAction("", order.currentFood.foodTime, (t, r) =>
+            if (person)
             {
-                imageSlider.fillAmount = t;
-            });
+                MessageCenter.Instance.RegistMSG(person.gameObject, this);
+            }
         }
 
-        Toggle();
+        public void HandleMessage(MessageType emoji, Order order)
+        {
+            autoHideTime = order.currentFood.foodTime;
+
+            emojiSprite = Resources.Load<Sprite>(order.currentFood.subFoodSpriteLocation);
+            image.sprite = emojiSprite;
+            imageSlider.sprite = emojiSprite;
+
+            if (imageSlider)
+            {
+                Dalechn.bl_UpdateManager.RunAction("", order.currentFood.foodTime, (t, r) =>
+                {
+                    imageSlider.fillAmount = t;
+                });
+            }
+
+            Toggle();
+        }
     }
 }

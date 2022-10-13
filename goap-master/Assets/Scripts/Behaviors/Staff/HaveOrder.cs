@@ -2,6 +2,7 @@ using BehaviorDesigner.Runtime.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyShop;
 
 [TaskCategory("Shop")]
 public class HaveOrder : Conditional
@@ -12,7 +13,8 @@ public class HaveOrder : Conditional
     {
         base.OnStart();
 
-        staff = GetComponent<Staff>();
+        //staff = GetComponent<Staff>();
+        staff = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Staff;
     }
 
     public override TaskStatus OnUpdate()

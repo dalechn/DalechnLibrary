@@ -2,21 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+namespace MyShop
 {
-    public static GameManager Instance { get; private set; }
-    protected virtual void Awake()
+
+    public class GameManager : MonoBehaviour
     {
-        Instance = this;
-    }
+        public static GameManager Instance { get; private set; }
+        protected virtual void Awake()
+        {
+            Instance = this;
+        }
 
-    void Start()
-    {
+        void Start()
+        {
 
-    }
+        }
 
-    void Update()
-    {
+        void Update()
+        {
 
+        }
     }
 }

@@ -3,6 +3,7 @@ using BehaviorDesigner.Runtime.Tasks.Movement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyShop;
 
 [TaskCategory("Shop")]
 public class TakeOrder : NavMeshMovement
@@ -16,7 +17,8 @@ public class TakeOrder : NavMeshMovement
     {
         base.OnStart();
 
-        staff = GetComponent<Staff>();
+        //staff = GetComponent<Staff>();
+        staff = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Staff;
 
         haveFood = staff.DequeFoodPosition(out currentPos);
     }

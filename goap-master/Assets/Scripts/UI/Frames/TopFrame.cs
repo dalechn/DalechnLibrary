@@ -4,14 +4,18 @@ using UnityEngine;
 using UnityEngine.Events;
 using Lean.Gui;
 
-public class TopFrame : PopupUI
+namespace MyShop
 {
-    [Invector.vEditorToolbar("UI")]
-    public LeanButton btn;
 
-   public void RegistClick(UnityAction action)
+    public class TopFrame : PopupUI
     {
-        btn.OnClick.RemoveAllListeners();
-        btn.OnClick.AddListener(action);
+        [Invector.vEditorToolbar("UI")]
+        public LeanButton btn;
+
+        public void RegistClick(UnityAction action)
+        {
+            btn.OnClick.RemoveAllListeners();
+            btn.OnClick.AddListener(action);
+        }
     }
 }

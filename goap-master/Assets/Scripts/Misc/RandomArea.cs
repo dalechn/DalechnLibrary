@@ -8,7 +8,7 @@ public enum RandomAreaName
 
 public class RandomArea : MonoBehaviour
 {
-    public static Dictionary<string, RandomArea> areaDict = new Dictionary<string, RandomArea>();  //管理随机区域,放static是因为start就要取值,放 awake ShopInfo可能还没初始化
+    public static Dictionary<string, RandomArea> areaDict = new Dictionary<string, RandomArea>();  //管理随机区域,放static是因为start就要取值,放 awake ShopInfo可能还没初始化,比如wanderarea ?
 
     public enum _AreaType { Square, Circle }
     public _AreaType type;

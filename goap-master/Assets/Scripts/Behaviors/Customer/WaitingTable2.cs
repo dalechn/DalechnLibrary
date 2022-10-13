@@ -4,6 +4,7 @@ using UnityEngine;
 using BehaviorDesigner.Runtime.Tasks;
 using BehaviorDesigner.Runtime.Tasks.Movement;
 using BehaviorDesigner.Runtime;
+using MyShop;
 
 [TaskCategory("Shop")]
 public class WaitingTable2 : NavMeshMovement    //±ﬂemo±ﬂ∂ØÃ¨…Ë÷√Œª÷√,,,
@@ -24,7 +25,8 @@ public class WaitingTable2 : NavMeshMovement    //±ﬂemo±ﬂ∂ØÃ¨…Ë÷√Œª÷√,,,
     public override void OnStart()
     {
         base.OnStart();
-        customer = GetComponent<Customer>();
+        //customer = GetComponent<Customer>();
+        customer = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Customer;
 
         // Remember the start time.
         startTime = Time.time;

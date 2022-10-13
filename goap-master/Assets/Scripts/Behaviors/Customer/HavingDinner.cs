@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BehaviorDesigner.Runtime.Tasks;
+using MyShop;
 
 [TaskCategory("Shop")]
 public class HavingDinner : Wait
@@ -12,7 +13,8 @@ public class HavingDinner : Wait
     {
         base.OnStart();
 
-        customer = GetComponent<Customer>();
+        //customer = GetComponent<Customer>();
+        customer = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Customer;
 
         customer.HavingDinner();
     }

@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MessageBase : PopupUI
+namespace MyShop
 {
-    protected PersonBase person;
 
-    protected override void Start()
+    public class MessageBase : PopupUI
     {
-        base.Start();
-        person = GetComponentInParent<PersonBase>();
-    }
+        protected PersonBase person;
 
-    public void ToggleCanvas(bool en)
-    {
-        canvas.enabled = en;
+        protected override void Start()
+        {
+            base.Start();
+            person = GetComponentInParent<PersonBase>();
+        }
+
+        public virtual void ToggleCanvas(bool en)
+        {
+            canvas.enabled = en;
+        }
     }
 }

@@ -4,7 +4,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using Lean.Gui;
 
-public class FurnitureWindow : PopupWindow
+namespace MyShop
 {
-  
+
+    public class FurnitureWindow : PopupWindow
+    {
+
+    }
 }

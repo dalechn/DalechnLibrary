@@ -3,23 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//ºá·ùmsg
-public class CenterMSG : MessageBase
+namespace MyShop
 {
-    [Invector.vEditorToolbar("UI")]
-    public Text text;
 
-    protected override void Start()
+    //ºá·ùmsg
+    public class CenterMSG : MessageBase
     {
-        base.Start();
+        [Invector.vEditorToolbar("UI")]
+        public Text text;
 
-        MessageCenter.Instance.RegistMSG(gameObject, this);
-    }
+        protected override void Start()
+        {
+            base.Start();
 
-    public  void HandleMessage(MessageType emoji,string content)
-    {
-        Toggle();
+            MessageCenter.Instance.RegistMSG(gameObject, this);
+        }
 
-        text.text = content;
+        public void HandleMessage(MessageType emoji, string content)
+        {
+            Toggle();
+
+            text.text = content;
+        }
     }
 }

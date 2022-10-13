@@ -4,18 +4,22 @@ using UnityEngine;
 using UnityEngine.Events;
 using Lean.Gui;
 
-public class ChatWindow : PopupWindow
+namespace MyShop
 {
-    [Invector.vEditorToolbar("UI")]
-    public LeanButton closeBtn;
 
-    protected override void Start()
+    public class ChatWindow : PopupWindow
     {
-        base.Start();
+        [Invector.vEditorToolbar("UI")]
+        public LeanButton closeBtn;
 
-        closeBtn.OnClick.AddListener(() =>
+        protected override void Start()
         {
-            Hide();
-        });
+            base.Start();
+
+            closeBtn.OnClick.AddListener(() =>
+            {
+                Hide();
+            });
+        }
     }
 }

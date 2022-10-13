@@ -4,41 +4,48 @@ using UnityEngine;
 using UnityEngine.Events;
 using Lean.Gui;
 
-public class StaffWindow : PopupWindow
+namespace MyShop
 {
-    [Invector.vEditorToolbar("UI")]
-    public StaffListWindow list;
-    public LeanButton home;
-    public LeanButton back;
-    public LeanButton chat;
 
-    protected override void Start()
+    public class StaffWindow : PopupWindow
     {
-        base.Start();
+        [Invector.vEditorToolbar("UI")]
+        public StaffListWindow list;
+        public LeanButton home;
+        public LeanButton back;
+        public LeanButton chat;
 
-        home.OnClick.AddListener(() => {
+        protected override void Start()
+        {
+            base.Start();
 
-            Hide();
-            list.Hide();
+            home.OnClick.AddListener(() =>
+            {
 
-            UIManager.Instance.ToggleMainPop(true);
-        });
+                Hide();
+                list.Hide();
+
+                UIManager.Instance.ToggleMainPop(true);
+            });
 
 
-        back.OnClick.AddListener(() => {
+            back.OnClick.AddListener(() =>
+            {
 
-            Hide();
-            list.Hide();
+                Hide();
+                list.Hide();
 
-            UIManager.Instance.ToggleMainPop(true);
-        });
+                UIManager.Instance.ToggleMainPop(true);
+            });
 
-        chat.OnClick.AddListener(() => {
+            chat.OnClick.AddListener(() =>
+            {
 
-            //只关自己
-            PopupWindow window = UIManager.Instance.GetObj<PopupWindow>(PopType.chatWindow.ToString());
-            //window.ToggleOnlySelf();
-            UIManager.Instance.TogglePopWindow(PopType.chatWindow,true);
-        });
+                //只关自己
+                PopupWindow window = UIManager.Instance.GetObj<PopupWindow>(PopType.chatWindow.ToString());
+                //window.ToggleOnlySelf();
+                UIManager.Instance.TogglePopWindow(PopType.chatWindow, true);
+            });
+        }
     }
 }

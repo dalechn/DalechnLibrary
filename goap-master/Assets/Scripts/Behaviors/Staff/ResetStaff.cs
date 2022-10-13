@@ -2,6 +2,7 @@ using BehaviorDesigner.Runtime.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using MyShop;
 
 [TaskCategory("Shop")]
 public class ResetStaff : Wait
@@ -24,6 +25,8 @@ public class ResetStaff : Wait
     public override void OnStart()
     {
         base.OnStart();
-        staff = GetComponent<Staff>();
+        //staff = GetComponent<Staff>();
+        staff = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Staff;
+
     }
 }

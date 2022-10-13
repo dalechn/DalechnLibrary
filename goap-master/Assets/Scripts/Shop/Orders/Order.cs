@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using MyShop;
 
 //[System.Serializable]     //不要序列化 ,因为staff是根据order是否null来判断的 ,编辑器会自动实例化一个就不会是null了
 //尽量确保只有shop和一开始的customer能写入,其他的都是只读!

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BehaviorDesigner.Runtime.Tasks;
 using BehaviorDesigner.Runtime.Tasks.Movement;
+using MyShop;
 
 [TaskCategory("Shop")]
 
@@ -15,7 +16,8 @@ public class TakeASeat : NavMeshMovement
     {
         base.OnStart();
 
-        customer = GetComponent<Customer>();
+        //customer = GetComponent<Customer>();
+        customer = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Customer;
 
         //first = true;
     }

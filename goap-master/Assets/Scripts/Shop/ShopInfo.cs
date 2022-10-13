@@ -1,320 +1,338 @@
+using Lean.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public struct Score
+namespace MyShop
 {
-    public int environmentScore;    //环境分
-    public int maxWaitNumber;       //当前最大可等待人数
-    public int cookingScore;            //厨艺分,所有工作中的员工相加
-    public int thumbsNumber;        //点赞数
 
-    public float genRate;          //来客速度
-    public float goodRate;      //好评率
-    public float enthusiasm;    //客人热情
-}
-
-public struct OrderState
-{
-    public int totalOrder;          //所有产生的订单
-    public int canceledOrder; //强行取消的订单(太慢了)
-    public int hateOrder;   //评价不喜欢的客人
-    public int leavedCustomer;  //没有进来的客人(已经在等待)
-    public float totalPrice;
-}
-
-public enum FoodType
-{
-    hotdog, burger, popcorn, taco, cola, beer, wine,
-    hotdogBurger, hotdogBurgerpoPcorn
-}
-
-
-public class ShopInfo : MonoBehaviour
-{
-    //private static int orderID = 0;
-
-    // 每个家具/桌子start的时候会向这里注册
-    //public Dictionary<string, Slot> furnitureDict = new Dictionary<string, Slot>();
-    //public List<Slot> tableList = new List<Slot>();
-    //public List<Slot> gameList = new List<Slot>();
-
-    private List<GameObject> gameSlotList = new List<GameObject>();
-    private Dictionary<GameObject, Slot> tableSlotDict = new Dictionary<GameObject, Slot>();
-    private Dictionary<string, Slot> furnitureSlotDict = new Dictionary<string, Slot>();
-
-    public CustomerManager customerManager;
-    public StaffManager staffManager;
-    //public OrderManager orderManager;
-    public Score currentScore;
-
-
-    public OrderState orderState;
-    public Queue<Order> orderQueue = new Queue<Order>();
-
-    public int CurrentWaitNumber { get { return customerManager.leftWaitCustomer.Count + customerManager.rightWaitCustomer.Count; } }     //当前等待的人数
-    public Order CurrentHandleOrder { get; set; }   //当前手动处理的订单,由handle msg发出
-
-    public static ShopInfo Instance { get; private set; }
-    protected virtual void Awake()
+    [System.Serializable]
+    public struct Score
     {
-        Instance = this;
+        public int environmentScore;    //环境分
+        public int maxWaitNumber;       //当前最大可等待人数
+        public int cookingScore;            //厨艺分,所有工作中的员工相加
+        public int thumbsNumber;        //点赞数
+
+        public float genRate;          //来客速度
+        public float goodRate;      //好评率
+        public float enthusiasm;    //客人热情
     }
 
-    void Start()
+    public struct OrderState
     {
-        //staffManager.idleEvent += (Staff staff) =>
-        //{
-        //    if (orderQueue.TryDequeue(out Order order))
-        //    {
-        //        if (order.canBeAssigned)//确保没被手动操作过
-        //        {
-        //            staffManager.StaffGetOrder(staff, order);
-
-        //        }
-        //    }
-        //};
-
-        if (currentScore.genRate > 0)
-        {
-            customerManager.StartGen(currentScore.genRate);
-        }
-
-        //GenOrder("burger");
-        //GenOrder("burger");
-        //GenOrder("burger");
-        //GenOrder("burger");
+        public int totalOrder;          //所有产生的订单
+        public int canceledOrder; //强行取消的订单(太慢了)
+        public int hateOrder;   //评价不喜欢的客人
+        public int leavedCustomer;  //没有进来的客人(已经在等待)
+        public float totalPrice;
     }
 
-    public void FinishOrder(Order order, bool served)
+    public enum FoodType
     {
-        order.customer.Served = served;
-
-        if (!served)
-        {
-            orderState.canceledOrder++;
-        }
-        else
-        {
-            orderState.totalOrder++;
-            orderState.totalPrice += order.price;
-        }
+        hotdog, burger, popcorn, taco, cola, beer, wine,
+        hotdogBurger, hotdogBurgerpoPcorn
     }
 
-    //手动处理订单
-    public void HandleOrder(bool canBeAssigned, bool finishOrder = false)
+
+    public class ShopInfo : MonoBehaviour
     {
-        if (CurrentHandleOrder == null)
+        //private static int orderID = 0;
+
+        // 每个家具/桌子start的时候会向这里注册
+        //public Dictionary<string, Slot> furnitureDict = new Dictionary<string, Slot>();
+        //public List<Slot> tableList = new List<Slot>();
+        //public List<Slot> gameList = new List<Slot>();
+
+        private List<GameObject> gameSlotList = new List<GameObject>();
+        private Dictionary<GameObject, Slot> tableSlotDict = new Dictionary<GameObject, Slot>();
+        private Dictionary<string, Slot> furnitureSlotDict = new Dictionary<string, Slot>();
+
+        public CustomerManager customerManager;
+        public StaffManager staffManager;
+        //public OrderManager orderManager;
+        public Score currentScore;
+
+
+        public OrderState orderState;
+        public Queue<Order> orderQueue = new Queue<Order>();
+
+        public LeanPlane plane;
+
+        public int CurrentWaitNumber { get { return customerManager.leftWaitCustomer.Count + customerManager.rightWaitCustomer.Count; } }     //当前等待的人数
+        public Order CurrentHandleOrder { get; set; }   //当前手动处理的订单,由handle msg发出
+
+        public static ShopInfo Instance { get; private set; }
+        protected virtual void Awake()
         {
-            return;
+            Instance = this;
         }
 
-        // 显示/关闭每个小食物的tag
-        foreach (var val in CurrentHandleOrder.foodList)
+        void Start()
         {
-            val.tagPosition.gameObject.SetActive(!canBeAssigned);
+            //staffManager.idleEvent += (Staff staff) =>
+            //{
+            //    if (orderQueue.TryDequeue(out Order order))
+            //    {
+            //        if (order.canBeAssigned)//确保没被手动操作过
+            //        {
+            //            staffManager.StaffGetOrder(staff, order);
+
+            //        }
+            //    }
+            //};
+
+            if (currentScore.genRate > 0)
+            {
+                customerManager.StartGen(currentScore.genRate);
+            }
+
+            //GenOrder("burger");
+            //GenOrder("burger");
+            //GenOrder("burger");
+            //GenOrder("burger");
         }
 
-        CurrentHandleOrder.customer.ToggleOutline(!canBeAssigned);
-
-        //手动结束订单
-        if (finishOrder)               
+        public void FinishOrder(Order order, bool served, bool addMoney = true)
         {
-            CurrentHandleOrder.cookingScore = int.MaxValue;     //直接拉满,,,
-            FinishOrder(CurrentHandleOrder, true);
-            TogglePerson(true, false);
+            order.customer.Served = served;
 
-            CurrentHandleOrder = null;
+            if (!served)
+            {
+                orderState.canceledOrder++;
+            }
+            else
+            {
+                orderState.totalOrder++;
 
-            return;
+                if (addMoney)
+                {
+                    AddMoney(order);
+                }
+            }
         }
 
-        if (CurrentHandleOrder.staff == null)        //一定要确保没被系统分配过
+        //手动处理订单
+        public void HandleOrder(bool canBeAssigned, bool finishOrder = false)
         {
-            TogglePerson(canBeAssigned, false);
+            if (CurrentHandleOrder == null)
+            {
+                return;
+            }
 
-            CurrentHandleOrder.canBeAssigned = canBeAssigned;
+            // 显示/关闭每个小食物的tag
+            foreach (var val in CurrentHandleOrder.foodList)
+            {
+                val.tagPosition.gameObject.SetActive(!canBeAssigned);
+            }
 
-            //重新加入队列
-            if (canBeAssigned && !CurrentHandleOrder.orderFinished)    //再次确认订单没被顾客提前结束
-            {                                                                                 
-                orderQueue.Enqueue(CurrentHandleOrder);         //应该不用插队把,因为手动操作也要时间的,直接放到新订单处理了
-                //Debug.Log("enqeue");
+            CurrentHandleOrder.customer.ToggleOutline(!canBeAssigned);
+
+            //手动结束订单
+            if (finishOrder)
+            {
+                CurrentHandleOrder.cookingScore = int.MaxValue;     //直接拉满,,,
+                FinishOrder(CurrentHandleOrder, true, false);
+                TogglePerson(true, false);
+
                 CurrentHandleOrder = null;
+
+                return;
             }
-        }
-    }
 
-    public void CancelOrder(Order orderID)
-    {
-        staffManager.CancelOrder(orderID);
-
-        //orderState.canceledOrder++;
-    }
-
-    public void GenOrder(GameObject table, ref Order order)
-    {
-        RemoveWaitingCustomer(order.customer);        //多更新几次,,管他呢
-
-        FoodTem tem = FoodTem.Tem(order.orderFoodName);
-        string[] splitParts = tem.Need.Split(';');
-        foreach (var val in splitParts)
-        {
-            FoodTem tem2 = FoodTem.Tem(val);
-
-            if (furnitureSlotDict.TryGetValue(tem2.NeedFurniture, out Slot furniture))
+            if (CurrentHandleOrder.staff == null)        //一定要确保没被系统分配过
             {
-                Food food = new Food();
-                food.foodPosition = furniture.transform;
-                food.foodTime = tem2.Time;
-                food.subFoodSpriteLocation = tem2.Location;
-                food.tagPosition = furniture.GetFoodPosition(furniture.slotList[0]);
+                TogglePerson(canBeAssigned, false);
 
-                order.foodQueue.Enqueue(food);
-                order.foodList.Add(food);
+                CurrentHandleOrder.canBeAssigned = canBeAssigned;
+
+                //重新加入队列
+                if (canBeAssigned && !CurrentHandleOrder.orderFinished)    //再次确认订单没被顾客提前结束
+                {
+                    orderQueue.Enqueue(CurrentHandleOrder);         //应该不用插队把,因为手动操作也要时间的,直接放到新订单处理了
+                                                                    //Debug.Log("enqeue");
+                    CurrentHandleOrder = null;
+                }
             }
         }
 
-        Slot slot = tableSlotDict[table];
-        Transform pos = slot.GetUsableStaffPosition();
-        order.staffPosition = pos;
-        order.tableFoodPosition = slot.GetFoodPosition(pos.gameObject);
-
-        order.foodSpriteLocation = tem.Location;
-        order.price = tem.Price;
-        order.havePlate = tem.HavePlate;
-
-        orderQueue.Enqueue(order);
-        //Debug.Log(orderQueue.Count);
-        //Debug.Log(task.foodSprite);
-    }
-
-    public void RegistSlot(string objName, Slot table, RegistName registName)
-    {
-        switch (registName)
+        public void AddMoney(Order order)
         {
-            case RegistName.Table:
+            orderState.totalPrice += order.price;
+
+            Debug.Log(orderState.totalPrice);
+        }
+
+        public void CancelOrder(Order orderID)
+        {
+            staffManager.CancelOrder(orderID);
+
+            //orderState.canceledOrder++;
+        }
+
+        public void GenOrder(GameObject table, ref Order order)
+        {
+            RemoveWaitingCustomer(order.customer);        //多更新几次,,管他呢
+
+            FoodTem tem = FoodTem.Tem(order.orderFoodName);
+            string[] splitParts = tem.Need.Split(';');
+            foreach (var val in splitParts)
+            {
+                FoodTem tem2 = FoodTem.Tem(val);
+
+                if (furnitureSlotDict.TryGetValue(tem2.NeedFurniture, out Slot furniture))
                 {
-                    //tableList.Add(table);
-                    foreach (var val in table.slotList)
+                    Food food = new Food();
+                    food.foodPosition = furniture.transform;
+                    food.foodTime = tem2.Time;
+                    food.subFoodSpriteLocation = tem2.Location;
+                    food.tagPosition = furniture.GetFoodPosition(furniture.slotList[0]);
+
+                    order.foodQueue.Enqueue(food);
+                    order.foodList.Add(food);
+                }
+            }
+
+            Slot slot = tableSlotDict[table];
+            Transform pos = slot.GetUsableStaffPosition();
+            order.staffPosition = pos;
+            order.tableFoodPosition = slot.GetFoodPosition(pos.gameObject);
+
+            order.foodSpriteLocation = tem.Location;
+            order.price = tem.Price;
+            order.havePlate = tem.HavePlate;
+
+            orderQueue.Enqueue(order);
+            //Debug.Log(orderQueue.Count);
+            //Debug.Log(task.foodSprite);
+        }
+
+        public void RegistSlot(string objName, Slot table, RegistName registName)
+        {
+            switch (registName)
+            {
+                case RegistName.Table:
                     {
-                        tableSlotDict.Add(val, table);
+                        //tableList.Add(table);
+                        foreach (var val in table.slotList)
+                        {
+                            tableSlotDict.Add(val, table);
+                        }
                     }
-                }
-                break;
+                    break;
 
-            case RegistName.Furniture:
-                {
-                    //furnitureDict.Add(objName, table);
-                    furnitureSlotDict.Add(objName, table);
-                }
-                break;
-
-            case RegistName.Game:
-                {
-                    //gameList.Add(table);
-                    foreach (var val in table.slotList)
+                case RegistName.Furniture:
                     {
-                        gameSlotList.Add(val);
+                        //furnitureDict.Add(objName, table);
+                        furnitureSlotDict.Add(objName, table);
                     }
+                    break;
+
+                case RegistName.Game:
+                    {
+                        //gameList.Add(table);
+                        foreach (var val in table.slotList)
+                        {
+                            gameSlotList.Add(val);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void RegistStaff(Staff staff)
+        {
+            staffManager.staffList.Add(staff);
+        }
+
+        public GameObject GetUeableGame()
+        {
+            List<GameObject> usableList = new List<GameObject>();
+            foreach (var val in gameSlotList)
+            {
+                if (val.activeInHierarchy)
+                {
+                    usableList.Add(val);
                 }
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void RegistStaff(Staff staff)
-    {
-        staffManager.staffList.Add(staff);
-    }
-
-    public GameObject GetUeableGame()
-    {
-        List<GameObject> usableList = new List<GameObject>();
-        foreach (var val in gameSlotList)
-        {
-            if (val.activeInHierarchy)
-            {
-                usableList.Add(val);
             }
-        }
-        if (usableList.Count > 0)
-        {
-            int index = UnityEngine.Random.Range(0, usableList.Count);
-
-            return usableList[index];
-        }
-        return null;
-    }
-
-    public GameObject GetUeableTable()
-    {
-        List<GameObject> usableList = new List<GameObject>();
-
-        foreach (var val in tableSlotDict)
-        {
-            if (val.Key.activeInHierarchy)
+            if (usableList.Count > 0)
             {
-                usableList.Add(val.Key);
+                int index = UnityEngine.Random.Range(0, usableList.Count);
+
+                return usableList[index];
             }
+            return null;
         }
-        if (usableList.Count > 0)
+
+        public GameObject GetUeableTable()
         {
-            int index = UnityEngine.Random.Range(0, usableList.Count);
+            List<GameObject> usableList = new List<GameObject>();
 
-            return usableList[index];
-        }
-        return null;
-    }
-
-    public bool WillCustomerInto(float needScore)
-    {
-        return needScore <= currentScore.environmentScore
-          && CurrentWaitNumber < currentScore.maxWaitNumber;    //不能等于会再加一个,只能小于
-    }
-
-    public void AddWaitingCustomer(Customer customer)
-    {
-        customerManager.AddWaitingCustomer(customer);
-    }
-
-    public void RemoveWaitingCustomer(Customer customer)
-    {
-        customerManager.RemoveWaitingCustomer(customer);
-    }
-
-    public Vector3 GetWaitingPoint(Customer customer)
-    {
-        return customerManager.GetWaitingPoint(customer);
-    }
-
-    public void TogglePerson(bool en, bool all)
-    {
-        staffManager.ToggleStaff(en);
-        customerManager.ToggleCustomer(en, all);
-    }
-
-    //public void ToggleStaff(bool en)
-    //{
-    //    staffManager.ToggleStaff(en);
-    //}
-
-    //public void ToggleCustomer(bool en,bool all)
-    //{
-    //    customerManager.ToggleCustomer(en,all);
-    //}
-
-    void Update()
-    {
-        Staff staff = staffManager.GetFreeStaff();
-        if (staff && orderQueue.TryDequeue(out Order order))
-        {
-            if (order.canBeAssigned && !order.orderFinished)//确保没被手动操作过,或者顾客提前走人的
+            foreach (var val in tableSlotDict)
             {
-                staffManager.StaffGetOrder(staff, order);
+                if (val.Key.activeInHierarchy)
+                {
+                    usableList.Add(val.Key);
+                }
+            }
+            if (usableList.Count > 0)
+            {
+                int index = UnityEngine.Random.Range(0, usableList.Count);
+
+                return usableList[index];
+            }
+            return null;
+        }
+
+        public bool WillCustomerInto(float needScore)
+        {
+            return needScore <= currentScore.environmentScore
+              && CurrentWaitNumber < currentScore.maxWaitNumber;    //不能等于会再加一个,只能小于
+        }
+
+        public void AddWaitingCustomer(Customer customer)
+        {
+            customerManager.AddWaitingCustomer(customer);
+        }
+
+        public void RemoveWaitingCustomer(Customer customer)
+        {
+            customerManager.RemoveWaitingCustomer(customer);
+        }
+
+        public Vector3 GetWaitingPoint(Customer customer)
+        {
+            return customerManager.GetWaitingPoint(customer);
+        }
+
+        public void TogglePerson(bool en, bool all)
+        {
+            staffManager.ToggleStaff(en);
+            customerManager.ToggleCustomer(en, all);
+        }
+
+        //public void ToggleStaff(bool en)
+        //{
+        //    staffManager.ToggleStaff(en);
+        //}
+
+        //public void ToggleCustomer(bool en,bool all)
+        //{
+        //    customerManager.ToggleCustomer(en,all);
+        //}
+
+        void Update()
+        {
+            Staff staff = staffManager.GetFreeStaff();
+            if (staff && orderQueue.TryDequeue(out Order order))
+            {
+                if (order.canBeAssigned && !order.orderFinished)//确保没被手动操作过,或者顾客提前走人的
+                {
+                    staffManager.StaffGetOrder(staff, order);
+                }
             }
         }
     }

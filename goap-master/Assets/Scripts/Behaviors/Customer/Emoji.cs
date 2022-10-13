@@ -5,6 +5,7 @@ using UnityEngine;
 using BehaviorDesigner.Runtime.Tasks;
 using BehaviorDesigner.Runtime.Tasks.Movement;
 using BehaviorDesigner.Runtime;
+using MyShop;
 
 [TaskCategory("Shop")]
 
@@ -37,10 +38,11 @@ public class Emoji : Wait
     public override void OnStart()
     {
         base.OnStart();
-        customer = GetComponent<Customer>();
+        //customer = GetComponent<Customer>();
+        customer = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Customer;
 
         customer.Emoji(startEmoji);
 
-        emoed = false;
+        emoed = false;  //对象池初始化
     }
 }

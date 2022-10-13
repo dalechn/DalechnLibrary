@@ -117,13 +117,14 @@ namespace Dalechn
         {
             target.SetActive(true);
 
-            target.transform.localScale = Vector3.one;
+            //target.transform.localScale = Vector3.one;
+            Vector3 originScal = target.transform.localScale;
             DoAction a = bl_UpdateManager.RunAction(null, duration, delegate (float time, float r)
             {
                 float val = DampMotion(time, 0.309f);
                 float val2 = DampMotion(time, 0.204f);
 
-                target.transform.localScale = new Vector3(val, val2, 1);
+                target.transform.localScale =  new Vector3(originScal.x*val, originScal.y * val2, originScal.z * 1);
 
             });
             a.overCall += delegate

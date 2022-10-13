@@ -4,44 +4,50 @@ using UnityEngine;
 using UnityEngine.Events;
 using Lean.Gui;
 
-public class StaffListWindow : PopupWindow
+namespace MyShop
 {
-    [Invector.vEditorToolbar("UI")]
-    public LeanButton home;
-    public LeanButton back;
 
-    private PopupUI parentPop;
-
-    protected override void Start()
+    public class StaffListWindow : PopupWindow
     {
-        base.Start();
+        [Invector.vEditorToolbar("UI")]
+        public LeanButton home;
+        public LeanButton back;
 
-        home.OnClick.AddListener(() => {
+        private PopupUI parentPop;
 
-            //if (parentPop != null)
-            //{
-            //    parentPop.Show();
-            //}
-            Hide();
+        protected override void Start()
+        {
+            base.Start();
 
-            UIManager.Instance.ToggleMainPop(true);
-        });
-
-
-        back.OnClick.AddListener(() => {
-
-            //UIManager.Instance.ToggleMainPop(true);
-
-            if (parentPop!=null)
+            home.OnClick.AddListener(() =>
             {
-                parentPop.Show();
-            }
-            Hide();
-        });
-    }
 
-    public void RegistParent(PopupUI pop)
-    {
-        parentPop = pop;
+                //if (parentPop != null)
+                //{
+                //    parentPop.Show();
+                //}
+                Hide();
+
+                UIManager.Instance.ToggleMainPop(true);
+            });
+
+
+            back.OnClick.AddListener(() =>
+            {
+
+                //UIManager.Instance.ToggleMainPop(true);
+
+                if (parentPop != null)
+                {
+                    parentPop.Show();
+                }
+                Hide();
+            });
+        }
+
+        public void RegistParent(PopupUI pop)
+        {
+            parentPop = pop;
+        }
     }
 }

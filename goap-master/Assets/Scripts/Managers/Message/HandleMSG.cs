@@ -4,94 +4,184 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//可操作的msg
-public class HandleMSG : MessageBase
+namespace MyShop
 {
-    protected Sprite emojiSprite;
-    [Invector.vEditorToolbar("UI")]
-    public LeanButton button;       //可操作按钮
-    public Image buttonImage; //按钮的图标
-    public Image plate;
-    public LeanPulse pulse;
 
-    protected override void Start()
+    //可操作的msg
+    public class HandleMSG : MessageBase
     {
-        base.Start();
+        protected Sprite emojiSprite;
+        [Invector.vEditorToolbar("UI")]
+        public LeanButton button;       //可操作按钮
+        public Image buttonImage; //按钮的图标
+        public Image plate;
+        public LeanPulse pulse;
 
-        if (person)
+        public LeanPulse secondPulse;
+        public GameObject switchObj;
+
+        protected override void Start()
         {
-            MessageCenter.Instance.RegistMSG(person.gameObject, this);
+            base.Start();
+
+            if (person)
+            {
+                MessageCenter.Instance.RegistMSG(person.gameObject, this);
+            }
         }
-    }
 
-    public void HandleMessage(MessageType emoji, Order order)
-    {
-        if (order != null)
+        public void HandleMessage(MessageType emoji, Order order)
         {
-            Dalechn.bl_UpdateManager.RunActionOnce("",1.5f,() => {
+            if (order != null)
+            {
+                //Dalechn.bl_UpdateManager.RunActionOnce("", 1.5f, () =>
+                //{          //延迟摇啊摇, 用leanpulse 好像不太好写
                 if (pulse)
                 {
+                    pulse.RemainingTime = pulse.TimeInterval;
                     pulse.enabled = true;
                 }
-            });
+                //});
 
-            this.order = order;
-            autoHide = false;
-            EnableRaycast(true);
+                this.order = order;
+                autoHide = false;
+                EnableRaycast(true);
 
-            emojiSprite = Resources.Load<Sprite>(order.foodSpriteLocation);
+                plate.gameObject.SetActive(true);
+                switchObj.SetActive(false);
 
-            button.OnClick.RemoveAllListeners();
-            button.OnClick.AddListener(() =>
-            {
+                emojiSprite = Resources.Load<Sprite>(order.foodSpriteLocation);
+
+                buttonImage.sprite = emojiSprite;
+                if (plate != null)
+                {
+                    plate.enabled = order.havePlate;
+                }
+
+                button.OnClick.RemoveAllListeners();
+                button.OnClick.AddListener(() =>
+                {
+                    button.OnClick.RemoveAllListeners();
+
                 //EnableRaycast(false);
                 //Toggle();
 
                 //弹窗
-                Debug.Log("operation");
+                    Debug.Log("operation");
                 //移除订单
-                ShopInfo.Instance.CurrentHandleOrder = order;
-                UIManager.Instance.TogglePopUI(PopType.switchModal);
-            });
-            buttonImage.sprite = emojiSprite;
-            if(plate!=null)
+                    ShopInfo.Instance.CurrentHandleOrder = order;
+                    UIManager.Instance.TogglePopUI(PopType.switchModal);
+                });
+
+                Toggle();
+            }
+        }
+
+        public override void Hide()
+        {
+            base.Hide();
+
+            //endOvercall.RemoveAllListeners();
+
+            if (autoHide)
             {
-                plate.enabled = order.havePlate;
+                ShopInfo.Instance.AddMoney(order);      //自动关闭就直接加钱
+                return;
             }
 
-            Toggle();
+            //if (order.customer.Served)           //切换到打钩的图片
+            //{
+            //    autoHide = true;
+
+            //    plate.gameObject.SetActive(false);
+            //    switchObj.SetActive(true);
+
+            //    endOvercall.AddListener(() => { base.Show(); });
+
+            //    button.OnClick.RemoveAllListeners();
+            //    button.OnClick.AddListener(() =>
+            //    {
+            //        Hide();
+            //        //ShopInfo.Instance.AddMoney(order);
+
+            //    });
+            //}
+            //else
+            {
+                EnableRaycast(false);
+
+                if (pulse)
+                {
+                    pulse.enabled = false;
+                }
+                if (secondPulse)
+                {
+                    secondPulse.enabled = false;
+                }
+            }
         }
-    }
 
-    public override void Hide()
-    {
-        base.Hide();
-        
-        EnableRaycast(false);
-
-        if (pulse)
+        public override void Show()
         {
-            pulse.enabled = false;
+            base.Show();
         }
-    }
 
-
-    Order order;
-    bool entered = false;
-    protected void Update()
-    {
-        if (!entered && order != null && (order.staff != null || order.orderFinished||order.customer.Served))//被系统分配,或者顾客提前走人,或者玩家手动结束
+        public override void ToggleCanvas(bool en)      //切换动画
         {
-            entered = true;
-            TryHide();
+            base.ToggleCanvas(en);
+
         }
-    }
 
-    // 对象池调用
-    public void OnDisable()
-    {
-        order = null;
-        entered = false;
-    }
+        Order order;
+        bool entered = false;
+        protected void Update()
+        {
+            if (!entered && order != null && (order.staff != null || order.orderFinished || order.customer.Served))//被系统分配,或者顾客提前走人,或者玩家手动结束
+            {
+                entered = true;
 
+                if (order.customer.Served)           //切换到打钩的图片
+                {
+                    autoHide = true;
+                    if (autoHide && autoHideTime > 0)
+                    {
+                        StartCoroutine(CoroutineHide());
+                    }
+
+                    if (secondPulse)            //切换动画,还是单独写吧,省的手动去setactive了
+                    {
+                        pulse.RemainingTime = 0;        //立即重置
+                        secondPulse.enabled = true;
+                    }
+                    if (pulse)
+                    {
+                        pulse.RemainingTime = 0;
+                        pulse.enabled = false;
+                    }
+
+                    plate.gameObject.SetActive(false);
+                    switchObj.SetActive(true);
+
+                    button.OnClick.RemoveAllListeners();
+                    button.OnClick.AddListener(() =>
+                    {
+                        Hide();
+                        button.OnClick.RemoveAllListeners();
+                    });
+                }
+                else
+                {
+                    TryHide();
+                }
+            }
+        }
+
+        // 对象池调用
+        public void OnDisable()
+        {
+            order = null;
+            entered = false;
+        }
+
+    }
 }

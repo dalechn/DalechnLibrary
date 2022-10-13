@@ -4,6 +4,7 @@ using UnityEngine;
 using BehaviorDesigner.Runtime.Tasks;
 using BehaviorDesigner.Runtime.Tasks.Movement;
 using BehaviorDesigner.Runtime;
+using MyShop;
 
 [TaskCategory("Shop")]
 public class ServeTheDishes : NavMeshMovement
@@ -22,7 +23,8 @@ public class ServeTheDishes : NavMeshMovement
     {
         //waitDuration = waitTime.Value;
 
-        staff = GetComponent<Staff>();
+        //staff = GetComponent<Staff>();
+        staff = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Staff;
     }
 
     public override TaskStatus OnUpdate()

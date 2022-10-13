@@ -5,7 +5,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using Lean.Gui;
 
-public class InventoryWindow : PopupWindow
+namespace MyShop
 {
 
+    public class InventoryWindow : PopupWindow
+    {
+
+    }
 }

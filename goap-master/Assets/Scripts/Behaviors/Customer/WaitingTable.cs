@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using BehaviorDesigner.Runtime.Tasks;
 using BehaviorDesigner.Runtime.Tasks.Movement;
+using MyShop;
 
-[TaskCategory("Shop")]
+    [TaskCategory("Shop")]
 public class WaitingTable : NavMeshMovement
 {
     protected Customer customer;
@@ -17,7 +18,9 @@ public class WaitingTable : NavMeshMovement
     public override void OnStart()
     {
         base.OnStart();
-        customer = GetComponent<Customer>();
+        //customer = GetComponent<Customer>();
+        customer = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Customer;
+
         //area = ShopInfo.Instance.GetFloor(areaName);
         area = RandomArea.areaDict[areaName.ToString()];
 

@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Lean.Gui;
-public class InfoWindow: PopupWindow
+namespace MyShop
 {
-    [Invector.vEditorToolbar("UI")]
-    public LeanButton closeBtn;
 
-    protected override void Start()
+    public class InfoWindow : PopupWindow
     {
-        base.Start();
+        [Invector.vEditorToolbar("UI")]
+        public LeanButton closeBtn;
 
-        closeBtn.OnClick.AddListener(() =>
+        protected override void Start()
         {
-            Hide();
-        });
-    }
+            base.Start();
 
+            closeBtn.OnClick.AddListener(() =>
+            {
+                Hide();
+            });
+        }
+
+    }
 }

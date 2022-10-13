@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
+using MyShop;
 
 [TaskCategory("Shop")]
 public class PasserBy : Seek
@@ -12,7 +13,7 @@ public class PasserBy : Seek
 
     public override void OnStart()
     {
-
+        customer = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Customer;
     }
 
     public override TaskStatus OnUpdate()

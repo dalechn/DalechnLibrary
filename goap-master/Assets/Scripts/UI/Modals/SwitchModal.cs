@@ -3,58 +3,62 @@ using System.Collections.Generic;
 using UnityEngine;
 using Lean.Gui;
 
-public class SwitchModal : PopupWindow      //这个不能继承PopupWidow ，因为要call base.hide()
+namespace MyShop
 {
-    [Invector.vEditorToolbar("UI")]
-    public LeanButton button;
-    public LeanButton xButton;
-    public LeanButton cancelButton;
 
-    private LeanButton[] buttonList;
-
-    protected override void Start()
+    public class SwitchModal : PopupWindow      //这个不能继承PopupWidow ，因为要call base.hide()
     {
-        base.Start();
+        [Invector.vEditorToolbar("UI")]
+        public LeanButton button;
+        public LeanButton xButton;
+        public LeanButton cancelButton;
 
-        buttonList = GetComponentsInChildren<LeanButton>();
+        private LeanButton[] buttonList;
 
-        button.OnClick.AddListener(() =>
+        protected override void Start()
         {
-            UIManager.Instance.TogglePopUI(PopType.modeFrame, true);
+            base.Start();
+
+            buttonList = GetComponentsInChildren<LeanButton>();
+
+            button.OnClick.AddListener(() =>
+            {
+                UIManager.Instance.TogglePopUI(PopType.modeFrame, true);
             //base.Hide();        //不toggle main
-            HideOnlySelf();
+                HideOnlySelf();
 
-        });
-        xButton.OnClick.AddListener(() =>
-        {
-            Hide();
-        });
-        cancelButton.OnClick.AddListener(() =>
-        {
+            });
+            xButton.OnClick.AddListener(() =>
+            {
+                Hide();
+            });
+            cancelButton.OnClick.AddListener(() =>
+            {
             //UIManager.Instance.TogglePop(ModalType.modeFrame, true);
-            Hide();
+                Hide();
 
-        });
-    }
-
-    public void EnableButton(bool en)
-    {
-        foreach (var val in buttonList)
-        {
-            val.enabled = en;
+            });
         }
+
+        public void EnableButton(bool en)
+        {
+            foreach (var val in buttonList)
+            {
+                val.enabled = en;
+            }
+        }
+
+        //public override void Show()
+        //{
+        //    base.Show();
+        //    UIManager.Instance.ToggleMainPop(false);
+        //}
+
+        //public override void Hide()
+        //{
+        //    base.Hide();
+
+        //    UIManager.Instance.ToggleMainPop(true);
+        //}
     }
-
-    //public override void Show()
-    //{
-    //    base.Show();
-    //    UIManager.Instance.ToggleMainPop(false);
-    //}
-
-    //public override void Hide()
-    //{
-    //    base.Hide();
-
-    //    UIManager.Instance.ToggleMainPop(true);
-    //}
 }
