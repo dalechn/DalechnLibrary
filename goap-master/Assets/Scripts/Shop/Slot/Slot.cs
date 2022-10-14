@@ -14,6 +14,7 @@ namespace MyShop
 
     public class Slot : MonoBehaviour
     {
+        public CircleUI ui;
         public List<GameObject> slotList;           //      插槽位置
         public List<GameObject> staffPositionList;      //服务员站的位置
 
@@ -32,6 +33,7 @@ namespace MyShop
             select = GetComponentInChildren<LeanSelectableByFinger>();
             translateAlong = GetComponentInChildren<LeanDragTranslateAlong>();
             multiHeld = GetComponentInChildren<LeanMultiHeld>();
+            ui = GetComponentInChildren<CircleUI>();
 
             if (translateAlong)
             {
@@ -42,12 +44,94 @@ namespace MyShop
             {
                 select.OnSelected.AddListener(OnLeanSelected);
             }
+
+            if (multiHeld)
+            {
+                //ToggleClick(true);
+                multiHeld.OnFingersDown.RemoveAllListeners();   //移除在编辑器注册的,我靠这样居然无法移除???
+                multiHeld.OnFingersDown.AddListener(OnMultiHeld);
+            }
+
+            if (ui)
+            {
+                //ui关闭的事件
+                ui.endOvercall.AddListener(() =>
+                {
+                    translateAlong.enabled = false;
+                    select.OnSelected.AddListener(OnLeanSelected);
+
+                    ShopInfo.Instance.TogglePerson(true, true);
+                });
+
+                ui.RegistEvent((index) =>
+                {
+                    switch (index)
+                    {
+                        case 0:
+                            ui.Hide();
+                            break;
+                        case 1:
+                            ResetPosition();
+                            //ui.Hide();
+                            break;
+                        case 2:
+                            Rotate();
+                            break;
+                        case 3:
+                            Recycle();
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+        }
+
+        public void ToggleClick(bool en)
+        {
+            if (!multiHeld)
+            {
+                return;
+            }
+            multiHeld.enabled = en;
+
+            //if (en)
+            //{
+            //    multiHeld.OnFingersDown.RemoveAllListeners();
+            //    multiHeld.OnFingersDown.AddListener(OnMultiHeld);
+            //}
+            //else
+            //{
+            //    multiHeld.OnFingersDown.RemoveAllListeners();
+            //}
+        }
+
+        public void Rotate()
+        {
+            transform.rotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0, 90, 0));
+        }
+
+
+        private Quaternion originRotation;
+        private Vector3 originPosition;
+
+        public void ResetPosition()
+        {
+            transform.position = originPosition;
+            transform.rotation = originRotation;
+        }
+
+        public void Recycle()
+        {
+            //回收
+            //UIManager.Instance.TogglePopUI(PopType.recycleModal);
+            Debug.Log("Recycle");
         }
 
         protected Dictionary<GameObject, float> canClickLastTimeMap = new Dictionary<GameObject, float>();
 
         //这应该叫节流?
-        public bool CanClick(GameObject key, float t = 0.5f)
+        protected bool CanClick(GameObject key, float t = 0.5f)
         {
             float now = Time.realtimeSinceStartup;
 
@@ -67,7 +151,6 @@ namespace MyShop
             return false;
         }
 
-        protected float startTime;
         protected virtual void OnLeanSelected(LeanSelect s)
         {
             const float waitDuration = 0.5f;
@@ -76,6 +159,21 @@ namespace MyShop
                 Dalechn.GameUtils.DampAnimation(gameObject, waitDuration);
             }
         }
+
+
+        protected virtual void OnMultiHeld(List<LeanFinger> f)
+        {
+            originRotation = transform.rotation;
+            originPosition = transform.position;
+
+            ui?.Show();
+            translateAlong.enabled = true;
+
+            select.OnSelected.RemoveListener(OnLeanSelected);
+
+            ShopInfo.Instance.TogglePerson(false, true);
+        }
+
 
         //public GameObject GetUsableSlot()
         //{
@@ -90,7 +188,7 @@ namespace MyShop
         //    return null;
         //}
 
-        //给家具用的时候获取的tag,给桌子的时候获取的是桌子上的食物
+        //给家具用的时候获取的tag的位置,给桌子的时候获取的是桌子上的食物的位置
         public Transform GetFoodPosition(GameObject obj)
         {
             int index = slotList.FindIndex(e => { return e == obj; });

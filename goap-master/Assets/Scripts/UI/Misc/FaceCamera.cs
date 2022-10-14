@@ -5,12 +5,19 @@ using UnityEngine;
 public class FaceCamera : MonoBehaviour
 {
     private Transform camTr;
+    private Canvas canvas;
     public bool isBack = false;
     public bool onlyY;
 
     void Start()
     {
         camTr = Camera.main.transform;
+
+        canvas = GetComponent<Canvas>();
+        if(canvas&&!canvas.worldCamera)
+        {
+            canvas.worldCamera = Camera.main;
+        }
     }
 
     private void Update()

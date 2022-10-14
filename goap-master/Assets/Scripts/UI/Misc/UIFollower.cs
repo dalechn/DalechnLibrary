@@ -6,6 +6,7 @@ public class UIFollower : MonoBehaviour
 {
     public Transform target;
     public bool worldSpace;
+    public RectTransform parentTr;
 
     private RectTransform tr;
     private Transform camTr;
@@ -26,8 +27,13 @@ public class UIFollower : MonoBehaviour
         }
         else
         {
-            Vector2 head = RectTransformUtility.WorldToScreenPoint(Camera.main, target.position);
-            tr.position = head;
+            //Vector2 head = RectTransformUtility.WorldToScreenPoint(Camera.main, target.position);
+            //tr.position = head;
+
+            Vector2 mScreenPos = Camera.main.WorldToScreenPoint(target.position);
+            Vector2 mRectPos;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(parentTr, mScreenPos, null, out mRectPos);
+            tr.localPosition = mRectPos ;
         }
 
     }

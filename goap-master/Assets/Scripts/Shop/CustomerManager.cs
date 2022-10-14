@@ -123,10 +123,12 @@ namespace MyShop
             {
                 return rightPosDict[customer];
             }
-            else
+            else if (leftWaitCustomer.Exists(e => { return e == customer; }))
             {
                 return leftPosDict[customer];
             }
+
+            return midPoint.position;       //防止还没进入判断圈子的时候给的位置
         }
 
         public void StartGen(float genRate)

@@ -41,24 +41,23 @@ namespace MyShop
         //private static int orderID = 0;
 
         // 每个家具/桌子start的时候会向这里注册
-        //public Dictionary<string, Slot> furnitureDict = new Dictionary<string, Slot>();
         //public List<Slot> tableList = new List<Slot>();
         //public List<Slot> gameList = new List<Slot>();
 
-        private List<GameObject> gameSlotList = new List<GameObject>();
-        private Dictionary<GameObject, Slot> tableSlotDict = new Dictionary<GameObject, Slot>();
-        private Dictionary<string, Slot> furnitureSlotDict = new Dictionary<string, Slot>();
+        //private Dictionary<GameObject, Slot> gameSlotList = new Dictionary<GameObject, Slot>();
+        //private Dictionary<GameObject, Slot> tableSlotDict = new Dictionary<GameObject, Slot>();
+        //private Dictionary<string, Slot> furnitureSlotDict = new Dictionary<string, Slot>();
 
         public CustomerManager customerManager;
         public StaffManager staffManager;
         //public OrderManager orderManager;
+        public SlotManager slotManager;
         public Score currentScore;
-
 
         public OrderState orderState;
         public Queue<Order> orderQueue = new Queue<Order>();
 
-        public LeanPlane plane;
+        public LeanPlane plane;         //家具拖拽时候的平面
 
         public int CurrentWaitNumber { get { return customerManager.leftWaitCustomer.Count + customerManager.rightWaitCustomer.Count; } }     //当前等待的人数
         public Order CurrentHandleOrder { get; set; }   //当前手动处理的订单,由handle msg发出
@@ -127,6 +126,7 @@ namespace MyShop
                 val.tagPosition.gameObject.SetActive(!canBeAssigned);
             }
 
+            //当前手动操作的顾客显示outline
             CurrentHandleOrder.customer.ToggleOutline(!canBeAssigned);
 
             //手动结束订单
@@ -135,15 +135,18 @@ namespace MyShop
                 CurrentHandleOrder.cookingScore = int.MaxValue;     //直接拉满,,,
                 FinishOrder(CurrentHandleOrder, true, false);
                 TogglePerson(true, false);
+                ToggleFurnitureEvent(true);
 
                 CurrentHandleOrder = null;
 
                 return;
             }
 
+            // 打开/关闭frame(关闭是中途结束)
             if (CurrentHandleOrder.staff == null)        //一定要确保没被系统分配过
             {
                 TogglePerson(canBeAssigned, false);
+                ToggleFurnitureEvent(canBeAssigned);
 
                 CurrentHandleOrder.canBeAssigned = canBeAssigned;
 
@@ -181,7 +184,7 @@ namespace MyShop
             {
                 FoodTem tem2 = FoodTem.Tem(val);
 
-                if (furnitureSlotDict.TryGetValue(tem2.NeedFurniture, out Slot furniture))
+                if (slotManager.furnitureSlotDict.TryGetValue(tem2.NeedFurniture, out Slot furniture))
                 {
                     Food food = new Food();
                     food.foodPosition = furniture.transform;
@@ -194,7 +197,7 @@ namespace MyShop
                 }
             }
 
-            Slot slot = tableSlotDict[table];
+            Slot slot = slotManager.tableSlotDict[table];
             Transform pos = slot.GetUsableStaffPosition();
             order.staffPosition = pos;
             order.tableFoodPosition = slot.GetFoodPosition(pos.gameObject);
@@ -210,37 +213,38 @@ namespace MyShop
 
         public void RegistSlot(string objName, Slot table, RegistName registName)
         {
-            switch (registName)
-            {
-                case RegistName.Table:
-                    {
-                        //tableList.Add(table);
-                        foreach (var val in table.slotList)
-                        {
-                            tableSlotDict.Add(val, table);
-                        }
-                    }
-                    break;
+            slotManager.RegistSlot(objName, table, registName);
+            //switch (registName)
+            //{
+            //    case RegistName.Table:
+            //        {
+            //            tableList.Add(table);
+            //            foreach (var val in table.slotList)
+            //            {
+            //                tableSlotDict.Add(val, table);
+            //            }
+            //        }
+            //        break;
 
-                case RegistName.Furniture:
-                    {
-                        //furnitureDict.Add(objName, table);
-                        furnitureSlotDict.Add(objName, table);
-                    }
-                    break;
+            //    case RegistName.Furniture:
+            //        {
+            //            //furnitureDict.Add(objName, table);
+            //            furnitureSlotDict.Add(objName, table);
+            //        }
+            //        break;
 
-                case RegistName.Game:
-                    {
-                        //gameList.Add(table);
-                        foreach (var val in table.slotList)
-                        {
-                            gameSlotList.Add(val);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
+            //    case RegistName.Game:
+            //        {
+            //            gameList.Add(table);
+            //            foreach (var val in table.slotList)
+            //            {
+            //                gameSlotList.Add(val, table);
+            //            }
+            //        }
+            //        break;
+            //    default:
+            //        break;
+            //}
         }
 
         public void RegistStaff(Staff staff)
@@ -250,41 +254,44 @@ namespace MyShop
 
         public GameObject GetUeableGame()
         {
-            List<GameObject> usableList = new List<GameObject>();
-            foreach (var val in gameSlotList)
-            {
-                if (val.activeInHierarchy)
-                {
-                    usableList.Add(val);
-                }
-            }
-            if (usableList.Count > 0)
-            {
-                int index = UnityEngine.Random.Range(0, usableList.Count);
+            return slotManager.GetUeableGame();
 
-                return usableList[index];
-            }
-            return null;
+            //List<GameObject> usableList = new List<GameObject>();
+            //foreach (var val in gameSlotList)
+            //{
+            //    if (val.Key.activeInHierarchy)
+            //    {
+            //        usableList.Add(val.Key);
+            //    }
+            //}
+            //if (usableList.Count > 0)
+            //{
+            //    int index = UnityEngine.Random.Range(0, usableList.Count);
+
+            //    return usableList[index];
+            //}
+            //return null;
         }
 
         public GameObject GetUeableTable()
         {
-            List<GameObject> usableList = new List<GameObject>();
+            return slotManager.GetUeableTable();
+            //List<GameObject> usableList = new List<GameObject>();
 
-            foreach (var val in tableSlotDict)
-            {
-                if (val.Key.activeInHierarchy)
-                {
-                    usableList.Add(val.Key);
-                }
-            }
-            if (usableList.Count > 0)
-            {
-                int index = UnityEngine.Random.Range(0, usableList.Count);
+            //foreach (var val in tableSlotDict)
+            //{
+            //    if (val.Key.activeInHierarchy)
+            //    {
+            //        usableList.Add(val.Key);
+            //    }
+            //}
+            //if (usableList.Count > 0)
+            //{
+            //    int index = UnityEngine.Random.Range(0, usableList.Count);
 
-                return usableList[index];
-            }
-            return null;
+            //    return usableList[index];
+            //}
+            //return null;
         }
 
         public bool WillCustomerInto(float needScore)
@@ -314,15 +321,23 @@ namespace MyShop
             customerManager.ToggleCustomer(en, all);
         }
 
-        //public void ToggleStaff(bool en)
-        //{
-        //    staffManager.ToggleStaff(en);
-        //}
+        public void ToggleFurnitureEvent(bool en)
+        {
+            slotManager.ToggleFurnitureEvent(en);
+            //foreach (var val in gameList)
+            //{
+            //    val.ToggleClick(en);
+            //}
+            //foreach (var val in tableList)
+            //{
+            //    val.ToggleClick(en);
+            //}
+            //foreach (var val in furnitureSlotDict)
+            //{
+            //    val.Value.ToggleClick(en);
+            //}
+        }
 
-        //public void ToggleCustomer(bool en,bool all)
-        //{
-        //    customerManager.ToggleCustomer(en,all);
-        //}
 
         void Update()
         {

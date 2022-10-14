@@ -6,7 +6,7 @@ using UObject = UnityEngine.Object;
 
 public enum PopType
 {
-    switchModal, modeFrame, topFrame,
+    switchModal, modeFrame, topFrame,recycleModal,
     chatWindow, infoWindow, settingWindow, staffWindow
 }
 

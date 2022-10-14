@@ -24,7 +24,7 @@ public class WaitingTable : NavMeshMovement
         //area = ShopInfo.Instance.GetFloor(areaName);
         area = RandomArea.areaDict[areaName.ToString()];
 
-        customer.WaitingTable();
+        customer.WaitingTable();            //还没进入判断圈子的时候用的是customerManager 的midpoint
 
         pos= ShopInfo.Instance.GetWaitingPoint(customer);
 
