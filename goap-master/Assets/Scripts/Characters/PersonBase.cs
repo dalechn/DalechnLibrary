@@ -39,16 +39,17 @@ namespace MyShop
 		protected NavMeshAgent ai;
 		protected SkeletonRendererCustomMaterials customMaterials;
 
-		protected CharacterState previousState, currentState;
+		protected SharedPersonBase sharedPersonBase = new SharedPersonBase();           //为行为树添加引用
+		public MeshRenderer mesh { get; protected set; }
 
-		protected SharedPersonBase sharedPersonBase = new SharedPersonBase();
+		protected CharacterState previousState, currentState;
 
 		protected virtual void Awake()
 		{
 			sharedPersonBase.Value = this;
 
 			behaviorTree = GetComponent<BehaviorTree>();
-			behaviorTree.SetVariableValue(GlobalConfig.SharedPersonBase, sharedPersonBase);     //为行为树添加引用
+			behaviorTree.SetVariableValue(GlobalConfig.SharedPersonBase, sharedPersonBase);     
 
 			ai = GetComponent<NavMeshAgent>();
 
@@ -64,6 +65,8 @@ namespace MyShop
 				}
 			}
 
+			mesh = animationHandle.skeletonAnimation.GetComponent<MeshRenderer>();
+
 		}
 
 		protected virtual void Start()
@@ -78,7 +81,6 @@ namespace MyShop
 
 		public void TogglePerson(bool en)
 		{
-			MeshRenderer mesh = animationHandle.skeletonAnimation.GetComponent<MeshRenderer>();
 			mesh.enabled = en;
 		}
 

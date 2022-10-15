@@ -14,14 +14,37 @@ namespace MyShop
         public LeanButton[] imageArray;
         public float radius = 300;
 
+        public Lean.Transition.LeanManualAnimation ani;     //loading的时间要和multiheld一致
+
         //protected Slot target;
 
         protected override void Start()
         {
             base.Start();
+            if (ani)
+                ani.transform.localScale = Vector3.zero;
 
             //target = GetComponentInParent<Slot>();
         }
+
+
+        public void ToggleLoading(bool en)
+        {
+            if(ani)
+            {
+                if (en)
+                {
+                    ani.transform.localScale = Vector3.one;
+                    ani.BeginTransitions();
+                }
+                else
+                {
+                    ani.transform.localScale = Vector3.zero;
+                    ani.StopTransitions();
+                }
+            }
+        }
+
 
         public override void Show()
         {

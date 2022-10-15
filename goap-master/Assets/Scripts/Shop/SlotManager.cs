@@ -7,7 +7,7 @@ namespace MyShop
 
     public class SlotManager : MonoBehaviour
     {
-
+        //public MeshRenderer floor;
         // 每个家具/桌子start的时候会向这里注册
         //public Dictionary<string, Slot> furnitureDict = new Dictionary<string, Slot>();
         public List<Slot> tableList = new List<Slot>();

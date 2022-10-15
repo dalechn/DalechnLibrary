@@ -39,7 +39,6 @@ public class TakeOrder : NavMeshMovement
         {
             staff.Emoji(false);
 
-
             return TaskStatus.Success;
         }
 

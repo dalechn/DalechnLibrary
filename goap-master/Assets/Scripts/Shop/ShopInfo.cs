@@ -1,4 +1,5 @@
 using Lean.Common;
+using PathologicalGames;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,19 +36,12 @@ namespace MyShop
         hotdogBurger, hotdogBurgerpoPcorn
     }
 
-
+    //模式1:手动处理订单模式(handle mode)
+    //模式2:装饰小店模式(decoration mode)
+    //模式3:装修模式(fix mode)
+    //模式4:对话模式(dialog mode)
     public class ShopInfo : MonoBehaviour
     {
-        //private static int orderID = 0;
-
-        // 每个家具/桌子start的时候会向这里注册
-        //public List<Slot> tableList = new List<Slot>();
-        //public List<Slot> gameList = new List<Slot>();
-
-        //private Dictionary<GameObject, Slot> gameSlotList = new Dictionary<GameObject, Slot>();
-        //private Dictionary<GameObject, Slot> tableSlotDict = new Dictionary<GameObject, Slot>();
-        //private Dictionary<string, Slot> furnitureSlotDict = new Dictionary<string, Slot>();
-
         public CustomerManager customerManager;
         public StaffManager staffManager;
         //public OrderManager orderManager;
@@ -70,27 +64,10 @@ namespace MyShop
 
         void Start()
         {
-            //staffManager.idleEvent += (Staff staff) =>
-            //{
-            //    if (orderQueue.TryDequeue(out Order order))
-            //    {
-            //        if (order.canBeAssigned)//确保没被手动操作过
-            //        {
-            //            staffManager.StaffGetOrder(staff, order);
-
-            //        }
-            //    }
-            //};
-
             if (currentScore.genRate > 0)
             {
                 customerManager.StartGen(currentScore.genRate);
             }
-
-            //GenOrder("burger");
-            //GenOrder("burger");
-            //GenOrder("burger");
-            //GenOrder("burger");
         }
 
         public void FinishOrder(Order order, bool served, bool addMoney = true)
@@ -110,6 +87,7 @@ namespace MyShop
                     AddMoney(order);
                 }
             }
+            order.foodPrefabLocation.gameObject.SetActive(true);            //显示食物
         }
 
         //手动处理订单
@@ -167,6 +145,11 @@ namespace MyShop
             Debug.Log(orderState.totalPrice);
         }
 
+        public void CustomerLeave()
+        {
+
+        }
+
         public void CancelOrder(Order orderID)
         {
             staffManager.CancelOrder(orderID);
@@ -187,10 +170,10 @@ namespace MyShop
                 if (slotManager.furnitureSlotDict.TryGetValue(tem2.NeedFurniture, out Slot furniture))
                 {
                     Food food = new Food();
-                    food.foodPosition = furniture.transform;
-                    food.foodTime = tem2.Time;
-                    food.subFoodSpriteLocation = tem2.Location;
-                    food.tagPosition = furniture.GetFoodPosition(furniture.slotList[0]);
+                    food.foodPosition = furniture.GetUsableStaffPosition();     //获取做饭的时候站的位置
+                    food.foodTime = tem2.Time;                                              //每个小食物做饭的时间
+                    food.subFoodSpriteLocation = tem2.Location;                     //每个小食物loading的时间
+                    food.tagPosition = furniture.GetFoodPosition(furniture.slotList[0]);        // 手动操作的时候tag的位置
 
                     order.foodQueue.Enqueue(food);
                     order.foodList.Add(food);
@@ -199,12 +182,18 @@ namespace MyShop
 
             Slot slot = slotManager.tableSlotDict[table];
             Transform pos = slot.GetUsableStaffPosition();
-            order.staffPosition = pos;
-            order.tableFoodPosition = slot.GetFoodPosition(pos.gameObject);
+            order.staffPosition = pos;                                                           //获取送餐的时候站的位置
 
-            order.foodSpriteLocation = tem.Location;
-            order.price = tem.Price;
-            order.havePlate = tem.HavePlate;
+            order.tableFoodPosition = slot.GetFoodPosition(table);     //桌子上食物的位置
+            //order.foodPrefabLocation = tem.PrefabLocation;     
+            order.foodPrefabLocation = PoolManager.Pools["FoodPool"].Spawn(tem.PrefabLocation);         //产生订单的同时直接生成prefab.
+            order.foodPrefabLocation.position = order.tableFoodPosition.position;
+            order.foodPrefabLocation.gameObject.SetActive(false);
+
+            order.foodSpriteLocation = tem.Location;                                            //服务员手里的最终的食物位置
+
+            order.price = tem.Price;                                                                    //订单价格
+            order.havePlate = tem.HavePlate;                                                        //图片是否有盘子
 
             orderQueue.Enqueue(order);
             //Debug.Log(orderQueue.Count);
@@ -214,37 +203,6 @@ namespace MyShop
         public void RegistSlot(string objName, Slot table, RegistName registName)
         {
             slotManager.RegistSlot(objName, table, registName);
-            //switch (registName)
-            //{
-            //    case RegistName.Table:
-            //        {
-            //            tableList.Add(table);
-            //            foreach (var val in table.slotList)
-            //            {
-            //                tableSlotDict.Add(val, table);
-            //            }
-            //        }
-            //        break;
-
-            //    case RegistName.Furniture:
-            //        {
-            //            //furnitureDict.Add(objName, table);
-            //            furnitureSlotDict.Add(objName, table);
-            //        }
-            //        break;
-
-            //    case RegistName.Game:
-            //        {
-            //            gameList.Add(table);
-            //            foreach (var val in table.slotList)
-            //            {
-            //                gameSlotList.Add(val, table);
-            //            }
-            //        }
-            //        break;
-            //    default:
-            //        break;
-            //}
         }
 
         public void RegistStaff(Staff staff)
@@ -255,43 +213,11 @@ namespace MyShop
         public GameObject GetUeableGame()
         {
             return slotManager.GetUeableGame();
-
-            //List<GameObject> usableList = new List<GameObject>();
-            //foreach (var val in gameSlotList)
-            //{
-            //    if (val.Key.activeInHierarchy)
-            //    {
-            //        usableList.Add(val.Key);
-            //    }
-            //}
-            //if (usableList.Count > 0)
-            //{
-            //    int index = UnityEngine.Random.Range(0, usableList.Count);
-
-            //    return usableList[index];
-            //}
-            //return null;
         }
 
         public GameObject GetUeableTable()
         {
             return slotManager.GetUeableTable();
-            //List<GameObject> usableList = new List<GameObject>();
-
-            //foreach (var val in tableSlotDict)
-            //{
-            //    if (val.Key.activeInHierarchy)
-            //    {
-            //        usableList.Add(val.Key);
-            //    }
-            //}
-            //if (usableList.Count > 0)
-            //{
-            //    int index = UnityEngine.Random.Range(0, usableList.Count);
-
-            //    return usableList[index];
-            //}
-            //return null;
         }
 
         public bool WillCustomerInto(float needScore)
@@ -324,18 +250,6 @@ namespace MyShop
         public void ToggleFurnitureEvent(bool en)
         {
             slotManager.ToggleFurnitureEvent(en);
-            //foreach (var val in gameList)
-            //{
-            //    val.ToggleClick(en);
-            //}
-            //foreach (var val in tableList)
-            //{
-            //    val.ToggleClick(en);
-            //}
-            //foreach (var val in furnitureSlotDict)
-            //{
-            //    val.Value.ToggleClick(en);
-            //}
         }
 
 

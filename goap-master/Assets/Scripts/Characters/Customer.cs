@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MyShop;
+using PathologicalGames;
 
 namespace MyShop
 {
@@ -124,6 +125,7 @@ namespace MyShop
             {
                 MessageCenter.Instance.CloseEmoji(gameObject);                //havefun结束关闭表情,不写这个的话为什么havefun的表情会不关闭?奇怪的bug,bug消失了,,
             }
+
             if (!judged)//只能判断一次,因为havefun和leaveshop都会判断这个
             {
                 Emoji(emojiType);
@@ -134,6 +136,7 @@ namespace MyShop
             {
                 ShopInfo.Instance.CancelOrder(currentOrder);
             }
+
             //统计准备进店 点餐的顾客
             if (currentSite == null && currentOrder == null)
             {
@@ -152,11 +155,16 @@ namespace MyShop
                 currentGame.SetActive(true);
                 currentGame = null;
             }
+
             if (currentOrder != null)
             {
+                //currentOrder.foodPrefabLocation.gameObject.SetActive(false);
+                PoolManager.Pools["FoodPool"].Despawn(currentOrder.foodPrefabLocation);        
+
                 currentOrder.orderFinished = true;         //需要标记订单已被取消,无法处理!!!
                 currentOrder = null;      //把订单清除放到reset 不然会出现一些奇怪的bug?比如emoji判断需要订单,不行! 会导致强行取消订单的问题!!!
             }
+
             Unused = true;
         }
 

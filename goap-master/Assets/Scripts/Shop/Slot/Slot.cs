@@ -3,6 +3,9 @@ using Lean.Touch;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UI;
+using Lean.Transition;
 
 namespace MyShop
 {
@@ -14,17 +17,21 @@ namespace MyShop
 
     public class Slot : MonoBehaviour
     {
-        public CircleUI ui;
         public List<GameObject> slotList;           //      插槽位置
         public List<GameObject> staffPositionList;      //服务员站的位置
 
         public List<GameObject> foodList;           // 标记和 桌子上的食物食物要和每一个插槽一一对应
 
         public RegistName registName;
+        public GameObject dampObj;
 
         protected LeanSelectableByFinger select;
         protected LeanDragTranslateAlong translateAlong;
         protected LeanMultiHeld multiHeld;
+        protected NavMeshObstacle obs;
+
+        protected RingCtrl ring;
+        protected CircleUI ui;
 
         protected virtual void Start()
         {
@@ -34,6 +41,8 @@ namespace MyShop
             translateAlong = GetComponentInChildren<LeanDragTranslateAlong>();
             multiHeld = GetComponentInChildren<LeanMultiHeld>();
             ui = GetComponentInChildren<CircleUI>();
+            ring = GetComponentInChildren<RingCtrl>();
+            obs = GetComponent<NavMeshObstacle>();
 
             if (translateAlong)
             {
@@ -42,7 +51,9 @@ namespace MyShop
 
             if (select)
             {
+                //select.enabled = true;          //不能toggle enable 会导致 鼠标抬起无法拖拽了
                 select.OnSelected.AddListener(OnLeanSelected);
+                select.OnDeselected.AddListener(OnLeanDeSelected);
             }
 
             if (multiHeld)
@@ -57,10 +68,15 @@ namespace MyShop
                 //ui关闭的事件
                 ui.endOvercall.AddListener(() =>
                 {
+                    obs.enabled = true;
+                    ring.Toggle(false);
                     translateAlong.enabled = false;
                     select.OnSelected.AddListener(OnLeanSelected);
+                    select.OnDeselected.AddListener(OnLeanDeSelected);
+                    //select.enabled = true;
 
                     ShopInfo.Instance.TogglePerson(true, true);
+                    UIManager.Instance.ToggleMainPop(true);
                 });
 
                 ui.RegistEvent((index) =>
@@ -68,7 +84,10 @@ namespace MyShop
                     switch (index)
                     {
                         case 0:
-                            ui.Hide();
+                            if(ring.CanPlace)
+                            {
+                                ui.Hide();
+                            }
                             break;
                         case 1:
                             ResetPosition();
@@ -154,12 +173,21 @@ namespace MyShop
         protected virtual void OnLeanSelected(LeanSelect s)
         {
             const float waitDuration = 0.5f;
-            if (CanClick(gameObject, waitDuration))
+            if (dampObj&&CanClick(dampObj, waitDuration))
             {
-                Dalechn.GameUtils.DampAnimation(gameObject, waitDuration);
+                Dalechn.GameUtils.DampAnimation(dampObj, waitDuration);
+            }
+            if(multiHeld.enabled)           //手动处理订单模式会开关multiheld的事件,所以根据他判断是否开启loading就行
+            {
+                ui.ToggleLoading(true);
             }
         }
 
+        protected virtual void OnLeanDeSelected(LeanSelect s)
+        {
+            if (multiHeld.enabled)
+                ui.ToggleLoading(false);
+        }
 
         protected virtual void OnMultiHeld(List<LeanFinger> f)
         {
@@ -169,9 +197,18 @@ namespace MyShop
             ui?.Show();
             translateAlong.enabled = true;
 
+
             select.OnSelected.RemoveListener(OnLeanSelected);
+            select.OnDeselected.RemoveListener(OnLeanDeSelected);
+            //select.enabled = false;
 
             ShopInfo.Instance.TogglePerson(false, true);
+            UIManager.Instance.ToggleMainPop(false);
+
+            obs.enabled = false;
+            //ring.enabled = true;
+            ring.Toggle(true);
+
         }
 
 
@@ -188,8 +225,8 @@ namespace MyShop
         //    return null;
         //}
 
-        //给家具用的时候获取的tag的位置,给桌子的时候获取的是桌子上的食物的位置
-        public Transform GetFoodPosition(GameObject obj)
+        //给furniture用的时候获取的tag的位置,给table的时候获取的是桌子上的食物的位置
+        public virtual Transform GetFoodPosition(GameObject obj)
         {
             int index = slotList.FindIndex(e => { return e == obj; });
 
@@ -212,7 +249,7 @@ namespace MyShop
                 }
             }
 
-            // 如果没有设置员工位置
+            // 如果没有设置staffPositionList,就直接取slot的值(game和furniture)
             foreach (var val in slotList)
             {
                 if (val.activeInHierarchy)

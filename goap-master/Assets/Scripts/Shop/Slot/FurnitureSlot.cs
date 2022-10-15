@@ -23,11 +23,12 @@ namespace MyShop
         {
             //player.Begin();
 
-            const float waitDuration = 0.5f;
-            if (CanClick(gameObject, waitDuration))
-            {
-                Dalechn.GameUtils.DampAnimation(gameObject, waitDuration);
-            }
+            //const float waitDuration = 0.5f;
+            //if (CanClick(gameObject, waitDuration))
+            //{
+            //    Dalechn.GameUtils.DampAnimation(gameObject, waitDuration);
+            //}
+            base.OnLeanSelected(s);
 
             if (foodList[0].activeInHierarchy)
             {
@@ -37,6 +38,18 @@ namespace MyShop
                 foodList[0].SetActive(false);
             }
         }
+
+        //public Transform GetTagPosition(GameObject obj)
+        //{
+        //    int index = slotList.FindIndex(e => { return e == obj; });
+
+        //    if (index != -1)
+        //    {
+        //        return foodList[index].transform;
+        //    }
+
+        //    return null;
+        //}
 
 
         // Update is called once per frame

@@ -35,18 +35,20 @@ namespace MyShop
 
         }
 
+        bool hideMode = false;          //是否进入其他模式(需要隐藏customer的)
         public void ToggleCustomer(bool en, bool toggleAll)
         {
             foreach (var val in customerList)
             {
                 if (toggleAll)
                 {
-                    val.TogglePerson(en);
+                    hideMode = !en;
+                    val.TogglePerson(en);           //关全部
                     MessageCenter.Instance.ToggleAllCanvas(val.gameObject, en);
                 }
                 else
                 {
-                    //val.ToggleOutline(!en);
+                    //val.ToggleOutline(!en);       //只显示outline
                     MessageCenter.Instance.ToggleHandleCanvas(val.gameObject, en);
                 }
             }
@@ -156,6 +158,15 @@ namespace MyShop
             if (customerTr)
             {
                 Customer customer = customerTr.GetComponent<Customer>();
+
+                if (hideMode)
+                {
+                    customer.TogglePerson(false);
+                    Dalechn.bl_UpdateManager.RunActionOnce("", Time.deltaTime, () =>//start注册完了之后再发消息,不然可能会不执行?
+                    {          
+                        MessageCenter.Instance.ToggleAllCanvas(customer.gameObject, false);
+                    });
+                }
 
                 customerList.Add(customer);
 

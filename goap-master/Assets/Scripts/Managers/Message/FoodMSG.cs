@@ -1,3 +1,4 @@
+using Lean.Transition;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,10 +35,11 @@ namespace MyShop
 
             if (imageSlider)
             {
-                Dalechn.bl_UpdateManager.RunAction("", order.currentFood.foodTime, (t, r) =>
-                {
-                    imageSlider.fillAmount = t;
-                });
+                //Dalechn.bl_UpdateManager.RunAction("", order.currentFood.foodTime, (t, r) =>
+                //{
+                //    imageSlider.fillAmount = t;
+                //});
+                imageSlider.fillAmountTransition(0,0).fillAmountTransition(1.0f, order.currentFood.foodTime,LeanEase.Linear);
             }
 
             Toggle();
