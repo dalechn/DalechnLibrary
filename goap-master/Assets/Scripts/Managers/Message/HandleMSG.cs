@@ -137,6 +137,7 @@ namespace MyShop
         protected void Update()
         {
             if (!entered && order != null && (order.staff != null || order.orderFinished || order.customer.Served))//被系统分配,或者顾客提前走人,或者玩家手动结束
+            //if (!entered && order != null && (order.state == OrderState.BySystem|| order.state == OrderState.Finished || order.customer.Served))
             {
                 entered = true;
 

@@ -26,7 +26,7 @@ public class WaitingTable2 : NavMeshMovement    //±ﬂemo±ﬂ∂ØÃ¨…Ë÷√Œª÷√,,,
     {
         base.OnStart();
         //customer = GetComponent<Customer>();
-        customer = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Customer;
+        customer = Owner.GetVariable(GlobalConfig.SharedPerson).GetValue() as Customer;
 
         // Remember the start time.
         startTime = Time.time;

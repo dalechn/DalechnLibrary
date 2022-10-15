@@ -95,26 +95,9 @@ namespace MyShop
                 {
                     int index = order.foodList.FindIndex(e => { return e.tagPosition == tr; });
 
-                    slotMask[index].fillAmountTransition(0, 0).fillAmountTransition(1.0f, order.foodList[index].foodTime, LeanEase.Linear).JoinTransition(). EventTransition(() => {
+                    //slotMask[index].fillAmount = 0;
+                    //slotMask[index]./*fillAmountTransition(0, 0).*/fillAmountTransition(1.0f, order.foodList[index].foodTime, LeanEase.Linear).JoinTransition(). EventTransition(() => {
 
-                        currentTimes++;
-                        if (currentTimes == order.foodList.Count)
-                        {
-                            Hide();
-
-                            chese.enabled = false;
-                            ShopInfo.Instance.HandleOrder(true, true);      //订单结束
-
-                            currentTimes = 0;   //重置点击次数
-                        }
-                    });
-
-                    ////int times = currentTimes;
-                    //Dalechn.bl_UpdateManager.RunAction("", order.foodList[index].foodTime, (t, r) =>
-                    //{
-                    //    slotMask[index].fillAmount = t;
-                    //}, () =>
-                    //{
                     //    currentTimes++;
                     //    if (currentTimes == order.foodList.Count)
                     //    {
@@ -126,6 +109,24 @@ namespace MyShop
                     //        currentTimes = 0;   //重置点击次数
                     //    }
                     //});
+
+                    //int times = currentTimes;
+                    Dalechn.bl_UpdateManager.RunAction("", order.foodList[index].foodTime, (t, r) =>
+                    {
+                        slotMask[index].fillAmount = t;
+                    }, () =>
+                    {
+                        currentTimes++;
+                        if (currentTimes == order.foodList.Count)
+                        {
+                            Hide();
+
+                            chese.enabled = false;
+                            ShopInfo.Instance.HandleOrder(true, true);      //订单结束
+
+                            currentTimes = 0;   //重置点击次数
+                        }
+                    });
                 }
             }
         }

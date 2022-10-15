@@ -25,6 +25,20 @@ namespace MyShop
             }
         }
 
+
+        //public void Reclocking()    //重新计时
+        //{
+        //    imageSlider.fillAmountTransition(0, 0);
+        //    StartAutoHide();
+        //}
+
+        public override void Show()
+        {
+            StartAutoHide();            //每次show的时候都会重新计时
+
+            base.Show();
+        }
+
         public void HandleMessage(MessageType emoji, Order order)
         {
             autoHideTime = order.currentFood.foodTime;
@@ -35,14 +49,17 @@ namespace MyShop
 
             if (imageSlider)
             {
-                //Dalechn.bl_UpdateManager.RunAction("", order.currentFood.foodTime, (t, r) =>
-                //{
-                //    imageSlider.fillAmount = t;
-                //});
-                imageSlider.fillAmountTransition(0,0).fillAmountTransition(1.0f, order.currentFood.foodTime,LeanEase.Linear);
+                imageSlider.fillAmount = 0;
+                Dalechn.bl_UpdateManager.s_Instance.RemoveAction(gameObject);
+                Dalechn.bl_UpdateManager.RunAction(gameObject, order.currentFood.foodTime, (t, r) =>
+                {
+                    imageSlider.fillAmount = t;
+                });
+                //imageSlider.fillAmount = 0;
+                //imageSlider./*fillAmountTransition(0,0).*/fillAmountTransition(1.0f, order.currentFood.foodTime,LeanEase.Linear);
             }
 
-            Toggle();
+            Show();
         }
     }
 }

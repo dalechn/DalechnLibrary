@@ -17,7 +17,7 @@ public class TakeASeat : NavMeshMovement
         base.OnStart();
 
         //customer = GetComponent<Customer>();
-        customer = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Customer;
+        customer = Owner.GetVariable(GlobalConfig.SharedPerson).GetValue() as Customer;
 
         //first = true;
     }

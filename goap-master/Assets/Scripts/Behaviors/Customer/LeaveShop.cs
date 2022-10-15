@@ -28,7 +28,7 @@ public class LeaveShop: Seek
     {
         base.OnStart();
         //customer = GetComponent<Customer>();
-        customer = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Customer;
+        customer = Owner.GetVariable(GlobalConfig.SharedPerson).GetValue() as Customer;
 
 
         customer.LeaveShop(emojiType, cancelOrder);

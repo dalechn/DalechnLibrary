@@ -24,7 +24,7 @@ public class ServeTheDishes : NavMeshMovement
         //waitDuration = waitTime.Value;
 
         //staff = GetComponent<Staff>();
-        staff = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Staff;
+        staff = Owner.GetVariable(GlobalConfig.SharedPerson).GetValue() as Staff;
     }
 
     public override TaskStatus OnUpdate()

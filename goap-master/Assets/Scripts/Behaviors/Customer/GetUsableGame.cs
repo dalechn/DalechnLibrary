@@ -16,7 +16,7 @@ public class GetUsableGame : Conditional
         base.OnStart();
 
         //customer = GetComponent<Customer>();
-        customer = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Customer;
+        customer = Owner.GetVariable(GlobalConfig.SharedPerson).GetValue() as Customer;
     }
 
     public override TaskStatus OnUpdate()

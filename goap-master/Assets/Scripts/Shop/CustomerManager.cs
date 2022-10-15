@@ -114,7 +114,7 @@ namespace MyShop
 
         private Vector3 RandomCirclePosition(Vector3 pos)
         {
-            const int radius = 2;
+            const float radius = 1;           //随机的半径
             Vector3 dir = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized;
             return pos + dir * Random.Range(0, radius);
         }
@@ -137,7 +137,7 @@ namespace MyShop
         {
             // 延迟好像有问题???
             //InvokeRepeating("GenCustomer", Time.deltaTime, genRate);
-            InvokeRepeating("GenCustomer", 0, genRate);
+            InvokeRepeating("GenCustomer", 1.0f, genRate);
 
             foreach (var val in leftList)
             {
@@ -166,6 +166,10 @@ namespace MyShop
                     {          
                         MessageCenter.Instance.ToggleAllCanvas(customer.gameObject, false);
                     });
+                }
+                else
+                {
+                    customer.TogglePerson(true);           // 可能解决人物隐藏的问题 ?
                 }
 
                 customerList.Add(customer);
@@ -220,7 +224,7 @@ namespace MyShop
         private HashSet<Customer> destroyCustomerList = new HashSet<Customer>();
 
         const int recycledDistance = 5;
-        const int midDistance = 8;
+        const int midDistance = 12;
         void Update()
         {
             destroyCustomerList.Clear();

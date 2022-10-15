@@ -19,7 +19,7 @@ public class WaitingTable : NavMeshMovement
     {
         base.OnStart();
         //customer = GetComponent<Customer>();
-        customer = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Customer;
+        customer = Owner.GetVariable(GlobalConfig.SharedPerson).GetValue() as Customer;
 
         //area = ShopInfo.Instance.GetFloor(areaName);
         area = RandomArea.areaDict[areaName.ToString()];

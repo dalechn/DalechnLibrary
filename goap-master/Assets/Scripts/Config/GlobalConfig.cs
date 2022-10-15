@@ -7,7 +7,7 @@ public class GlobalConfig
     public const string CustomerPool = "CustomerPool";
     public const string FoodPool = "FoodPool";
     //public const string EmojiPool = "EmojiPool";
-    public const string SharedPersonBase = "SharedPersonBase";
+    public const string SharedPerson = "SharedPerson";
     //public const int MaxWaitNumber
     //public const int DistanceJudgeConst = 5;
 }

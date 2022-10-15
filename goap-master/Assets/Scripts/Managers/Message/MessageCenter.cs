@@ -136,11 +136,19 @@ namespace MyShop
             }
         }
 
+        public void CloseFood(GameObject person)
+        {
+            if (foodDict.TryGetValue(person, out FoodMSG e))
+            {
+                e.Hide();
+            }
+        }
+
         public void SendMessageByStaff(GameObject person, bool isText, Order order)
         {
             if (isText)
             {
-                Debug.Log(order.date);
+                //Debug.Log(order.date);
 
                 EmojiTem tem = EmojiTem.Tem(MessageType.OrderNameStaff.ToString());
                 //SendMessageText(person, MessageType.OrderNameStaff, order, tem.TextMSG);

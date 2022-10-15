@@ -33,20 +33,43 @@ namespace MyShop
         protected RingCtrl ring;
         protected CircleUI ui;
 
+        public bool InDecoration { get; set; }
+
+        //protected List<PersonBase> customerList;            //向桌子注册的顾客
+
+        //public void RegistCustomer(PersonBase p)
+        //{
+        //    customerList.Add(p);
+        //}
+
+        //public void RemoveCustomer(PersonBase p)
+        //{
+        //    customerList.Remove(p);
+        //}
+
         protected virtual void Start()
         {
             ShopInfo.Instance.RegistSlot(name, this, registName);        //要改,不是start就add
 
-            select = GetComponentInChildren<LeanSelectableByFinger>();
-            translateAlong = GetComponentInChildren<LeanDragTranslateAlong>();
-            multiHeld = GetComponentInChildren<LeanMultiHeld>();
+            select = gameObject.AddComponent<LeanSelectableByFinger>();
+            translateAlong = gameObject.AddComponent<LeanDragTranslateAlong>();
+            multiHeld = gameObject.AddComponent<LeanMultiHeld>();
+
             ui = GetComponentInChildren<CircleUI>();
+            obs = GetComponentInChildren<NavMeshObstacle>();
             ring = GetComponentInChildren<RingCtrl>();
-            obs = GetComponent<NavMeshObstacle>();
+
+            if (ring)
+            {
+                ring.box = GetComponentsInChildren<BoxCollider>();
+            }
 
             if (translateAlong)
             {
+                translateAlong.ScreenDepth.Conversion = LeanScreenDepth.ConversionType.PlaneIntercept;
                 translateAlong.ScreenDepth.Object = ShopInfo.Instance.plane;
+                translateAlong.Damping = 10;
+                translateAlong.enabled = false;
             }
 
             if (select)
@@ -58,16 +81,20 @@ namespace MyShop
 
             if (multiHeld)
             {
+                multiHeld.RequiredCount = 1;
+                multiHeld.MaximumMovement = 30;
                 //ToggleClick(true);
                 multiHeld.OnFingersDown.RemoveAllListeners();   //移除在编辑器注册的,我靠这样居然无法移除???
-                multiHeld.OnFingersDown.AddListener(OnMultiHeld);
+                multiHeld.OnFingersDown.AddListener(OnMultiHeld);       // UI开启的事件
             }
 
             if (ui)
             {
-                //ui关闭的事件
+                // UI关闭的事件
                 ui.endOvercall.AddListener(() =>
                 {
+                    InDecoration = false;
+
                     obs.enabled = true;
                     ring.Toggle(false);
                     translateAlong.enabled = false;
@@ -209,6 +236,7 @@ namespace MyShop
             //ring.enabled = true;
             ring.Toggle(true);
 
+            InDecoration = true;
         }
 
 

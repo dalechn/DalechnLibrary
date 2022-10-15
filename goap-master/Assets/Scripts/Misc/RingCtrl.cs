@@ -8,18 +8,33 @@ public class RingCtrl : MonoBehaviour
     private SpriteRenderer r;
     public LayerMask layer;
     public float radius = 3;
+    public string originLayerName;
+    public string enableLayerName; //开启物理判断的时候的layer
 
-    public BoxCollider box;
+    public BoxCollider[] box;       //由slot来初始化
 
     void Start()
     {
         r = GetComponent<SpriteRenderer>();
         //box = GetComponentInParent<BoxCollider>();
+        r.enabled = false;
     }
 
     public void Toggle(bool en)
     {
         r.enabled = en;
+        foreach (var val in box)
+        {
+            if (en)
+            {
+                val.gameObject.layer =LayerMask.NameToLayer( enableLayerName);
+            }
+            else
+            {
+                val.gameObject.layer = LayerMask.NameToLayer( originLayerName);
+            }
+        }
+
     }
 
     private float GetMaximumScale()
@@ -33,9 +48,10 @@ public class RingCtrl : MonoBehaviour
     public bool CheckSphere()
     {
         //int num = Physics.OverlapBoxNonAlloc(box.transform.TransformPoint( box.center), box.transform.TransformDirection( box.size / 2), c, box.transform.rotation, layer);     //这个的判断有点问题
-        int num = Physics.OverlapSphereNonAlloc(transform.position, radius, c, layer); //半径/2
-        //bool check = Physics.CheckSphere(transform.position, GetMaximumScale(), layer);
-        if (num > 0 && !(num == 1 && c[0] == box))
+        int num = Physics.OverlapSphereNonAlloc(transform.position, radius, c, layer);
+        //bool check = Physics.CheckSphere(transform.position, GetMaximumScale()/2, layer); //半径/2
+
+        if (num > 0)
         {
             r.material.color = Color.red;
             CanPlace = false;
@@ -60,10 +76,10 @@ public class RingCtrl : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (box)
-        {
-            Gizmos.DrawWireCube(box.transform.TransformPoint(box.center), box.transform.TransformDirection(box.size));
-        }
+        //if (box)
+        //{
+        //    Gizmos.DrawWireCube(box.transform.TransformPoint(box.center), box.transform.TransformDirection(box.size));
+        //}
         Gizmos.DrawSphere(transform.position, radius);
     }
 }

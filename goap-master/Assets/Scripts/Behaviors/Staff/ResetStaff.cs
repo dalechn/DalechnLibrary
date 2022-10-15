@@ -26,7 +26,7 @@ public class ResetStaff : Wait
     {
         base.OnStart();
         //staff = GetComponent<Staff>();
-        staff = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Staff;
+        staff = Owner.GetVariable(GlobalConfig.SharedPerson).GetValue() as Staff;
 
     }
 }

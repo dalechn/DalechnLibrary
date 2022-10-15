@@ -10,7 +10,7 @@ public class TakeOrder : NavMeshMovement
 {
     protected Staff staff;
 
-    private Vector3 currentPos;
+    private Transform currentPos;
     private bool haveFood;
 
     public override void OnStart()
@@ -18,14 +18,18 @@ public class TakeOrder : NavMeshMovement
         base.OnStart();
 
         //staff = GetComponent<Staff>();
-        staff = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Staff;
+        staff = Owner.GetVariable(GlobalConfig.SharedPerson).GetValue() as Staff;
 
         haveFood = staff.DequeFoodPosition(out currentPos);
+
+        Owner.SetVariableValue(StaffBTVal.CurrentFoodPos.ToString(),currentPos);
+
+        //SetDestination(currentPos.position);
     }
 
     public override TaskStatus OnUpdate()
     {
-        if (!staff.HaveOrder()|| !haveFood)
+        if (!staff.HaveOrder()|| !haveFood)     //强行被取消订单和小食物取完
         {
             //staff.OrderFinish();
 
@@ -34,7 +38,7 @@ public class TakeOrder : NavMeshMovement
         //Debug.Log(navMeshAgent.velocity.magnitude);
         //Debug.Log(currentPos);
 
-        SetDestination(currentPos);
+        SetDestination(currentPos.position);
         if (HasArrived())
         {
             staff.Emoji(false);

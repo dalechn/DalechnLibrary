@@ -172,6 +172,12 @@ namespace MyShop
                 //});
             }
 
+            StartAutoHide();
+        }
+
+        public void StartAutoHide()
+        {
+            StopAllCoroutines();
             if (autoHide && autoHideTime > 0)
             {
                 StartCoroutine(CoroutineHide());

@@ -18,7 +18,7 @@ namespace MyShop
 
     public enum StaffBTVal
     {
-        CookingTime, Speed, ServeInterval
+        CookingTime, Speed, ServeInterval,CurrentFoodPos
     }
 
 
@@ -48,6 +48,11 @@ namespace MyShop
 
         }
 
+       public bool  IsSlotDecorationMode()
+        {
+            return currentOrder !=null&& currentOrder.currentFood.foodSlot.InDecoration;
+        }
+
         public void TakeOrder(Order order)
         {
             idleState = false;
@@ -55,6 +60,7 @@ namespace MyShop
 
             order.cookingScore = staffProp.cookingScore;
             order.staff = this;
+            //order.state = OrderState.BySystem;
 
             Emoji(true);
         }
@@ -81,19 +87,19 @@ namespace MyShop
             MessageCenter.Instance.SendMessageByStaff(gameObject, emoji, currentOrder);
         }
 
-        public bool DequeFoodPosition(out Vector3 pos)
+        public bool DequeFoodPosition(out Transform pos)
         {
             if (currentOrder != null && currentOrder.GetCurrentFood(out Food food))
             {
                 food.foodTime *= staffProp.cookingTime;                                                                             //动态减少cookingtime
                 behaviorTree.SetVariableValue(StaffBTVal.CookingTime.ToString(), food.foodTime + 1);             // 动态设置cookingtime,+1是给时间缓冲一下,多wait 1秒
 
-                pos = food.foodPosition.position;
+                pos = food.foodPosition;
 
                 return true;
             }
 
-            pos = default(Vector3);
+            pos = null;
             return false;
         }
 

@@ -119,7 +119,7 @@ namespace Dalechn
 
             //target.transform.localScale = Vector3.one;
             Vector3 originScal = target.transform.localScale;
-            DoAction a = bl_UpdateManager.RunAction(null, duration, delegate (float time, float r)
+            DoAction a = bl_UpdateManager.RunAction("", duration, delegate (float time, float r)
             {
                 float val = DampMotion(time, 0.309f);
                 float val2 = DampMotion(time, 0.204f);
@@ -138,7 +138,7 @@ namespace Dalechn
 
         public static void FlashUI(Image obj, bool overShow = true, float duration = 0.8f)
         {
-            bl_UpdateManager.RunAction(null, duration, (float time, float r) =>
+            bl_UpdateManager.RunAction("", duration, (float time, float r) =>
             {
                 obj.enabled = (r % 0.4f) > 0.4f / 2;
             }, () =>
@@ -154,7 +154,7 @@ namespace Dalechn
                 m.enabled = false;
             }
 
-            bl_UpdateManager.RunAction(null, duration, (float time, float r) =>
+            bl_UpdateManager.RunAction("", duration, (float time, float r) =>
         {
             for (int i = 0; i < originVisableMeshs.Count; i++)
             {

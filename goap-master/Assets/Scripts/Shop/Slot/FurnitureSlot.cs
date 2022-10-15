@@ -30,6 +30,7 @@ namespace MyShop
             //}
             base.OnLeanSelected(s);
 
+            //用标记是否被打开来判断是否进入玩家操作模式
             if (foodList[0].activeInHierarchy)
             {
                 ModeFrame top = UIManager.Instance.GetObj<ModeFrame>(PopType.modeFrame.ToString());

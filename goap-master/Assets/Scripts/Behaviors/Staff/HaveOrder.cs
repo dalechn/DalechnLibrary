@@ -14,7 +14,7 @@ public class HaveOrder : Conditional
         base.OnStart();
 
         //staff = GetComponent<Staff>();
-        staff = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Staff;
+        staff = Owner.GetVariable(GlobalConfig.SharedPerson).GetValue() as Staff;
     }
 
     public override TaskStatus OnUpdate()

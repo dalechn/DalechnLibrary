@@ -13,7 +13,8 @@ public class PasserBy : Seek
 
     public override void OnStart()
     {
-        customer = Owner.GetVariable(GlobalConfig.SharedPersonBase).GetValue() as Customer;
+        base.OnStart();
+        customer = Owner.GetVariable(GlobalConfig.SharedPerson).GetValue() as Customer;
     }
 
     public override TaskStatus OnUpdate()

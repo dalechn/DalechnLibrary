@@ -19,9 +19,10 @@ namespace Dalechn
         private bool Initializate = false;
         private float lastSlowCall = 0;
 
-        [vHelpBox("ReadOnly",vHelpBoxAttribute.MessageType.Warning)]
+        [vHelpBox("ReadOnly", vHelpBoxAttribute.MessageType.Warning)]
         [SerializeField]
         private List<DoAction> actionList = new List<DoAction>();
+        private Dictionary<GameObject, DoAction> actionDict = new Dictionary<GameObject, DoAction>();
 
         /// <summary>
         /// 
@@ -291,26 +292,44 @@ namespace Dalechn
         }
 
         // 考虑增加Dictionary来提升性能?
-        public void RemoveAction(string actName)
+        public bool RemoveAction(string actName)
         {
             for (int i = 0; i < actionList.Count; i++)
             {
                 if (actionList[i].actionName == actName)
                 {
                     actionList[i].removed = true;
+
+                    return true;
                 }
             }
+            return false;
         }
 
-        public void RemoveAction(DoAction act)
+        public bool RemoveAction(GameObject actName)
+        {
+            if (actionDict.TryGetValue(actName, out DoAction act))
+            {
+                actionDict.Remove(actName);
+                act.removed = true;
+                return true;
+            }
+            return false;
+        }
+
+        public bool RemoveAction(DoAction act)
         {
             for (int i = 0; i < actionList.Count; i++)
             {
                 if (actionList[i] == act)
                 {
                     actionList[i].removed = true;
+
+                    return true;
                 }
             }
+
+            return false;
         }
 
         public bool HasAction(string act)
@@ -330,7 +349,7 @@ namespace Dalechn
         /// <summary>
         ///回调函数参数第一个是[0,1],第二个才是realTime
         /// </summary>
-        public static DoAction RunAction([DefaultValue("")]string actName, float duration, UnityAction<float, float> stepCall, UnityAction overCall = null, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
+        public static DoAction RunAction([DefaultValue("")] string actName, float duration, UnityAction<float, float> stepCall, UnityAction overCall = null, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
         {
             DoAction s = new DoAction();
             s.mode = mode;
@@ -345,7 +364,7 @@ namespace Dalechn
             return s;
         }
 
-        public static DoAction RunAction([DefaultValue("")]string actName, float duration, float delay, UnityAction<float,float> stepCall, UnityAction onceCall = null, UnityAction overCall = null, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
+        public static DoAction RunAction([DefaultValue("")] string actName, float duration, float delay, UnityAction<float, float> stepCall, UnityAction onceCall = null, UnityAction overCall = null, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
         {
             DoAction s = new DoAction();
             s.mode = mode;
@@ -362,7 +381,40 @@ namespace Dalechn
             return s;
         }
 
-        public static DoAction RunActionOnce([DefaultValue("")]string actName, float delay, UnityAction onceCall, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
+        public static DoAction RunAction(GameObject actName, float duration, UnityAction<float, float> stepCall, UnityAction overCall = null, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
+        {
+            DoAction s = new DoAction();
+            s.mode = mode;
+            s.easeType = type;
+            s.duration = duration;
+            s.stepCall += (stepCall);
+            s.overCall += (overCall);
+
+            s_Instance?.actionList.Add(s);
+            s_Instance?.actionDict.Add(actName, s);
+
+            return s;
+        }
+
+
+        public static DoAction RunAction(GameObject actName, float duration, float delay, UnityAction<float, float> stepCall, UnityAction onceCall = null, UnityAction overCall = null, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
+        {
+            DoAction s = new DoAction();
+            s.mode = mode;
+            s.easeType = type;
+            s.duration = duration;
+            s.delayTime = delay;
+            s.stepCall += (stepCall);
+            s.overCall += (overCall);
+            s.onceCall += (onceCall);
+
+            s_Instance?.actionList.Add(s);
+            s_Instance?.actionDict.Add(actName, s);
+
+            return s;
+        }
+
+        public static DoAction RunActionOnce([DefaultValue("")] string actName, float delay, UnityAction onceCall, EaseType type = EaseType.Lerp, ActionMode mode = ActionMode.MUpdate)
         {
             DoAction s = new DoAction();
             s.mode = mode;
@@ -375,10 +427,10 @@ namespace Dalechn
             return s;
         }
 
-        public static void StopAction(string actName, ActionMode mode = ActionMode.MUpdate)
-        {
-            s_Instance?.RemoveAction(actName);
-        }
+        //public static void StopAction(string actName, ActionMode mode = ActionMode.MUpdate)
+        //{
+        //    s_Instance?.RemoveAction(actName);
+        //}
 
         #endregion
     }

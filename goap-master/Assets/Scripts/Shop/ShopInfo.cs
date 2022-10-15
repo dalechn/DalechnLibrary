@@ -21,7 +21,7 @@ namespace MyShop
         public float enthusiasm;    //客人热情
     }
 
-    public struct OrderState
+    public struct TotalOrderState
     {
         public int totalOrder;          //所有产生的订单
         public int canceledOrder; //强行取消的订单(太慢了)
@@ -48,7 +48,7 @@ namespace MyShop
         public SlotManager slotManager;
         public Score currentScore;
 
-        public OrderState orderState;
+        public TotalOrderState orderState;
         public Queue<Order> orderQueue = new Queue<Order>();
 
         public LeanPlane plane;         //家具拖拽时候的平面
@@ -142,7 +142,7 @@ namespace MyShop
         {
             orderState.totalPrice += order.price;
 
-            Debug.Log(orderState.totalPrice);
+            //Debug.Log(orderState.totalPrice);
         }
 
         public void CustomerLeave()
@@ -170,6 +170,7 @@ namespace MyShop
                 if (slotManager.furnitureSlotDict.TryGetValue(tem2.NeedFurniture, out Slot furniture))
                 {
                     Food food = new Food();
+                    food.foodSlot = furniture;
                     food.foodPosition = furniture.GetUsableStaffPosition();     //获取做饭的时候站的位置
                     food.foodTime = tem2.Time;                                              //每个小食物做饭的时间
                     food.subFoodSpriteLocation = tem2.Location;                     //每个小食物loading的时间
@@ -181,6 +182,8 @@ namespace MyShop
             }
 
             Slot slot = slotManager.tableSlotDict[table];
+            order.slot = slot;
+
             Transform pos = slot.GetUsableStaffPosition();
             order.staffPosition = pos;                                                           //获取送餐的时候站的位置
 
@@ -189,6 +192,7 @@ namespace MyShop
             order.foodPrefabLocation = PoolManager.Pools["FoodPool"].Spawn(tem.PrefabLocation);         //产生订单的同时直接生成prefab.
             order.foodPrefabLocation.position = order.tableFoodPosition.position;
             order.foodPrefabLocation.gameObject.SetActive(false);
+            order.foodPrefabLocation.parent = slot.transform;
 
             order.foodSpriteLocation = tem.Location;                                            //服务员手里的最终的食物位置
 
@@ -259,6 +263,7 @@ namespace MyShop
             if (staff && orderQueue.TryDequeue(out Order order))
             {
                 if (order.canBeAssigned && !order.orderFinished)//确保没被手动操作过,或者顾客提前走人的
+                //if(order.state==OrderState.Generated)
                 {
                     staffManager.StaffGetOrder(staff, order);
                 }

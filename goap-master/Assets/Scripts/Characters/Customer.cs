@@ -79,6 +79,12 @@ namespace MyShop
             customerProp.foodType = Dalechn.GameUtils.RandomEnum<FoodType>();       //暂定随机
         }
 
+        public bool IsSlotDecorationMode()
+        {
+            return currentOrder != null && currentOrder.slot.InDecoration;
+        }
+
+
         public void Emoji(MessageType emojiType, float possibility = 1.0f)
         {
             if (emojiType == MessageType.None)
@@ -227,6 +233,8 @@ namespace MyShop
             ShopInfo.Instance.GenOrder(currentSite, ref currentOrder);
 
             Emoji(MessageType.OrderName);
+
+            WaitForServe();
         }
 
         public void HavingDinner()
@@ -234,6 +242,10 @@ namespace MyShop
             //吃饭动画
         }
 
+        public void WaitForServe()
+        {
+            //等待服务动画
+        }
 
         public void WaitingTable()
         {
