@@ -36,7 +36,12 @@ namespace Dalechn
             test3 = 5;
 
             Debug.Log(this is CSharpTest);
+
+            System.Object obj1 = null;
+            Vector3 v = (Vector3)obj1;
+            //Vector3 v2 =obj1 as Vector3; //报错,as运算符用于执行引用类型的显式类型转换
             CSharpTest cls2 = this as CSharpTest;
+
             Debug.Log(typeof(CSharpTest));
         }
 
@@ -356,8 +361,9 @@ namespace Dalechn
 
             //CSharp7Test(out int x, out int y);
 
-            //Person p = new Person();
+            Person p = new Person();
             //p.ReflectTest();
+            p.ExtensionsTest();
 
             //多态测试
             AbstractClassBase abs = new GenericClass<int>(10);
@@ -639,7 +645,17 @@ namespace Dalechn
 
     }
     //静态类,只能有静态方法和静态成员变量
-    public static class StaticClass { }
+    //this扩展方法:
+        //1. 声明扩展方法的类必须是static静态类
+        //2. 扩展方法本身必须static静态方法
+        //3. 扩展方法必须包含关键字this作为第一个参数类型
+    public static class StaticClass
+    {
+        //访问修饰符依旧有效,比如private还是不可外部访问
+        public static void ExtensionsTest(this Person person) {
+            Debug.Log("ExtensionsTest");
+        }
+    }
 
     // 抽象类(abstract class)抽象成员必须加abstract,static不可以加abstract/virtual
     public abstract class AbstractClassBase
@@ -654,7 +670,9 @@ namespace Dalechn
         public abstract void Init();
     }
 
-    public enum EEnumTest { ENUMTEST }
+    //继承: byte，这个表示枚举元素使用 byte 存储,默认是int
+    public enum EEnumTest : byte
+    { ENUMTEST }
 
     // 接口(interface)无法创建成员变量,不需要加abstract/virtual,不可以加static,默认public(无法修改访问限制)
     public interface IInterfaceTest
@@ -786,7 +804,7 @@ namespace Dalechn
     //-------------------------------------建立新语言模板--------------------------------------------
     // 1.环境搭建,注释,语言基本属性,语言基本组成
     // 2.核心类库(控制台调试, 鼠标键盘, io,日期, 数学, 随机)
-    // 3.工作需要的框架
+    // 3.工作需要的框架(关键字:运行环境->目录结构->入口->核心类库)
 
     //-------------------------------------语言基本属性-------------------------------------------
     // 编译型语言(compiled language) :c/c++

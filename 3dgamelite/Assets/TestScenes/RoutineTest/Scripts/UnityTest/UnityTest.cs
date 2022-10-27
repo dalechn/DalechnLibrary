@@ -64,6 +64,9 @@ namespace Dalechn
                 //rotDebug.gameObject.SetActive(false);
             }
 
+            //猜测:这两个应该都能获取隐藏的GameObject?
+            Transform tr = transform.Find("UnityTest");
+            GameObject obj1 = GameObject.Find("UnityTest");
             // 不返回gameObject.active = false,可返回transform.enable = false
             RotDebug rotDebugTest = FindObjectOfType<RotDebug>();
             Debug.Log(rotDebugTest);
@@ -173,16 +176,16 @@ namespace Dalechn
 #if UNITY_WEBGL
 #endif
 
-//UNITY_EDITOR
-//UNITY_EDITOR_WIN
-//UNITY_EDITOR_OSX
-//UNITY_EDITOR_LINUX
+            //UNITY_EDITOR
+            //UNITY_EDITOR_WIN
+            //UNITY_EDITOR_OSX
+            //UNITY_EDITOR_LINUX
 
-//UNITY_STANDALONE_OSX
-//UNITY_STANDALONE_WIN
-//UNITY_STANDALONE_LINUX
-//UNITY_STANDALONE
-//file:///D:/program/UnityDocumentation/Documentation/en/Manual/PlatformDependentCompilation.html
+            //UNITY_STANDALONE_OSX
+            //UNITY_STANDALONE_WIN
+            //UNITY_STANDALONE_LINUX
+            //UNITY_STANDALONE
+            //file:///D:/program/UnityDocumentation/Documentation/en/Manual/PlatformDependentCompilation.html
         }
 
         //private void FixedUpdate()
@@ -323,7 +326,7 @@ namespace Dalechn
 
         private void OnGUI()
         {
-        
+
         }
 
     }
