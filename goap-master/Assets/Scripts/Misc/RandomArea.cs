@@ -68,6 +68,8 @@ public class RandomArea : MonoBehaviour
         //Debug.DrawLine(pos, pos+new Vector3(0,1,0),Color.red,1.0f);
     }
 
+#if UNITY_EDITOR
+
     void OnDrawGizmos()
     {
         Gizmos.color = Color;
@@ -90,4 +92,5 @@ public class RandomArea : MonoBehaviour
             UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, GetMaximumScale());
         }
     }
+#endif
 }

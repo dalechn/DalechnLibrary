@@ -275,9 +275,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  tr: {fileID: 0}
+  staffProp:
+    priority: 0
+    cookingTime: 0
+    serveInterval: 0
+    cookingScore: 0
   idleState: 1
-  priority: 0
 --- !u!114 &4748898663811421976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5634,7 +5637,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9aa2023c2c91b254f9cb0a4fba19af00, type: 2}
+  - {fileID: 2100000, guid: 1455e88fdb81ccc45bdeaedd657bad4d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5668,8 +5671,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonDataAsset: {fileID: 11400000, guid: 2f899e95232e6144786de8fb99678a8d, type: 2}
-  initialSkinName: weapon/sword
+  skeletonDataAsset: {fileID: 11400000, guid: a467507a4ffb1d542a558739b2fede77, type: 2}
+  initialSkinName: 
   fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
   initialFlipY: 0

@@ -260,6 +260,7 @@ namespace MyShop
             }
         }
 
+#if UNITY_EDITOR
         void OnDrawGizmos()
         {
 
@@ -271,5 +272,6 @@ namespace MyShop
                 UnityEditor.Handles.DrawWireDisc(c.position, Vector3.up, recycledDistance);
             }
         }
+#endif
     }
 }

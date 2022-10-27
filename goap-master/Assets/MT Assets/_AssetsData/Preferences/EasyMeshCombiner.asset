@@ -15,8 +15,8 @@ MonoBehaviour:
   projectName: goap
   windowPosition:
     serializedVersion: 2
-    x: 681
-    y: 727
+    x: 302
+    y: 301
     width: 610
     height: 666
   representLogsInScene: 1

@@ -41,8 +41,9 @@ namespace MyShop
             top.RegistClick(() =>
             {
                 Hide();
+                if(chese)
+                    chese.enabled = false;
 
-                chese.enabled = false;
                 ShopInfo.Instance?.HandleOrder(true);       //重新加入队列,
             });
 

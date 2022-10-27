@@ -29,6 +29,7 @@ namespace MyShop
         protected LeanDragTranslateAlong translateAlong;
         protected LeanMultiHeld multiHeld;
         protected NavMeshObstacle obs;
+        //protected LeanCtrl ctrl;
 
         protected RingCtrl ring;
         protected CircleUI ui;
@@ -58,6 +59,8 @@ namespace MyShop
             ui = GetComponentInChildren<CircleUI>();
             obs = GetComponentInChildren<NavMeshObstacle>();
             ring = GetComponentInChildren<RingCtrl>();
+
+            //ctrl = FindObjectOfType<LeanCtrl>();       
 
             if (ring)
             {
@@ -208,12 +211,16 @@ namespace MyShop
             {
                 ui.ToggleLoading(true);
             }
+
+            //ctrl?.Toggle(false);
         }
 
         protected virtual void OnLeanDeSelected(LeanSelect s)
         {
             if (multiHeld.enabled)
                 ui.ToggleLoading(false);
+
+            //ctrl?.Toggle(true);
         }
 
         protected virtual void OnMultiHeld(List<LeanFinger> f)

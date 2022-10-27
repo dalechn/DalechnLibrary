@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
+# if UNITY_EDITOR
 public class GetPrefabImage : MonoBehaviour
 {
     public GameObject objectPrefab;
@@ -27,3 +28,4 @@ public class GetPrefabImage : MonoBehaviour
         image.sprite = sprite;
     }
 }
+#endif

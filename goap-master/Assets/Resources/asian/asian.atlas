@@ -1,0 +1,216 @@
+
+asian.png
+size: 1024,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+angry
+  rotate: false
+  xy: 2, 23
+  size: 86, 103
+  orig: 86, 103
+  offset: 0, 0
+  index: -1
+body
+  rotate: true
+  xy: 699, 36
+  size: 90, 185
+  orig: 90, 185
+  offset: 0, 0
+  index: -1
+cellphone
+  rotate: true
+  xy: 397, 2
+  size: 21, 30
+  orig: 21, 30
+  offset: 0, 0
+  index: -1
+eyelid1
+  rotate: false
+  xy: 106, 4
+  size: 41, 17
+  orig: 41, 17
+  offset: 0, 0
+  index: -1
+eyelid2
+  rotate: false
+  xy: 273, 6
+  size: 41, 16
+  orig: 41, 16
+  offset: 0, 0
+  index: -1
+eyelid3
+  rotate: false
+  xy: 316, 8
+  size: 41, 14
+  orig: 41, 14
+  offset: 0, 0
+  index: -1
+glasses
+  rotate: false
+  xy: 571, 2
+  size: 74, 23
+  orig: 74, 23
+  offset: 0, 0
+  index: -1
+happy
+  rotate: false
+  xy: 133, 24
+  size: 86, 102
+  orig: 86, 102
+  offset: 0, 0
+  index: -1
+knapsack
+  rotate: false
+  xy: 571, 27
+  size: 82, 99
+  orig: 82, 99
+  offset: 0, 0
+  index: -1
+lbigarm
+  rotate: true
+  xy: 762, 2
+  size: 32, 65
+  orig: 32, 65
+  offset: 0, 0
+  index: -1
+lfoot
+  rotate: true
+  xy: 829, 2
+  size: 32, 42
+  orig: 32, 42
+  offset: 0, 0
+  index: -1
+lforearm
+  rotate: true
+  xy: 212, 2
+  size: 20, 59
+  orig: 20, 59
+  offset: 0, 0
+  index: -1
+lforearm_happy
+  rotate: false
+  xy: 149, 2
+  size: 61, 20
+  orig: 61, 20
+  offset: 0, 0
+  index: -1
+lham
+  rotate: false
+  xy: 655, 35
+  size: 42, 91
+  orig: 42, 91
+  offset: 0, 0
+  index: -1
+lhand_angry
+  rotate: true
+  xy: 963, 93
+  size: 33, 42
+  orig: 33, 42
+  offset: 0, 0
+  index: -1
+lhand_normal
+  rotate: true
+  xy: 647, 2
+  size: 23, 42
+  orig: 23, 42
+  offset: 0, 0
+  index: -1
+lhand_smile
+  rotate: true
+  xy: 959, 51
+  size: 40, 33
+  orig: 40, 33
+  offset: 0, 0
+  index: -1
+lshank
+  rotate: false
+  xy: 90, 23
+  size: 41, 103
+  orig: 41, 103
+  offset: 0, 0
+  index: -1
+normal
+  rotate: false
+  xy: 397, 25
+  size: 85, 101
+  orig: 85, 101
+  offset: 0, 0
+  index: -1
+normal_idle
+  rotate: false
+  xy: 484, 25
+  size: 85, 101
+  orig: 85, 101
+  offset: 0, 0
+  index: -1
+rbigarm
+  rotate: true
+  xy: 691, 4
+  size: 29, 69
+  orig: 29, 69
+  offset: 0, 0
+  index: -1
+rfoot
+  rotate: false
+  xy: 914, 3
+  size: 47, 37
+  orig: 47, 37
+  offset: 0, 0
+  index: -1
+rforearm
+  rotate: true
+  xy: 2, 2
+  size: 19, 60
+  orig: 19, 60
+  offset: 0, 0
+  index: -1
+rham
+  rotate: false
+  xy: 886, 42
+  size: 36, 84
+  orig: 36, 84
+  offset: 0, 0
+  index: -1
+rhand
+  rotate: true
+  xy: 64, 3
+  size: 18, 40
+  orig: 18, 40
+  offset: 0, 0
+  index: -1
+rhand_angry
+  rotate: false
+  xy: 963, 12
+  size: 33, 37
+  orig: 33, 37
+  offset: 0, 0
+  index: -1
+rhand_smile
+  rotate: false
+  xy: 873, 6
+  size: 39, 28
+  orig: 39, 28
+  offset: 0, 0
+  index: -1
+rshank
+  rotate: false
+  xy: 924, 42
+  size: 33, 84
+  orig: 33, 84
+  offset: 0, 0
+  index: -1
+smile
+  rotate: false
+  xy: 221, 24
+  size: 86, 102
+  orig: 86, 102
+  offset: 0, 0
+  index: -1
+unhappy
+  rotate: false
+  xy: 309, 24
+  size: 86, 102
+  orig: 86, 102
+  offset: 0, 0
+  index: -1

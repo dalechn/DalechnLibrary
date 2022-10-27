@@ -30,7 +30,7 @@ namespace MyShop
 
         public void ToggleLoading(bool en)
         {
-            if(ani)
+            if (ani)
             {
                 if (en)
                 {
@@ -50,7 +50,8 @@ namespace MyShop
         {
             base.Show();
 
-            CreateCubeAngle30();
+            if (!isVisible)
+                CreateCubeAngle30();
         }
 
         public override void Hide()

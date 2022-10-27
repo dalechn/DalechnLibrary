@@ -61,7 +61,7 @@ namespace MyShop
                 button.OnClick.RemoveAllListeners();
                 button.OnClick.AddListener(() =>
                 {
-                    button.OnClick.RemoveAllListeners();
+                    //button.OnClick.RemoveAllListeners();
 
                 //EnableRaycast(false);
                 //Toggle();
